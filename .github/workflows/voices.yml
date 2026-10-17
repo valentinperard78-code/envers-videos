@@ -1,0 +1,26 @@
+name: test-voix
+on:
+  push:
+    paths: [".github/workflows/voices.yml", "tools/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  voix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install edge-tts
+      - run: mkdir -p out && python tools/voices.py && ls -la out
+      - run: |
+          pip install piper-tts && mkdir -p pv && cd pv
+          for v in fr/fr_FR/tom/medium/fr_FR-tom-medium fr/fr_FR/siwis/medium/fr_FR-siwis-medium; do
+            curl -sL -O https://huggingface.co/rhasspy/piper-voices/resolve/main/$v.onnx
+            curl -sL -O https://huggingface.co/rhasspy/piper-voices/resolve/main/$v.onnx.json
+            n=$(basename $v); python -m piper -m $n.onnx -f ../out/piper_$n.wav < ../tools/samples.txt || true
+          done
+        continue-on-error: true
+      - run: |
+          git config user.name "envers-bot"; git config user.email "bot@users.noreply.github.com"
+          git checkout --orphan echantillons && git rm -rf --cached . -q
+          git add out && git commit -qm "Echantillons de voix" && git push -f origin echantillons
