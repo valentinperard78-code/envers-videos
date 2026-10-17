@@ -2,12 +2,39 @@
 Voix principale : Rémy (fr-FR-RemyMultilingualNeural, edge-tts). Secours : Piper fr_FR-tom-medium + faster-whisper pour le minutage."""
 import asyncio, glob, json, os, subprocess, sys
 VOICE = "fr-FR-RemyMultilingualNeural"
+RATE = "-5%"
 os.makedirs("out", exist_ok=True)
 status = {}
+import re
+def norm(t):
+    return re.sub(r"[^0-9a-zà-ÿœæ]", "", t.lower())
+def thousands(t):
+    return re.sub(r"\d{4,}", lambda m: f"{int(m.group()):,}".replace(",", " ") if len(m.group()) > 4 or not 1000 <= int(m.group()) <= 2100 else m.group(), t)
+def align(words, txt):
+    """Remet la ponctuation du texte et un mot par entrée ; minutage réparti si un repère couvre plusieurs mots."""
+    raw = txt.split(); toks = []; pre = ""
+    for t in raw:
+        if not norm(t) and t in ("«", "(", "\u201c"):
+            pre += t + " "
+        elif not norm(t) and toks:
+            toks[-1] += " " + t
+        else:
+            toks.append(pre + t); pre = ""
+    out = []; i = 0
+    for w, s, e in words:
+        target = norm(w); got = []; acc = ""
+        while i < len(toks) and len(acc) < len(target):
+            got.append(toks[i]); acc += norm(toks[i]); i += 1
+        if acc != target or not got:
+            return [[thousands(w), s, e] for w, s, e in words]
+        n = len(got)
+        for k, t in enumerate(got):
+            out.append([thousands(t), s + (e - s) * k // n, s + (e - s) * (k + 1) // n])
+    return out
 
 async def edge(slug, txt):
     import edge_tts
-    c = edge_tts.Communicate(txt, VOICE, boundary="WordBoundary")
+    c = edge_tts.Communicate(txt, VOICE, rate=RATE, boundary="WordBoundary")
     words = []
     with open(f"out/{slug}.mp3", "wb") as f:
         async for ch in c.stream():
@@ -41,6 +68,7 @@ for path in sorted(glob.glob("texts/*.txt")):
         print("edge-tts en échec :", repr(e), file=sys.stderr)
         words, used = piper(slug, txt), "piper_tom"
     dur = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f"out/{slug}.wav"]))
+    words = align(words, txt) if used == "remy" else words
     json.dump(words, open(f"out/{slug}.json", "w", encoding="utf-8"), ensure_ascii=False)
     status[slug] = {"voice": used, "duration_s": round(dur, 2), "words": len(words)}
 json.dump(status, open("out/status.json", "w"), ensure_ascii=False, indent=1)
