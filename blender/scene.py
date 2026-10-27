@@ -30,12 +30,13 @@ sc.render.fps = FPS
 sc.frame_start, sc.frame_end = 1, END
 sc.view_settings.view_transform = "AgX"
 try:
-    sc.view_settings.look = "AgX - Medium High Contrast"
+    sc.view_settings.look = "AgX - High Contrast"
 except Exception:
     pass
 sc.render.image_settings.file_format = "PNG"
 sc.render.film_transparent = False
 sc.render.use_persistent_data = True
+sc.view_settings.exposure = -0.9
 
 
 # ---------------------------------------------------------------- utilitaires
@@ -121,33 +122,33 @@ world.use_nodes = True
 wn = world.node_tree
 sky = wn.nodes.new("ShaderNodeTexSky")
 sky.sky_type = "NISHITA"
-sky.sun_elevation = math.radians(4)
+sky.sun_elevation = math.radians(7)
 sky.sun_rotation = math.radians(200)
 sky.air_density = 1.4
 sky.dust_density = 2.5
 bg = wn.nodes["Background"]
-bg.inputs["Strength"].default_value = 0.55
+bg.inputs["Strength"].default_value = 0.35
 wn.links.new(sky.outputs["Color"], bg.inputs["Color"])
 
 sun = bpy.data.objects.new("Sun", bpy.data.lights.new("Sun", "SUN"))
 sc.collection.objects.link(sun)
-sun.data.energy = 2.2
+sun.data.energy = 3.0
 sun.data.color = (1.0, 0.62, 0.38)
 sun.data.angle = math.radians(3)
 sun.rotation_euler = Euler((math.radians(80), 0, math.radians(200)))
 
 fill = bpy.data.objects.new("Fill", bpy.data.lights.new("Fill", "AREA"))
 sc.collection.objects.link(fill)
-fill.data.energy = 900
+fill.data.energy = 500
 fill.data.size = 6
 fill.data.color = (0.75, 0.8, 1.0)
 fill.location = (2.5, -6.5, 4.5)
 fill.rotation_euler = Euler((math.radians(55), 0, math.radians(20)))
 
 # ---------------------------------------------------------------- décor : la villa
-M_TILE = mat("Dallage", (0.62, 0.55, 0.47), rough=0.55, bump=(18, 0.25))
-M_WALL = mat("Enduit", (0.93, 0.9, 0.85), rough=0.8, bump=(6, 0.08))
-M_WIN = mat("Fenetre", (1.0, 0.75, 0.45), emit=(1.0, 0.68, 0.38), emit_s=6)
+M_TILE = mat("Dallage", (0.3, 0.25, 0.21), rough=0.4, bump=(18, 0.25))
+M_WALL = mat("Enduit", (0.72, 0.66, 0.6), rough=0.8, bump=(6, 0.08))
+M_WIN = mat("Fenetre", (1.0, 0.75, 0.45), emit=(1.0, 0.62, 0.3), emit_s=3)
 M_WATER = mat("Eau", (0.25, 0.75, 0.85), rough=0.02, transm=0.9, ior=1.33, bump=(3, 0.15))
 M_POOLTILE = mat("Bassin", (0.1, 0.55, 0.75), rough=0.3)
 M_WOOD = mat("Bois", (0.36, 0.2, 0.1), rough=0.5, bump=(40, 0.2))
@@ -181,10 +182,10 @@ def palm(x, y, h, lean):
     t = obj_from(bpy.ops.mesh.primitive_cone_add, "Tronc", M_TRUNK, radius1=0.22, radius2=0.12, depth=h, location=(x, y, h / 2), vertices=16)
     t.rotation_euler = (0, lean, 0)
     top = Vector((x + math.sin(lean) * h / 2 * 1.0, y, h * math.cos(lean)))
-    for k in range(9):
-        a = k / 9 * 2 * math.pi
+    for k in range(16):
+        a = k / 16 * 2 * math.pi
         l = obj_from(bpy.ops.mesh.primitive_plane_add, "Palme", M_LEAF, size=1, location=top)
-        l.scale = (2.4, 0.35, 1)
+        l.scale = (2.6, 0.45, 1)
         l.rotation_euler = (0, math.radians(25), a)
         l.location = top + Vector((math.cos(a) * 1.1, math.sin(a) * 1.1, -0.35))
         sb = l.modifiers.new("b", "SIMPLE_DEFORM"); sb.deform_method = "BEND"; sb.angle = math.radians(-50); sb.deform_axis = "Y"
@@ -234,153 +235,155 @@ def talk(mouth, f0, f1, base=0.55):
     mouth.scale = (1, base, 1); mouth.keyframe_insert("scale", frame=f1)
 
 
-# --- Cellia (la cellule) : grosse sphère violette translucide avec noyau
-M_CELL = mat("Cellule", (0.55, 0.32, 0.85), rough=0.25, sss=0.6, sss_col=(0.9, 0.5, 1.0), coat=0.6, bump=(4, 0.12))
-cell = sphere("Cellia", 1.35, (1.6, 0.8, 1.35), M_CELL, seg=64)
+# --- Cellia (la cellule) : grosse sphère violette, face à la caméra (axe -Y)
+CC = Vector((1.3, 1.2, 1.4)); R = 1.4
+M_CELL = mat("Cellule", (0.36, 0.12, 0.7), rough=0.3, sss=0.25, sss_col=(0.6, 0.3, 1.0), coat=0.7, bump=(4, 0.1))
+cell = sphere("Cellia", R, CC, M_CELL, seg=64)
 dis = cell.modifiers.new("d", "DISPLACE")
-dis.texture = bpy.data.textures.new("tc", "CLOUDS"); dis.texture.noise_scale = 0.9; dis.strength = 0.12
+dis.texture = bpy.data.textures.new("tc", "CLOUDS"); dis.texture.noise_scale = 0.9; dis.strength = 0.08
 subsurf(cell, 1)
-nuc = sphere("Noyau", 0.45, (2.05, 1.1, 1.95), mat("Noyau", (0.35, 0.12, 0.6), rough=0.4, sss=0.5), seg=32)
+nuc = sphere("Noyau", 0.42, CC + Vector((0.65, 0.2, 0.75)), mat("Noyau", (0.2, 0.04, 0.4), rough=0.4, sss=0.3), seg=32)
 parent(nuc, cell)
-CELL_FWD = Vector((-0.75, -0.66, 0))
-eyes_c, mouth_c = face(cell, Vector((1.6, 0.8, 1.35)) + CELL_FWD * 1.22 + Vector((0, 0, 0.45)), CELL_FWD, 0.2, 0.32, 0.16)
-# porte de la cellule (sur le flanc gauche, face caméra)
-door_center = Vector((1.6, 0.8, 1.0)) + Vector((-1.0, -0.45, 0)).normalized() * 1.28
-frame_o = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Encadrement", mat("Encadr", (0.22, 0.08, 0.2), rough=0.6), radius=0.42, depth=0.12, location=door_center, vertices=40)
-ang = math.atan2(-0.45, -1.0)
-frame_o.rotation_euler = Euler((math.radians(90), 0, ang + math.pi / 2))
-frame_o.scale = (0.8, 1.35, 1)
-parent(frame_o, cell)
-# charnière (pivot) à gauche de la porte
-side_vec = Vector((math.cos(ang + math.pi / 2), math.sin(ang + math.pi / 2), 0))
+def on_sphere(dx, dz, push=1.0):
+    d = Vector((dx, -1.0, dz)).normalized()
+    return CC + d * R * push, d
+eye_pos, eye_n = on_sphere(0.28, 0.42, 0.93)
+eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.15)
+# porte en bas à gauche, tournée vers la caméra
+door_pos, door_n = on_sphere(-0.48, -0.42, 1.0)
+DN = Vector((door_n.x, door_n.y, 0)).normalized()          # normale horizontale
+ang = math.atan2(DN.y, DN.x)
+side_vec = Vector((-DN.y, DN.x, 0))                        # vers la droite de la porte (vu de face)
+door_center = door_pos + DN * 0.02
+door_center.z = 0.72
+M_DARK = mat("Embrasure", (0.04, 0.0, 0.05), rough=0.9)
+emb = obj_from(bpy.ops.mesh.primitive_cube_add, "Embrasure", M_DARK, size=1, location=door_center - DN * 0.05)
+emb.scale = (0.72, 0.2, 1.22); emb.rotation_euler = Euler((0, 0, ang + math.pi / 2))
+bve = emb.modifiers.new("bv", "BEVEL"); bve.width = 0.2; bve.segments = 6
+parent(emb, cell)
 hinge = bpy.data.objects.new("Charniere", None); sc.collection.objects.link(hinge)
-hinge.location = door_center - side_vec * 0.32 + Vector((math.cos(ang), math.sin(ang), 0)) * 0.08
+hinge.location = door_center + side_vec * 0.33 + DN * 0.08
 hinge.rotation_euler = Euler((0, 0, ang + math.pi / 2))
-door = obj_from(bpy.ops.mesh.primitive_cube_add, "Porte", M_WOOD, size=1, location=door_center + Vector((math.cos(ang), math.sin(ang), 0)) * 0.08)
-door.scale = (0.62, 0.07, 1.05)
+door = obj_from(bpy.ops.mesh.primitive_cube_add, "Porte", M_WOOD, size=1, location=door_center + DN * 0.08)
+door.scale = (0.64, 0.07, 1.12)
 door.rotation_euler = Euler((0, 0, ang + math.pi / 2))
-bv = door.modifiers.new("bv", "BEVEL"); bv.width = 0.05; bv.segments = 4
+bv = door.modifiers.new("bv", "BEVEL"); bv.width = 0.12; bv.segments = 6
 parent(door, hinge)
-M_GOLD = mat("Or", (1.0, 0.75, 0.25), rough=0.2, metal=1.0)
-lock = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Serrure", M_GOLD, radius=0.06, depth=0.04, location=door_center + Vector((math.cos(ang), math.sin(ang), 0)) * 0.13 + side_vec * 0.18, vertices=24)
+M_GOLD = mat("Or", (1.0, 0.72, 0.22), rough=0.18, metal=1.0)
+lock_loc = door_center + DN * 0.13 - side_vec * 0.18
+lock = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Serrure", M_GOLD, radius=0.075, depth=0.04, location=lock_loc, vertices=24)
 lock.rotation_euler = Euler((math.radians(90), 0, ang + math.pi / 2))
 parent(lock, door)
-keyhole_world = lock.location.copy() + Vector((math.cos(ang), math.sin(ang), 0)) * 0.03
+hole = obj_from(bpy.ops.mesh.primitive_cube_add, "TrouSerrure", M_DARK, size=1, location=lock_loc + DN * 0.022)
+hole.scale = (0.025, 0.01, 0.07); hole.rotation_euler = Euler((0, 0, ang + math.pi / 2)); parent(hole, door)
+keyhole_world = lock_loc + DN * 0.03
 
-# --- Insuline (le chien) : corps de primitives arrondies, pelage doré
-M_FUR = mat("Pelage", (0.85, 0.55, 0.2), rough=0.7, sss=0.15, bump=(60, 0.35))
-M_FUR2 = mat("Pelage2", (0.98, 0.88, 0.7), rough=0.7, bump=(60, 0.3))
-M_NOSE = mat("Truffe", (0.03, 0.02, 0.02), rough=0.15, coat=1)
-M_COLLAR = mat("Collier", (0.85, 0.05, 0.12), rough=0.35)
+# --- Insuline (le chien)
+M_FUR = mat("Pelage", (0.62, 0.32, 0.08), rough=0.75, sss=0.1, bump=(70, 0.4))
+M_FUR2 = mat("Pelage2", (0.9, 0.75, 0.55), rough=0.75, bump=(70, 0.3))
+M_NOSE = mat("Truffe", (0.02, 0.015, 0.015), rough=0.15, coat=1)
+M_COLLAR = mat("Collier", (0.8, 0.03, 0.1), rough=0.35)
 dog = bpy.data.objects.new("Chien", None); sc.collection.objects.link(dog)
-dog.location = (-3.2, -1.6, 0)
-torso = sphere("Torse", 0.38, (0, 0, 0.62), M_FUR); torso.scale = (1.35, 0.85, 0.85); parent(torso, dog)
-head = sphere("Tete", 0.32, (0.52, 0, 1.02), M_FUR); parent(head, dog)
-snout = sphere("Museau", 0.17, (0.8, 0, 0.94), M_FUR2); snout.scale = (1.2, 1, 0.8); parent(snout, head)
-nose = sphere("Truffe", 0.07, (0.98, 0, 0.99), M_NOSE); parent(nose, head)
-for s in (-1, 1):
-    ear = sphere("Oreille", 0.16, (0.42, s * 0.3, 1.12), mat("Oreille", (0.55, 0.32, 0.12), rough=0.7)); ear.scale = (0.6, 0.35, 1.25)
-    ear.rotation_euler = (s * 0.35, 0, 0); parent(ear, head)
-eyes_d, mouth_d = face(head, (0.78, 0, 1.15), (1, 0, 0), 0.075, 0.12, 0.07)
-collar = obj_from(bpy.ops.mesh.primitive_torus_add, "Collier", M_COLLAR, major_radius=0.25, minor_radius=0.045, location=(0.38, 0, 0.82))
+torso = sphere("Torse", 0.36, (0, 0, 0.62), M_FUR); torso.scale = (1.35, 0.85, 0.85); parent(torso, dog)
+head = sphere("Tete", 0.3, (0.5, 0, 1.0), M_FUR); parent(head, dog)
+snout = sphere("Museau", 0.16, (0.77, 0, 0.92), M_FUR2); snout.scale = (1.2, 1, 0.8); parent(snout, head)
+nose = sphere("Truffe", 0.065, (0.95, 0, 0.97), M_NOSE); parent(nose, head)
+for s_ in (-1, 1):
+    ear = sphere("Oreille", 0.15, (0.4, s_ * 0.28, 1.08), mat("Oreille", (0.35, 0.16, 0.05), rough=0.7)); ear.scale = (0.6, 0.35, 1.3)
+    ear.rotation_euler = (s_ * 0.35, 0, 0); parent(ear, head)
+eyes_d, mouth_d = face(head, (0.74, 0, 1.13), (1, 0, 0), 0.07, 0.11, 0.065)
+collar = obj_from(bpy.ops.mesh.primitive_torus_add, "Collier", M_COLLAR, major_radius=0.24, minor_radius=0.045, location=(0.36, 0, 0.8))
 collar.rotation_euler = (0, math.radians(65), 0); parent(collar, dog)
 legs = []
-for (lx, ly) in ((0.32, 0.2), (0.32, -0.2), (-0.32, 0.2), (-0.32, -0.2)):
+for (lx, ly) in ((0.3, 0.19), (0.3, -0.19), (-0.3, 0.19), (-0.3, -0.19)):
     piv = bpy.data.objects.new("Hanche", None); sc.collection.objects.link(piv)
     piv.location = (lx, ly, 0.5); parent(piv, dog)
-    leg = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Patte", M_FUR, radius=0.085, depth=0.48, location=(lx, ly, 0.27), vertices=20)
+    leg = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Patte", M_FUR, radius=0.08, depth=0.48, location=(lx, ly, 0.27), vertices=20)
     paw = sphere("Pied", 0.1, (lx + 0.04, ly, 0.05), M_FUR2); paw.scale = (1.3, 1, 0.6)
     parent(leg, piv); parent(paw, piv)
     legs.append(piv)
-tail = obj_from(bpy.ops.mesh.primitive_cone_add, "Queue", M_FUR, radius1=0.07, radius2=0.02, depth=0.45, location=(-0.6, 0, 0.88), vertices=16)
-tail.rotation_euler = (0, math.radians(-55), 0)
-tpiv = bpy.data.objects.new("QueuePiv", None); sc.collection.objects.link(tpiv); tpiv.location = (-0.48, 0, 0.75); parent(tpiv, dog)
-parent(tail, tpiv)
+tpiv = bpy.data.objects.new("QueuePiv", None); sc.collection.objects.link(tpiv); tpiv.location = (-0.46, 0, 0.75); parent(tpiv, dog)
+tail = obj_from(bpy.ops.mesh.primitive_cone_add, "Queue", M_FUR, radius1=0.07, radius2=0.02, depth=0.45, location=(-0.58, 0, 0.88), vertices=16)
+tail.rotation_euler = (0, math.radians(-55), 0); parent(tail, tpiv)
 
-# clé (portée par le chien dans la gueule, puis dans la serrure)
+# --- clé (grande, dorée)
 keyo = bpy.data.objects.new("Cle", None); sc.collection.objects.link(keyo)
-ring = obj_from(bpy.ops.mesh.primitive_torus_add, "Anneau", M_GOLD, major_radius=0.09, minor_radius=0.025, location=(0, 0, 0))
+ring = obj_from(bpy.ops.mesh.primitive_torus_add, "Anneau", M_GOLD, major_radius=0.1, minor_radius=0.03, location=(0, 0, 0))
 ring.rotation_euler = (math.radians(90), 0, 0); parent(ring, keyo)
-shaft = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Tige", M_GOLD, radius=0.022, depth=0.26, location=(0.22, 0, 0))
+shaft = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Tige", M_GOLD, radius=0.026, depth=0.3, location=(0.25, 0, 0))
 shaft.rotation_euler = (0, math.radians(90), 0); parent(shaft, keyo)
-bit = obj_from(bpy.ops.mesh.primitive_cube_add, "Panneton", M_GOLD, size=1, location=(0.32, 0, -0.05)); bit.scale = (0.05, 0.02, 0.08); parent(bit, keyo)
+bit = obj_from(bpy.ops.mesh.primitive_cube_add, "Panneton", M_GOLD, size=1, location=(0.36, 0, -0.06)); bit.scale = (0.06, 0.025, 0.1); parent(bit, keyo)
 
-# --- Sucrette (glucose) : cube de sucre arrondi, grains et brillance
-M_SUGAR = mat("Sucre", (0.97, 0.96, 0.98), rough=0.55, sss=0.35, sss_col=(1, 1, 1), bump=(140, 0.6))
-sug = obj_from(bpy.ops.mesh.primitive_cube_add, "Sucrette", M_SUGAR, size=0.62, location=(-2.2, 0.6, 0.31))
+# --- Sucrette (glucose)
+M_SUGAR = mat("Sucre", (0.92, 0.92, 0.95), rough=0.6, sss=0.25, sss_col=(1, 1, 1), bump=(160, 0.7))
+SUG0 = Vector((-1.9, -0.9, 0.31))
+sug = obj_from(bpy.ops.mesh.primitive_cube_add, "Sucrette", M_SUGAR, size=0.62, location=SUG0)
 bvs = sug.modifiers.new("bv", "BEVEL"); bvs.width = 0.1; bvs.segments = 5
-eyes_s, mouth_s = face(sug, (-2.2 + 0.0, 0.6 - 0.32, 0.4), (0, -1, 0), 0.07, 0.12, 0.06)
+eyes_s, mouth_s = face(sug, SUG0 + Vector((0, -0.32, 0.09)), (0, -1, 0), 0.07, 0.12, 0.06)
 
 # ---------------------------------------------------------------- animation
-# Chien : marche de x=-3.2 à x=-0.35 (devant la porte), de f1 à f84
-start, stop = Vector((-3.4, -1.7, 0)), Vector((-0.55, -0.75, 0))
-dog.rotation_euler = (0, 0, math.atan2((stop - start).y, (stop - start).x))
-key(dog, "location", 1, start); key(dog, "location", 84, stop)
-for f in range(1, 85, 6):  # pas : balancement des pattes + rebond
+stand = door_center - DN * 0.95; stand.z = 0
+start = Vector((-3.6, -2.9, 0))
+walk_dir = (stand - start).normalized()
+dog.location = start; dog.rotation_euler = (0, 0, math.atan2(walk_dir.y, walk_dir.x))
+key(dog, "location", 1); key(dog, "rotation_euler", 1)
+key(dog, "location", 84, stand); key(dog, "rotation_euler", 84)
+dog.rotation_euler = (0, 0, ang + math.pi); key(dog, "rotation_euler", 96)   # se tourne vers la porte
+for f in range(1, 85, 6):
     for i, piv in enumerate(legs):
         ph = 1 if i in (0, 3) else -1
         piv.rotation_euler = (0, ph * 0.45 * (1 if (f // 6) % 2 == 0 else -1), 0); piv.keyframe_insert("rotation_euler", frame=f)
-    dog.keyframe_insert("location", frame=f) if False else None
     torso.location = (0, 0, 0.62 + (0.03 if (f // 6) % 2 == 0 else 0)); torso.keyframe_insert("location", frame=f)
 for piv in legs:
-    piv.rotation_euler = (0, 0, 0); piv.keyframe_insert("rotation_euler", frame=90)
-for f in range(1, END, 5):  # queue qui remue
+    piv.rotation_euler = (0, 0, 0); piv.keyframe_insert("rotation_euler", frame=92)
+for f in range(1, END, 5):
     tpiv.rotation_euler = (0, 0, 0.5 * (1 if (f // 5) % 2 == 0 else -1)); tpiv.keyframe_insert("rotation_euler", frame=f)
-# tête qui se lève vers la serrure puis revient
-head.rotation_euler = (0, 0, 0); head.keyframe_insert("rotation_euler", frame=84)
-head.rotation_euler = (0, -0.25, 0.25); head.keyframe_insert("rotation_euler", frame=100)
-head.rotation_euler = (0, -0.25, 0.25); head.keyframe_insert("rotation_euler", frame=150)
-head.rotation_euler = (0, 0.1, 0.4); head.keyframe_insert("rotation_euler", frame=165)
+head.rotation_euler = (0, 0, 0); head.keyframe_insert("rotation_euler", frame=96)
+head.rotation_euler = (0, -0.2, 0); head.keyframe_insert("rotation_euler", frame=104)
+head.rotation_euler = (0, -0.2, 0); head.keyframe_insert("rotation_euler", frame=140)
+head.rotation_euler = (0, 0.15, 0.35); head.keyframe_insert("rotation_euler", frame=160)
 
-# Clé : suit la gueule du chien, puis va dans la serrure (f100-120), tourne (f120-136), reste
-dir_v = (stop - start).normalized()
-def mouth_pos(base):
-    return base + dir_v * 0.95 + Vector((0, 0, 0.88))
-key(keyo, "location", 1, mouth_pos(start)); key(keyo, "location", 84, mouth_pos(stop))
-keyo.rotation_euler = Euler((0, 0, dog.rotation_euler.z)); keyo.keyframe_insert("rotation_euler", frame=84)
-key(keyo, "location", 100, keyhole_world - Vector((math.cos(ang), math.sin(ang), 0)) * 0.42)
-keyo.rotation_euler = Euler((0, 0, ang + math.pi)); keyo.keyframe_insert("rotation_euler", frame=100)
-key(keyo, "location", 118, keyhole_world - Vector((math.cos(ang), math.sin(ang), 0)) * 0.26)
-keyo.rotation_euler = Euler((0, 0, ang + math.pi)); keyo.keyframe_insert("rotation_euler", frame=120)
-keyo.rotation_euler = Euler((math.radians(90), 0, ang + math.pi)); keyo.keyframe_insert("rotation_euler", frame=136)
-# la clé repart avec la porte
-key(keyo, "location", 136, keyhole_world - Vector((math.cos(ang), math.sin(ang), 0)) * 0.26)
-
-# Porte : s'ouvre f140-170 (rotation autour de la charnière)
-hinge.keyframe_insert("rotation_euler", frame=140)
-hinge.rotation_euler = Euler((0, 0, ang + math.pi / 2 - math.radians(105))); hinge.keyframe_insert("rotation_euler", frame=170)
-# la clé disparaît dans la porte qui s'ouvre (on la cache)
-keyo.hide_render = False; keyo.keyframe_insert("hide_render", frame=139)
+def mouth_world(base, yaw):
+    return base + Vector((math.cos(yaw), math.sin(yaw), 0)) * 0.98 + Vector((0, 0, 0.9))
+yaw_w = math.atan2(walk_dir.y, walk_dir.x)
+key(keyo, "location", 1, mouth_world(start, yaw_w)); keyo.rotation_euler = (0, 0, yaw_w); key(keyo, "rotation_euler", 1)
+key(keyo, "location", 84, mouth_world(stand, yaw_w)); key(keyo, "rotation_euler", 84)
+key(keyo, "location", 96, mouth_world(stand, ang + math.pi)); keyo.rotation_euler = (0, 0, ang + math.pi); key(keyo, "rotation_euler", 96)
+# la clé glisse dans la serrure (le bout entre dans le trou)
+key(keyo, "location", 116, keyhole_world - DN * 0.36 + Vector((0, 0, 0.0)))
+key(keyo, "rotation_euler", 116)
+keyo.rotation_euler = (math.radians(90), 0, ang + math.pi); key(keyo, "rotation_euler", 134)
+key(keyo, "location", 134, keyhole_world - DN * 0.36)
 for ch in keyo.children:
-    ch.hide_render = False; ch.keyframe_insert("hide_render", frame=139)
-    ch.hide_render = True; ch.keyframe_insert("hide_render", frame=140)
+    ch.hide_render = False; ch.keyframe_insert("hide_render", frame=141)
+    ch.hide_render = True; ch.keyframe_insert("hide_render", frame=142)
 
-# Sucrette : sautille vers la porte et entre (f150-210)
-spath = [(-2.2, 0.6), (-1.6, 0.2), (-1.0, -0.05), (-0.45, -0.2), (door_center.x - 0.1, door_center.y - 0.1)]
-fr = [1, 150, 170, 186, 206]
-for i, (x, y) in enumerate(spath):
-    sug.location = (x, y, 0.31); sug.keyframe_insert("location", frame=fr[i])
-for f in range(150, 206, 10):
+hinge.keyframe_insert("rotation_euler", frame=142)
+hinge.rotation_euler = Euler((0, 0, ang + math.pi / 2 + math.radians(110))); hinge.keyframe_insert("rotation_euler", frame=172)
+
+sp = [SUG0, Vector((-1.2, -1.3, 0.31)), Vector((-0.5, -1.15, 0.31)), Vector((door_center.x - DN.x * 0.6, door_center.y - DN.y * 0.6, 0.31)), Vector((door_center.x, door_center.y, 0.31))]
+fr = [150, 166, 182, 198, 210]
+for v, f in zip(sp, fr):
+    sug.location = v; sug.keyframe_insert("location", frame=f)
+for f in range(150, 200, 8):
     sug.location.z = 0.31; sug.keyframe_insert("location", frame=f, index=2)
-    sug.location.z = 0.65; sug.keyframe_insert("location", frame=f + 5, index=2)
-sug.scale = (1, 1, 1); sug.keyframe_insert("scale", frame=200)
+    sug.location.z = 0.7; sug.keyframe_insert("location", frame=f + 4, index=2)
+sug.scale = (1, 1, 1); sug.keyframe_insert("scale", frame=202)
 sug.scale = (0.05, 0.05, 0.05); sug.keyframe_insert("scale", frame=212)
 
-# Cellia : sourire qui s'élargit et léger « souffle »
 for f in range(1, END, 24):
     cell.scale = (1, 1, 1); cell.keyframe_insert("scale", frame=f)
-    cell.scale = (1.02, 1.02, 0.98); cell.keyframe_insert("scale", frame=f + 12)
-blink(eyes_c, [30, 110, 190]); blink(eyes_d, [20, 95, 175]); blink(eyes_s, [45, 160])
-talk(mouth_d, 86, 118)       # « Wouf ! Je toque à la porte… »
-talk(mouth_c, 172, 200)      # « Merci les chiens ! »
+    cell.scale = (1.015, 1.015, 0.985); cell.keyframe_insert("scale", frame=f + 12)
+blink(eyes_c, [30, 110, 190]); blink(eyes_d, [20, 100, 175]); blink(eyes_s, [45, 165])
+talk(mouth_d, 98, 116); talk(mouth_c, 176, 204)
 for o in (dog, keyo, hinge, sug, head):
     smooth_fcurves(o)
 
 # ---------------------------------------------------------------- caméra
 cam = bpy.data.objects.new("Cam", bpy.data.cameras.new("Cam")); sc.collection.objects.link(cam); sc.camera = cam
-cam.data.lens = 30
+cam.data.lens = 28
 cam.data.dof.use_dof = True
-cam.data.dof.aperture_fstop = 2.8
+cam.data.dof.aperture_fstop = 4.0
 focus = bpy.data.objects.new("Focus", None); sc.collection.objects.link(focus)
 cam.data.dof.focus_object = focus
 def campose(f, loc, look, foc):
@@ -389,11 +392,13 @@ def campose(f, loc, look, foc):
     cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     cam.keyframe_insert("location", frame=f); cam.keyframe_insert("rotation_euler", frame=f)
     focus.location = foc; focus.keyframe_insert("location", frame=f)
-campose(1, (-4.6, -7.2, 2.3), (-1.8, -0.6, 1.0), (-3.0, -1.6, 0.8))
-campose(84, (-2.6, -5.6, 1.8), (-0.4, 0.0, 1.0), (-0.5, -0.7, 0.9))
-campose(120, (-1.5, -3.3, 1.35), (0.25, 0.1, 1.0), door_center)
-campose(170, (-1.9, -4.2, 1.6), (0.4, 0.2, 1.0), door_center)
-campose(END, (-2.8, -5.8, 2.0), (0.5, 0.4, 1.1), (0.4, 0.3, 1.0))
+mid = (start + stand) / 2
+campose(1, (-1.2, -8.2, 2.1), (-0.6, -0.4, 1.1), (start.x, start.y, 0.8))
+campose(84, (-0.6, -6.6, 1.7), (0.1, 0.0, 1.0), (stand.x, stand.y, 0.9))
+campose(110, (-0.3, -3.6, 1.05), (door_center.x, door_center.y, 0.85), door_center)
+campose(140, (-0.3, -3.4, 1.0), (door_center.x, door_center.y, 0.85), door_center)
+campose(176, (-0.6, -5.2, 1.4), (0.4, 0.4, 1.0), door_center)
+campose(END, (-1.0, -6.2, 1.7), (0.5, 0.6, 1.1), (0.6, 0.6, 1.1))
 smooth_fcurves(cam); smooth_fcurves(focus)
 
 # ---------------------------------------------------------------- rendu
