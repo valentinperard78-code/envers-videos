@@ -1,1 +1,1 @@
-{"range": [1, 216], "res": [540, 960], "samples": 24, "run": 9}
+{"script": "blender/body.py", "frames": [40, 200, 410], "res": [720, 1280], "samples": 48, "run": 10}

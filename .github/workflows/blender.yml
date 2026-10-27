@@ -37,7 +37,7 @@ jobs:
             export RES_Y=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][1])")
             export SAMPLES=$(python3 -c "import json;print(json.load(open('blender/job.json'))['samples'])")
             mkdir -p frames
-            ./blender-dist/blender -b -noaudio -t 0 -P blender/scene.py -- frames $FR > frames/log_${{ matrix.chunk }}.txt 2>&1 || true
+            ./blender-dist/blender -b -noaudio -t 0 -P $(python3 -c "import json;print(json.load(open('blender/job.json')).get('script','blender/scene.py'))") -- frames $FR > frames/log_${{ matrix.chunk }}.txt 2>&1 || true
             grep -v "^Fra:" frames/log_${{ matrix.chunk }}.txt | tail -40
           fi
           mkdir -p frames
