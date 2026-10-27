@@ -1,0 +1,128 @@
+[
+ {
+  "id": "01",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Bienvenue dans la Villa des Pathologies ! Ce soir, un épisode explosif : le diabète de type 2."
+ },
+ {
+  "id": "02",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Voici Pancho, le pancréas. Son super-pouvoir ? Il élève des chiens très spéciaux : les Insulines."
+ },
+ {
+  "id": "03",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+0%",
+  "pitch": "-6Hz",
+  "text": "Dès que Sucrette entre dans la villa après un repas, je lâche mes chiens !"
+ },
+ {
+  "id": "04",
+  "voice": "fr-FR-VivienneMultilingualNeural",
+  "rate": "+8%",
+  "pitch": "+12Hz",
+  "text": "Coucou, moi c'est Sucrette, le glucose ! Je suis l'énergie de la villa. Mais il faut qu'on m'ouvre la porte !"
+ },
+ {
+  "id": "05",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Car Sucrette doit entrer chez Cellia, la cellule. Et ce sont les chiens Insuline qui ont la clé."
+ },
+ {
+  "id": "06",
+  "voice": "fr-FR-EloiseNeural",
+  "rate": "+10%",
+  "pitch": "+8Hz",
+  "text": "Wouf ! Je toque à la porte, Cellia ouvre, et Sucrette peut entrer !"
+ },
+ {
+  "id": "07",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+2%",
+  "pitch": "+0Hz",
+  "text": "Merci les chiens ! Grâce à Sucrette, j'ai toute l'énergie qu'il me faut."
+ },
+ {
+  "id": "08",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Mais un jour… c'est le drame dans la villa."
+ },
+ {
+  "id": "09",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+2%",
+  "pitch": "+0Hz",
+  "text": "Ces chiens, je ne veux plus les voir. Je n'ouvre plus ma porte !"
+ },
+ {
+  "id": "10",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Cellia résiste à l'insuline. C'est ce qu'on appelle l'insulinorésistance."
+ },
+ {
+  "id": "11",
+  "voice": "fr-FR-VivienneMultilingualNeural",
+  "rate": "+8%",
+  "pitch": "+12Hz",
+  "text": "Et moi, je reste bloquée dehors, dans le sang ! Et on est de plus en plus nombreuses !"
+ },
+ {
+  "id": "12",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le sucre s'accumule dans le sang. C'est l'hyperglycémie."
+ },
+ {
+  "id": "13",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+0%",
+  "pitch": "-6Hz",
+  "text": "Alors je lâche encore plus de chiens… Mais je n'en peux plus, je suis épuisé !"
+ },
+ {
+  "id": "14",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Avec le temps, le pancréas peut s'épuiser, et l'insuline vient à manquer."
+ },
+ {
+  "id": "15",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le pire ? Pendant des années, on ne sent souvent rien. Pourtant, le sucre en trop abîme les yeux, les reins, le cœur et les nerfs des pieds."
+ },
+ {
+  "id": "16",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le diagnostic : une glycémie à jeun d'au moins 1,26 gramme par litre, à 2 reprises."
+ },
+ {
+  "id": "17",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le type 2, c'est près de 9 diabètes sur 10. Surpoids, manque d'activité physique et hérédité augmentent le risque."
+ },
+ {
+  "id": "18",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Prochain épisode : le diabète de type 1, quand les chiens disparaissent. Abonne-toi pour ne pas le rater !"
+ }
+]
