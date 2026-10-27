@@ -1,0 +1,68 @@
+name: blender
+on:
+  push:
+    branches: [blender]
+    paths: ["blender/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: blender
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: blender-dist
+          key: blender-4.2.3
+      - name: Blender
+        run: |
+          if [ ! -x blender-dist/blender ]; then
+            mkdir -p blender-dist
+            curl -sL https://download.blender.org/release/Blender4.2/blender-4.2.3-linux-x64.tar.xz | tar -xJ -C blender-dist --strip-components=1
+          fi
+          sudo apt-get install -y -q libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libxkbcommon0 libsm6 >/dev/null || true
+      - name: Rendu
+        run: |
+          FR=$(python3 -c "import json;j=json.load(open('blender/job.json'));fs=j['frames'] if isinstance(j['frames'],list) else list(range(j['frames'][0],j['frames'][1]+1));n=${{ matrix.chunk }};print(' '.join(str(f) for f in fs[n::12]))")
+          echo "images: $FR"
+          if [ -n "$FR" ]; then
+            export RES_X=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][0])")
+            export RES_Y=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][1])")
+            export SAMPLES=$(python3 -c "import json;print(json.load(open('blender/job.json'))['samples'])")
+            ./blender-dist/blender -b -noaudio -t 0 -P blender/scene.py -- frames $FR 2>&1 | grep -v "^Fra:" | tail -40
+          fi
+          mkdir -p frames
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.chunk }}
+          path: frames
+          if-no-files-found: ignore
+  assemble:
+    needs: render
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: parts
+      - run: |
+          sudo apt-get install -y -q ffmpeg >/dev/null || true
+          mkdir -p out && find parts -name '*.png' -exec cp {} out/ \;
+          ls out | head -50; ls out | wc -l
+          N=$(ls out/*.png 2>/dev/null | wc -l)
+          if [ "$N" -gt 30 ]; then
+            ffmpeg -v error -y -framerate 24 -pattern_type glob -i 'out/f*.png' -c:v libx264 -pix_fmt yuv420p -crf 18 out/anim.mp4
+            mkdir -p keep && cp out/anim.mp4 keep/ && for f in 0001 0060 0110 0130 0160 0200; do [ -f out/f$f.png ] && cp out/f$f.png keep/; done
+          else
+            mkdir -p keep && cp out/*.png keep/ 2>/dev/null || true
+          fi
+          git config user.name "envers-bot"; git config user.email "bot@users.noreply.github.com"
+          git checkout --orphan blender-out && git rm -rf --cached . -q && git add keep && git commit -qm "Rendu Blender" && git push -f origin HEAD:blender-out
