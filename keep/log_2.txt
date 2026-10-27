@@ -1,0 +1,7 @@
+Blender 4.2.3 LTS (hash 0e22e4fcea03 built 2024-10-14 23:31:34)
+Saved: 'frames/f0410.png'
+Time: 02:16.67 (Saving: 00:00.19)
+
+rendu 410
+
+Blender quit
