@@ -270,7 +270,7 @@ def on_sphere(dx, dz, push=1.0):
     d = Vector((dx, -1.0, dz)).normalized()
     return CC + d * R * push, d
 eye_pos, eye_n = on_sphere(0.28, 0.42, 0.93)
-eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.15, mouth_push=0.12)
+eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.24, mouth_push=0.16)
 # porte en bas à gauche, tournée vers la caméra
 door_pos, door_n = on_sphere(-0.48, -0.42, 1.0)
 DN = Vector((door_n.x, door_n.y, 0)).normalized()          # normale horizontale
@@ -417,9 +417,13 @@ def campose(f, loc, look, foc):
 mid = (start + stand) / 2
 campose(1, (-1.2, -8.2, 2.1), (-0.6, -0.4, 1.1), (start.x, start.y, 0.8))
 campose(84, (-0.6, -6.6, 1.7), (0.1, 0.0, 1.0), (stand.x, stand.y, 0.9))
-campose(110, (-0.3, -3.6, 1.05), (door_center.x, door_center.y, 0.85), door_center)
-campose(140, (-0.3, -3.4, 1.0), (door_center.x, door_center.y, 0.85), door_center)
-campose(176, (-0.6, -5.2, 1.4), (0.4, 0.4, 1.0), door_center)
+side_cam = door_center + DN * 2.4 - side_vec * 2.0
+side_cam.z = 1.25
+side_cam2 = door_center + DN * 2.9 - side_vec * 2.4
+side_cam2.z = 1.4
+campose(110, tuple(side_cam), (door_center.x, door_center.y, 0.85), door_center)
+campose(140, tuple(side_cam), (door_center.x, door_center.y, 0.85), door_center)
+campose(176, tuple(side_cam2), (door_center.x, door_center.y, 0.9), door_center)
 campose(END, (-1.0, -6.2, 1.7), (0.5, 0.6, 1.1), (0.6, 0.6, 1.1))
 smooth_fcurves(cam); smooth_fcurves(focus)
 
