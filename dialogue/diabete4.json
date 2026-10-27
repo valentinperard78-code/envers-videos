@@ -1,0 +1,142 @@
+[
+ {
+  "id": "01",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Ce soir, dans la Villa des Pathologies : une histoire d'amour entre le sucre et tes cellules… et elle va très mal finir."
+ },
+ {
+  "id": "02",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Tout commence après le dîner. Une nouvelle candidate entre dans la villa, par le sang."
+ },
+ {
+  "id": "03",
+  "voice": "fr-FR-VivienneMultilingualNeural",
+  "rate": "+8%",
+  "pitch": "+12Hz",
+  "text": "Coucou, moi c'est Sucrette, le glucose ! Je suis l'énergie de la villa. Mon rêve : entrer dans les chambres des cellules."
+ },
+ {
+  "id": "04",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Seul problème : les chambres sont fermées à clé."
+ },
+ {
+  "id": "05",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+2%",
+  "pitch": "+0Hz",
+  "text": "Moi, c'est Cellia, une cellule. J'ai besoin de Sucrette pour avoir de l'énergie. Mais sans la bonne clé, ma porte reste fermée."
+ },
+ {
+  "id": "06",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Heureusement, la villa a son gardien : Pancho, le pancréas."
+ },
+ {
+  "id": "07",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+0%",
+  "pitch": "-6Hz",
+  "text": "Dès que le sucre monte dans le sang, je lâche mes chiens. Leur nom : Insuline. Et ils ont tous la clé !"
+ },
+ {
+  "id": "08",
+  "voice": "fr-FR-EloiseNeural",
+  "rate": "+10%",
+  "pitch": "+8Hz",
+  "text": "Wouf ! La clé dans la serrure, la porte s'ouvre, et Sucrette entre !"
+ },
+ {
+  "id": "09",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le sucre quitte le sang, et la glycémie redescend. Dans un corps en bonne santé, c'est le couple parfait."
+ },
+ {
+  "id": "10",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Mais quelques années plus tard… tout bascule."
+ },
+ {
+  "id": "11",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Surpoids, manque d'activité, hérédité : avec le temps, les serrures des cellules se grippent."
+ },
+ {
+  "id": "12",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+2%",
+  "pitch": "+0Hz",
+  "text": "La clé ne tourne plus ! Je n'arrive plus à ouvrir !"
+ },
+ {
+  "id": "13",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "C'est la résistance à l'insuline. Sucrette reste coincée dans le sang, le sucre s'accumule : c'est l'hyperglycémie."
+ },
+ {
+  "id": "14",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+0%",
+  "pitch": "-6Hz",
+  "text": "Alors je lâche encore plus de chiens… Je travaille jour et nuit. Mais à force, je m'épuise."
+ },
+ {
+  "id": "15",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Et le pire ? Personne ne remarque rien. Le diabète de type 2 ne fait pas mal, parfois pendant des années."
+ },
+ {
+  "id": "16",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Pendant ce temps, le sucre en trop abîme les vaisseaux de la villa : les yeux, les reins, le cœur, et les nerfs des pieds."
+ },
+ {
+  "id": "17",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le verdict tombe avec une prise de sang à jeun : à partir de 1,26 gramme par litre, sur deux contrôles, c'est le diabète."
+ },
+ {
+  "id": "18",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Mais la villa peut se battre : bouger aide les serrures à mieux s'ouvrir, manger équilibré soulage Pancho, et un traitement peut aider."
+ },
+ {
+  "id": "19",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "À retenir : l'insuline, c'est la clé. Dans le type 2, les serrures résistent, et le sucre reste dans le sang."
+ },
+ {
+  "id": "20",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Abonne-toi pour ne rater aucun épisode de la Villa !"
+ }
+]
