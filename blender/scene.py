@@ -270,7 +270,7 @@ def on_sphere(dx, dz, push=1.0):
     d = Vector((dx, -1.0, dz)).normalized()
     return CC + d * R * push, d
 eye_pos, eye_n = on_sphere(0.28, 0.42, 0.93)
-eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.24, mouth_push=0.16)
+eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.16, mouth_push=0.02)
 # porte en bas à gauche, tournée vers la caméra
 door_pos, door_n = on_sphere(-0.48, -0.42, 1.0)
 DN = Vector((door_n.x, door_n.y, 0)).normalized()          # normale horizontale
@@ -338,10 +338,11 @@ bit = obj_from(bpy.ops.mesh.primitive_cube_add, "Panneton", M_GOLD, size=1, loca
 
 # --- Sucrette (glucose)
 M_SUGAR = mat("Sucre", (0.92, 0.92, 0.95), rough=0.6, sss=0.25, sss_col=(1, 1, 1), bump=(160, 0.7))
-SUG0 = Vector((-1.9, -0.9, 0.31))
+SUG0 = Vector((2.6, -1.3, 0.31))
 sug = obj_from(bpy.ops.mesh.primitive_cube_add, "Sucrette", M_SUGAR, size=0.62, location=SUG0)
 bvs = sug.modifiers.new("bv", "BEVEL"); bvs.width = 0.1; bvs.segments = 5
 eyes_s, mouth_s = face(sug, SUG0 + Vector((0, -0.32, 0.09)), (0, -1, 0), 0.07, 0.12, 0.06)
+sug.rotation_euler = (0, 0, math.radians(-25))
 
 # ---------------------------------------------------------------- animation
 stand = door_center + DN * 1.05; stand.z = 0
@@ -383,7 +384,8 @@ for ch in keyo.children:
 hinge.keyframe_insert("rotation_euler", frame=142)
 hinge.rotation_euler = Euler((0, 0, ang + math.pi / 2 + math.radians(110))); hinge.keyframe_insert("rotation_euler", frame=172)
 
-sp = [SUG0, Vector((-1.2, -1.3, 0.31)), Vector((-0.5, -1.15, 0.31)), Vector((door_center.x + DN.x * 0.7, door_center.y + DN.y * 0.7, 0.31)), Vector((door_center.x, door_center.y, 0.31))]
+sp = [SUG0, door_center + side_vec * 1.9 + DN * 1.4, door_center + side_vec * 1.2 + DN * 1.1, door_center + side_vec * 0.45 + DN * 0.75, door_center + DN * 0.05]
+for v in sp: v.z = 0.31
 fr = [150, 166, 182, 198, 210]
 for v, f in zip(sp, fr):
     sug.location = v; sug.keyframe_insert("location", frame=f)
