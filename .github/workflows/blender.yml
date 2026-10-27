@@ -30,7 +30,7 @@ jobs:
           sudo apt-get install -y -q libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libxkbcommon0 libsm6 >/dev/null || true
       - name: Rendu
         run: |
-          FR=$(python3 -c "import json;j=json.load(open('blender/job.json'));fs=j['frames'] if isinstance(j['frames'],list) else list(range(j['frames'][0],j['frames'][1]+1));n=${{ matrix.chunk }};print(' '.join(str(f) for f in fs[n::12]))")
+          FR=$(python3 -c "import json;j=json.load(open('blender/job.json'));fs=j['frames'] if 'frames' in j else list(range(j['range'][0],j['range'][1]+1));n=${{ matrix.chunk }};print(' '.join(str(f) for f in fs[n::12]))")
           echo "images: $FR"
           if [ -n "$FR" ]; then
             export RES_X=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][0])")
