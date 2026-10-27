@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -30,7 +30,7 @@ jobs:
           sudo apt-get install -y -q libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libxkbcommon0 libsm6 >/dev/null || true
       - name: Rendu
         run: |
-          FR=$(python3 -c "import json;j=json.load(open('blender/job.json'));fs=j['frames'] if 'frames' in j else list(range(j['range'][0],j['range'][1]+1));n=${{ matrix.chunk }};print(' '.join(str(f) for f in fs[n::12]))")
+          FR=$(python3 -c "import json;j=json.load(open('blender/job.json'));fs=j['frames'] if 'frames' in j else list(range(j['range'][0],j['range'][1]+1));n=${{ matrix.chunk }};print(' '.join(str(f) for f in fs[n::20]))")
           echo "images: $FR"
           if [ -n "$FR" ]; then
             export RES_X=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][0])")
