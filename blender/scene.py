@@ -5,11 +5,13 @@ glisse la clé dans la serrure, la tourne, la porte s'ouvre et Sucrette (glucose
 import bpy, bmesh, math, sys, os, random
 from mathutils import Vector, Euler
 
-argv = sys.argv[sys.argv.index("--") + 1:]
-OUT = argv[0]
+argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+# Sans argument (PC de Valentin) : vidéo complète en pleine qualité, sur la carte graphique.
+OUT = argv[0] if argv else os.path.join(os.path.dirname(os.path.abspath(__file__)), "rendu")
+ANIM = len(argv) <= 1
 FRAMES = [int(x) for x in argv[1:]] or [1]
-RES = (int(os.environ.get("RES_X", 720)), int(os.environ.get("RES_Y", 1280)))
-SAMPLES = int(os.environ.get("SAMPLES", 48))
+RES = (int(os.environ.get("RES_X", 1080 if ANIM else 720)), int(os.environ.get("RES_Y", 1920 if ANIM else 1280)))
+SAMPLES = int(os.environ.get("SAMPLES", 96 if ANIM else 48))
 FPS = 24
 END = 216            # 9 s
 
@@ -18,6 +20,26 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
 sc.render.engine = "CYCLES"
 sc.cycles.device = "CPU"
+def use_gpu():
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+        for kind in ("OPTIX", "CUDA", "HIP", "METAL", "ONEAPI"):
+            try:
+                prefs.compute_device_type = kind
+                prefs.get_devices()
+                gpus = [d for d in prefs.devices if d.type == kind]
+                if gpus:
+                    for d in prefs.devices:
+                        d.use = d.type == kind
+                    sc.cycles.device = "GPU"
+                    print("Rendu sur la carte graphique :", kind, [d.name for d in gpus])
+                    return
+            except Exception:
+                pass
+    except Exception as e:
+        print("GPU indisponible :", e)
+    print("Rendu sur le processeur (CPU)")
+use_gpu()
 sc.cycles.samples = SAMPLES
 sc.cycles.use_denoising = True
 try:
@@ -403,6 +425,16 @@ smooth_fcurves(cam); smooth_fcurves(focus)
 
 # ---------------------------------------------------------------- rendu
 os.makedirs(OUT, exist_ok=True)
+if ANIM:
+    sc.render.image_settings.file_format = "FFMPEG"
+    sc.render.ffmpeg.format = "MPEG4"
+    sc.render.ffmpeg.codec = "H264"
+    sc.render.ffmpeg.constant_rate_factor = "HIGH"
+    sc.render.filepath = os.path.join(OUT, "villa_prototype_")
+    print("Rendu de", END, "images en", RES, "->", OUT)
+    bpy.ops.render.render(animation=True)
+    print("TERMINÉ : la vidéo est dans", OUT)
+    sys.exit(0)
 for f in FRAMES:
     sc.frame_set(f)
     sc.render.filepath = os.path.join(OUT, f"f{f:04d}.png")
