@@ -1,0 +1,21 @@
+name: dialogue
+on:
+  push:
+    branches: [dialogue]
+    paths: ["dialogue/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: dialogue
+jobs:
+  voix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get install -y -q ffmpeg >/dev/null || true
+      - run: pip install -q edge-tts
+      - run: python tools/dialogue.py
+      - run: |
+          git config user.name "envers-bot"; git config user.email "bot@users.noreply.github.com"
+          git add out && git commit -qm "Voix générées" && git push origin HEAD:dialogue
