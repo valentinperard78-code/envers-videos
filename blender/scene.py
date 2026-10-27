@@ -216,7 +216,7 @@ palm(8.0, 7.5, 7.5, -0.15)
 palm(-9.5, 9.0, 5.5, 0.05)
 
 # ---------------------------------------------------------------- personnages
-def face(par, center, fwd, r_eye, spacing, mouth_w, mood="happy", eye_up=0.0):
+def face(par, center, fwd, r_eye, spacing, mouth_w, mood="happy", eye_up=0.0, mouth_push=0.0):
     """Ajoute deux yeux et une bouche sur un personnage (fwd = direction du visage)."""
     M_EYE = mat("Oeil", (0.95, 0.95, 0.95), rough=0.15, coat=1.0)
     M_PUP = mat("Pupille", (0.01, 0.01, 0.015), rough=0.1, coat=1.0)
@@ -234,7 +234,7 @@ def face(par, center, fwd, r_eye, spacing, mouth_w, mood="happy", eye_up=0.0):
         parent(e, par)
         eyes.append(e)
     m = obj_from(bpy.ops.mesh.primitive_torus_add, "Bouche", M_MOUTH, major_radius=mouth_w, minor_radius=mouth_w * 0.22,
-                 location=Vector(center) - Vector((0, 0, r_eye * 2.2)) + fwd * r_eye * 0.1, major_segments=32, minor_segments=12)
+                 location=Vector(center) - Vector((0, 0, r_eye * 2.2)) + fwd * (r_eye * 0.1 + mouth_push), major_segments=32, minor_segments=12)
     m.rotation_euler = Euler((math.radians(90), 0, math.atan2(fwd.y, fwd.x) - math.pi / 2))
     m.scale = (1, 0.55 if mood != "angry" else 0.3, 1)
     parent(m, par)
@@ -259,7 +259,7 @@ def talk(mouth, f0, f1, base=0.55):
 
 # --- Cellia (la cellule) : grosse sphère violette, face à la caméra (axe -Y)
 CC = Vector((1.3, 1.2, 1.4)); R = 1.4
-M_CELL = mat("Cellule", (0.36, 0.12, 0.7), rough=0.3, sss=0.25, sss_col=(0.6, 0.3, 1.0), coat=0.7, bump=(4, 0.1))
+M_CELL = mat("Cellule", (0.16, 0.03, 0.55), rough=0.3, coat=0.7, bump=(4, 0.1))
 cell = sphere("Cellia", R, CC, M_CELL, seg=64)
 dis = cell.modifiers.new("d", "DISPLACE")
 dis.texture = bpy.data.textures.new("tc", "CLOUDS"); dis.texture.noise_scale = 0.9; dis.strength = 0.08
@@ -270,7 +270,7 @@ def on_sphere(dx, dz, push=1.0):
     d = Vector((dx, -1.0, dz)).normalized()
     return CC + d * R * push, d
 eye_pos, eye_n = on_sphere(0.28, 0.42, 0.93)
-eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.15)
+eyes_c, mouth_c = face(cell, eye_pos, Vector((eye_n.x, eye_n.y, 0)), 0.2, 0.3, 0.15, mouth_push=0.12)
 # porte en bas à gauche, tournée vers la caméra
 door_pos, door_n = on_sphere(-0.48, -0.42, 1.0)
 DN = Vector((door_n.x, door_n.y, 0)).normalized()          # normale horizontale
@@ -344,7 +344,7 @@ bvs = sug.modifiers.new("bv", "BEVEL"); bvs.width = 0.1; bvs.segments = 5
 eyes_s, mouth_s = face(sug, SUG0 + Vector((0, -0.32, 0.09)), (0, -1, 0), 0.07, 0.12, 0.06)
 
 # ---------------------------------------------------------------- animation
-stand = door_center - DN * 0.95; stand.z = 0
+stand = door_center + DN * 1.05; stand.z = 0
 start = Vector((-3.6, -2.9, 0))
 walk_dir = (stand - start).normalized()
 dog.location = start; dog.rotation_euler = (0, 0, math.atan2(walk_dir.y, walk_dir.x))
@@ -372,10 +372,10 @@ key(keyo, "location", 1, mouth_world(start, yaw_w)); keyo.rotation_euler = (0, 0
 key(keyo, "location", 84, mouth_world(stand, yaw_w)); key(keyo, "rotation_euler", 84)
 key(keyo, "location", 96, mouth_world(stand, ang + math.pi)); keyo.rotation_euler = (0, 0, ang + math.pi); key(keyo, "rotation_euler", 96)
 # la clé glisse dans la serrure (le bout entre dans le trou)
-key(keyo, "location", 116, keyhole_world - DN * 0.36 + Vector((0, 0, 0.0)))
+key(keyo, "location", 116, keyhole_world + DN * 0.36)
 key(keyo, "rotation_euler", 116)
 keyo.rotation_euler = (math.radians(90), 0, ang + math.pi); key(keyo, "rotation_euler", 134)
-key(keyo, "location", 134, keyhole_world - DN * 0.36)
+key(keyo, "location", 134, keyhole_world + DN * 0.36)
 for ch in keyo.children:
     ch.hide_render = False; ch.keyframe_insert("hide_render", frame=141)
     ch.hide_render = True; ch.keyframe_insert("hide_render", frame=142)
@@ -383,7 +383,7 @@ for ch in keyo.children:
 hinge.keyframe_insert("rotation_euler", frame=142)
 hinge.rotation_euler = Euler((0, 0, ang + math.pi / 2 + math.radians(110))); hinge.keyframe_insert("rotation_euler", frame=172)
 
-sp = [SUG0, Vector((-1.2, -1.3, 0.31)), Vector((-0.5, -1.15, 0.31)), Vector((door_center.x - DN.x * 0.6, door_center.y - DN.y * 0.6, 0.31)), Vector((door_center.x, door_center.y, 0.31))]
+sp = [SUG0, Vector((-1.2, -1.3, 0.31)), Vector((-0.5, -1.15, 0.31)), Vector((door_center.x + DN.x * 0.7, door_center.y + DN.y * 0.7, 0.31)), Vector((door_center.x, door_center.y, 0.31))]
 fr = [150, 166, 182, 198, 210]
 for v, f in zip(sp, fr):
     sug.location = v; sug.keyframe_insert("location", frame=f)
