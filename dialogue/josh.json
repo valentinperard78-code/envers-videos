@@ -1,0 +1,23 @@
+[
+ {
+  "id": "I1",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Voici Josh. Ce soir, il vient de se régaler d'un grand plat de pâtes."
+ },
+ {
+  "id": "I2",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Mais ce que Josh ne sait pas encore… c'est qu'il a développé un diabète de type 2."
+ },
+ {
+  "id": "I3",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Pour comprendre ce qui se passe, on entre dans son corps."
+ }
+]
