@@ -36,7 +36,9 @@ jobs:
             export RES_X=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][0])")
             export RES_Y=$(python3 -c "import json;print(json.load(open('blender/job.json'))['res'][1])")
             export SAMPLES=$(python3 -c "import json;print(json.load(open('blender/job.json'))['samples'])")
-            ./blender-dist/blender -b -noaudio -t 0 -P blender/scene.py -- frames $FR 2>&1 | grep -v "^Fra:" | tail -40
+            mkdir -p frames
+            ./blender-dist/blender -b -noaudio -t 0 -P blender/scene.py -- frames $FR > frames/log_${{ matrix.chunk }}.txt 2>&1 || true
+            grep -v "^Fra:" frames/log_${{ matrix.chunk }}.txt | tail -40
           fi
           mkdir -p frames
       - uses: actions/upload-artifact@v4
@@ -55,7 +57,7 @@ jobs:
           path: parts
       - run: |
           sudo apt-get install -y -q ffmpeg >/dev/null || true
-          mkdir -p out && find parts -name '*.png' -exec cp {} out/ \;
+          mkdir -p out && find parts -name '*.png' -exec cp {} out/ \; ; true
           ls out | head -50; ls out | wc -l
           N=$(ls out/*.png 2>/dev/null | wc -l)
           if [ "$N" -gt 30 ]; then
@@ -64,5 +66,6 @@ jobs:
           else
             mkdir -p keep && cp out/*.png keep/ 2>/dev/null || true
           fi
+          mkdir -p keep && for f in parts/*/log_*.txt; do grep -v "^Fra:" "$f" | tail -60 > keep/$(basename $f); done
           git config user.name "envers-bot"; git config user.email "bot@users.noreply.github.com"
           git checkout --orphan blender-out && git rm -rf --cached . -q && git add keep && git commit -qm "Rendu Blender" && git push -f origin HEAD:blender-out
