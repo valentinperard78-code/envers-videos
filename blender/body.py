@@ -344,9 +344,7 @@ mp = N.new("CompositorNodeMath"); mp.operation = "MULTIPLY"; mp.inputs[1].defaul
 Lk.new(rl.outputs["Mist"], mp.inputs[0]); Lk.new(mp.outputs[0], fog.inputs[0]); Lk.new(rl.outputs["Image"], fog.inputs[1])
 gl = N.new("CompositorNodeGlare"); gl.glare_type = "FOG_GLOW"; gl.quality = "MEDIUM"; gl.threshold = .8; gl.size = 8
 Lk.new(fog.outputs[0], gl.inputs[0])
-lens = N.new("CompositorNodeLensdist"); lens.inputs["Dispersion"].default_value = .012; lens.inputs["Distort"].default_value = -.02
-Lk.new(gl.outputs[0], lens.inputs[0])
-comp = N.new("CompositorNodeComposite"); Lk.new(lens.outputs[0], comp.inputs[0])
+comp = N.new("CompositorNodeComposite"); Lk.new(gl.outputs[0], comp.inputs[0])
 
 def set_cam(f):
     sc.camera = camA if f < 151 else (camB if f < 301 else camC)
