@@ -243,7 +243,7 @@ subsurf(cell, 1)
 nuc = sphere("Noyau", 0.45, (2.05, 1.1, 1.95), mat("Noyau", (0.35, 0.12, 0.6), rough=0.4, sss=0.5), seg=32)
 parent(nuc, cell)
 CELL_FWD = Vector((-0.75, -0.66, 0))
-eyes_c, mouth_c = face(cell, (1.6, 0.8, 1.35) + CELL_FWD * 1.22 + Vector((0, 0, 0.45)), CELL_FWD, 0.2, 0.32, 0.16)
+eyes_c, mouth_c = face(cell, Vector((1.6, 0.8, 1.35)) + CELL_FWD * 1.22 + Vector((0, 0, 0.45)), CELL_FWD, 0.2, 0.32, 0.16)
 # porte de la cellule (sur le flanc gauche, face caméra)
 door_center = Vector((1.6, 0.8, 1.0)) + Vector((-1.0, -0.45, 0)).normalized() * 1.28
 frame_o = obj_from(bpy.ops.mesh.primitive_cylinder_add, "Encadrement", mat("Encadr", (0.22, 0.08, 0.2), rough=0.6), radius=0.42, depth=0.12, location=door_center, vertices=40)
