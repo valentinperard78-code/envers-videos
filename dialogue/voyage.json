@@ -1,0 +1,51 @@
+[
+ {
+  "id": "J1",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Ce soir, dans la Villa des Pathologies, on entre dans le corps de Marc pour comprendre le diabète de type 2."
+ },
+ {
+  "id": "J2",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Marc vient de manger des pâtes. Dans son intestin, elles sont découpées en minuscules morceaux de sucre : le glucose."
+ },
+ {
+  "id": "J3",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le glucose traverse la paroi de l'intestin et passe dans le sang. La glycémie monte."
+ },
+ {
+  "id": "J4",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le pancréas le détecte aussitôt, et libère une hormone : l'insuline."
+ },
+ {
+  "id": "J5",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "L'insuline voyage dans le sang jusqu'aux cellules. Elle se fixe sur leur serrure, la porte s'ouvre, et le glucose entre pour leur donner de l'énergie."
+ },
+ {
+  "id": "J6",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Mais chez Marc, avec les années, les serrures se sont grippées. L'insuline se fixe… et la porte reste fermée. C'est la résistance à l'insuline."
+ },
+ {
+  "id": "J7",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Pour comprendre ce drame, direction la Villa, où les habitants du corps de Marc le vivent en direct !"
+ }
+]
