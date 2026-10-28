@@ -46,6 +46,8 @@ for path in sorted(glob.glob("dialogue/*.json")):
     ep = os.path.basename(path)[:-5]
     os.makedirs(f"out/{ep}", exist_ok=True)
     for line in json.load(open(path, encoding="utf-8")):
+        if os.path.exists(f"out/{ep}/{line['id']}.wav"):
+            continue
         for attempt in range(3):
             try:
                 asyncio.run(one(line, f"out/{ep}/{line['id']}"))
