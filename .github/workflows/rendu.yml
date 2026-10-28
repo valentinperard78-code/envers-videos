@@ -40,16 +40,19 @@ jobs:
       - name: Rendu 3D
         if: steps.pick.outputs.script != ''
         env: { CHROME_PATH: /usr/bin/google-chrome, VILLA_GPU: '0' }
-        run: node tools/render.js "${{ steps.pick.outputs.script }}" --qualite ${{ steps.pick.outputs.qualite }} --workers 2
-      - name: Vidéo en pièce jointe
-        if: steps.pick.outputs.script != ''
-        uses: actions/upload-artifact@v4
-        with: { name: video, path: sorties/*.mp4, retention-days: 30 }
-      - name: Publication sur la branche « villa-videos »
-        if: steps.pick.outputs.script != ''
         run: |
-          mkdir -p /tmp/pub && cp sorties/*.mp4 /tmp/pub/
+          mkdir -p sorties
+          set -o pipefail
+          node tools/render.js "${{ steps.pick.outputs.script }}" --qualite ${{ steps.pick.outputs.qualite }} --workers 2 2>&1 | tee sorties/rendu.log
+      - name: Vidéo en pièce jointe
+        if: always() && steps.pick.outputs.script != ''
+        uses: actions/upload-artifact@v4
+        with: { name: video, path: sorties/, retention-days: 30 }
+      - name: Publication sur la branche « villa-videos »
+        if: always() && steps.pick.outputs.script != ''
+        run: |
+          mkdir -p /tmp/pub && cp sorties/*.mp4 sorties/*.log sorties/*.timeline.json /tmp/pub/ 2>/dev/null || true
           git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
           git fetch origin villa-videos || true
-          git checkout --orphan videos-new && git rm -rfq . && cp /tmp/pub/*.mp4 .
-          git add *.mp4 && git commit -qm "Vidéo : ${{ steps.pick.outputs.script }}" && git push -f origin HEAD:villa-videos
+          git checkout --orphan videos-new && git rm -rfq . && cp /tmp/pub/* .
+          git add -A . && git commit -qm "Vidéo : ${{ steps.pick.outputs.script }}" && git push -f origin HEAD:villa-videos
