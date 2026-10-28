@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Casting 3D</title>
+<style>html,body{margin:0;background:#111}canvas{display:block;max-width:100vw;max-height:100vh}</style>
+<script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { Renderer3D } from '/engine/core/studio.js';
+import { createCharacter, PRESETS } from '/engine/characters/cast.js';
+import * as TX from '/engine/core/textures.js';
+import { canvasToBase64 } from '/app/capture.js';
+const qs = new URLSearchParams(location.search);
+const quality = qs.get('q') || 'standard';
+const R = new Renderer3D({ quality, width: +(qs.get('w') || 0) || undefined, height: +(qs.get('h') || 0) || undefined });
+document.body.appendChild(R.renderer.domElement);
+const S = R.scene;
+S.background = new THREE.Color('#2b2f3a');
+R.setEnvironment(new RoomEnvironment(), 0.9);
+const floor = new THREE.Mesh(new THREE.CircleGeometry(8, 64), new THREE.MeshStandardMaterial({ color: '#59607a', roughness: 0.7 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; S.add(floor);
+const key = new THREE.DirectionalLight('#fff3e0', 2.6); key.position.set(-3, 5, 5); key.castShadow = true;
+key.shadow.mapSize.set(R.q.shadow, R.q.shadow); Object.assign(key.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4 }); key.shadow.bias = -0.0003; key.shadow.normalBias = 0.02; key.shadow.radius = 4;
+S.add(key);
+const rim = new THREE.DirectionalLight('#b48cff', 2.0); rim.position.set(4, 3, -4); S.add(rim);
+const fill = new THREE.HemisphereLight('#cfe0ff', '#3a2a40', 0.6); S.add(fill);
+const which = (qs.get('who') || 'insuline,cellia,sucrette,pancho,josh').split(',');
+const chars = which.map((k) => createCharacter(PRESETS[k], TX));
+let x = -(chars.length - 1) * 0.55;
+for (const c of chars) { c.position.x = x; x += 1.1; S.add(c); }
+const cam = R.camera;
+window.setView = (o) => { Object.assign(view, o); };
+const view = { x: 0, y: 0.9, z: 7, tx: 0, ty: 0.75, fov: 26, emotion: 'neutral', pose: 'idle', talk: 0, mouth: 0, t: 1 };
+for (const [k, v] of qs) if (k in view) view[k] = isNaN(+v) ? v : +v;
+window.renderFrame = async (t = view.t) => {
+  cam.fov = view.fov; cam.updateProjectionMatrix();
+  cam.position.set(view.x, view.y, view.z); cam.lookAt(view.tx, view.ty, 0);
+  for (const c of chars) c.applyState({ x: c.position.x, yaw: 0, emotions: { [view.emotion]: 1 }, poses: { [view.pose]: 1 }, talk: view.talk, mouth: { open: view.mouth, wide: 0.5 }, look: cam.position, sweat: 1, doorOpen: +(qs.get('door') || 0) }, t, {});
+  R.setFocus(cam.position.distanceTo(new THREE.Vector3(view.tx, view.ty, 0)));
+  R.render(t);
+  return canvasToBase64(R.renderer.domElement);
+};
+window.ready = true;
+</script></body></html>

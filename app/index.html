@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Studio</title>
+<style>
+@font-face { font-family: Anton; src: url(/assets/fonts/Anton-Regular.ttf); }
+@font-face { font-family: Montserrat; src: url(/assets/fonts/Montserrat.ttf); font-weight: 100 900; }
+:root { --bg:#0d0716; --panel:#170d26; --panel2:#21123a; --line:#34204f; --text:#f3eaff; --muted:#a993c9; --pink:#ff3da8; --cyan:#2fe0ff; --gold:#ffd166; --ok:#2bd96b; --err:#ff4d6d; }
+* { box-sizing: border-box; }
+html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px/1.45 Montserrat, system-ui, sans-serif; }
+header { display:flex; align-items:center; gap:14px; padding:10px 18px; border-bottom:1px solid var(--line); background:linear-gradient(90deg,#1c0a2e,#0d0716); }
+header h1 { margin:0; font:32px Anton, Impact, sans-serif; letter-spacing:1px; }
+header h1 span { color:var(--pink); text-shadow:0 0 18px var(--pink); }
+header .sub { color:var(--muted); font-size:12px; }
+header .status { margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+.pill { padding:3px 10px; border-radius:99px; font-size:12px; font-weight:700; background:var(--panel2); border:1px solid var(--line); }
+.pill.ok { color:var(--ok); } .pill.bad { color:var(--err); }
+main { display:grid; grid-template-columns: minmax(320px,1fr) auto minmax(300px,380px); gap:14px; padding:14px; height:calc(100% - 64px); }
+section { background:var(--panel); border:1px solid var(--line); border-radius:14px; display:flex; flex-direction:column; min-height:0; }
+section > h2 { margin:0; padding:10px 14px; font:20px Anton, sans-serif; letter-spacing:.5px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:8px; }
+.bar { display:flex; gap:8px; padding:10px 14px; flex-wrap:wrap; align-items:center; }
+textarea { flex:1; margin:0 14px 14px; resize:none; background:#0b0613; color:#efe6ff; border:1px solid var(--line); border-radius:10px; padding:12px; font:13px/1.55 ui-monospace, Consolas, monospace; min-height:200px; }
+button, select, input[type=text] { font:inherit; color:var(--text); background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:7px 12px; }
+button { cursor:pointer; font-weight:700; } button:hover { border-color:var(--pink); }
+button.primary { background:linear-gradient(90deg,var(--pink),#b42cff); border:0; color:#fff; box-shadow:0 0 18px rgba(255,61,168,.35); }
+button.go { background:linear-gradient(90deg,#ff7a18,var(--pink)); border:0; color:#fff; font-size:16px; padding:12px 16px; width:100%; }
+button:disabled { opacity:.5; cursor:default; }
+#stage { padding:14px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+#screen { position:relative; height:calc(100vh - 210px); aspect-ratio:9/16; background:#000; border-radius:18px; overflow:hidden; box-shadow:0 0 0 1px var(--line), 0 10px 40px rgba(0,0,0,.5); }
+#screen canvas { width:100%; height:100%; display:block; }
+#screen .hint { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px; color:var(--muted); }
+.transport { display:flex; gap:8px; align-items:center; width:100%; }
+.transport input[type=range] { flex:1; accent-color:var(--pink); }
+#time { font-variant-numeric:tabular-nums; color:var(--muted); min-width:96px; text-align:right; }
+.right { overflow:auto; }
+.block { padding:12px 14px; border-bottom:1px solid var(--line); }
+.block h3 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
+.cast { display:flex; flex-direction:column; gap:6px; }
+.cast div { display:flex; align-items:center; gap:8px; padding:6px 8px; background:var(--panel2); border-radius:8px; }
+.cast i { width:14px; height:14px; border-radius:50%; flex:none; }
+.cast small { color:var(--muted); margin-left:auto; font-size:11px; }
+.progress { height:12px; background:#0b0613; border-radius:99px; overflow:hidden; border:1px solid var(--line); }
+.progress div { height:100%; width:0; background:linear-gradient(90deg,var(--cyan),var(--pink)); transition:width .3s; }
+#log { font:12px/1.5 ui-monospace, monospace; color:var(--muted); max-height:180px; overflow:auto; white-space:pre-wrap; margin-top:8px; }
+.outs a { color:var(--cyan); } .outs div { padding:6px 0; border-bottom:1px dashed var(--line); }
+video { width:100%; border-radius:10px; margin-top:8px; background:#000; }
+.row { display:flex; gap:8px; align-items:center; } .row > * { flex:1; }
+.help { font-size:12px; color:var(--muted); }
+.help code { color:var(--gold); }
+@media (max-width: 1100px) { main { grid-template-columns:1fr; height:auto; } #screen { height:70vh; } }
+</style>
+<script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/jsm/"}}</script>
+</head>
+<body>
+<header>
+  <h1>VILLA <span>STUDIO</span></h1>
+  <div class="sub">Script → vidéo 3D verticale · La Villa des Pathologies</div>
+  <div class="status" id="status"></div>
+</header>
+<main>
+  <section>
+    <h2>📜 Script</h2>
+    <div class="bar">
+      <select id="scriptList"></select>
+      <input type="text" id="scriptName" placeholder="nom-de-l-episode" style="flex:1;min-width:140px">
+      <button id="save">Enregistrer</button>
+      <button id="newScript">Nouveau</button>
+    </div>
+    <textarea id="editor" spellcheck="false"></textarea>
+    <div class="bar help">Format : <code>- NOM (didascalie) : « réplique »</code>, <code>- VOIX OFF : « … »</code>, <code>- Encadré à l'écran : MOT = explication</code>, <code>- Carton : « … »</code>, <code>- → GÉNÉRIQUE</code>.</div>
+  </section>
+
+  <section id="stage">
+    <div id="screen"><div class="hint" id="hint">Clique sur « Aperçu 3D » pour voir l'épisode en temps réel.<br><br>L'aperçu sans voix est instantané ; avec les voix, il faut quelques secondes.</div></div>
+    <div class="transport">
+      <button id="play" disabled>▶</button>
+      <input type="range" id="seek" min="0" max="100" step="0.01" value="0" disabled>
+      <span id="time">0:00 / 0:00</span>
+    </div>
+    <div class="row" style="width:100%">
+      <button class="primary" id="previewFast">⚡ Aperçu 3D</button>
+      <button id="previewVoice">🎙 Aperçu avec voix</button>
+      <select id="previewQ"><option value="brouillon">Aperçu léger</option><option value="standard" selected>Aperçu standard</option><option value="max">Aperçu max (carte graphique)</option></select>
+    </div>
+  </section>
+
+  <section class="right">
+    <h2>🎬 Production</h2>
+    <div class="block">
+      <h3>Distribution</h3>
+      <div class="cast" id="cast"><span class="help">Analyse le script pour voir les personnages.</span></div>
+      <div class="help" id="analyseInfo" style="margin-top:8px"></div>
+    </div>
+    <div class="block">
+      <h3>Générer la vidéo MP4</h3>
+      <div class="row" style="margin-bottom:8px">
+        <select id="quality">
+          <option value="brouillon">Brouillon (rapide, 540p)</option>
+          <option value="standard" selected>Standard (720p → 1080p)</option>
+          <option value="max">Max (1080p, effets complets — carte graphique)</option>
+        </select>
+      </div>
+      <label class="help"><input type="checkbox" id="voices" checked> Voix des personnages (edge-tts)</label>
+      <div style="margin-top:10px"><button class="go" id="render">🎥 GÉNÉRER LA VIDÉO</button></div>
+      <div class="progress" style="margin-top:10px"><div id="prog"></div></div>
+      <div class="help" id="progText"></div>
+      <div id="log"></div>
+      <div id="result"></div>
+    </div>
+    <div class="block">
+      <h3>Vidéos produites</h3>
+      <div class="outs" id="outs"></div>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { World, loadFonts } from '/engine/world.js';
+import { buildTimeline } from '/engine/script/director.js';
+
+const $ = (id) => document.getElementById(id);
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const TEMPLATE = `# La Villa des Pathologies — Épisode 2 : « Sous pression » (hypertension)
+
+## Casting
+- **Tensia** : la pression artérielle. Une diva rouge, toujours à cran.
+- **Artie** : une artère. Il en a marre d'être serré.
+- **Sel** : le sodium. Le fêtard blanc qui pailette partout.
+
+## Teaser
+- VOIX OFF : « Cette semaine dans la Villa des Pathologies… ça va chauffer. »
+- TENSIA (confessionnal) : « Moi, je monte. Et je redescends quand je veux. »
+- → GÉNÉRIQUE
+
+## Scène 1 : l'arrivée
+- VOIX OFF : « Dans la villa, une candidate fait monter la température. »
+- TENSIA (entrée stylée) : « Coucou les artères ! Ce soir, ça pousse fort ! »
+- Encadré à l'écran : TENSION = la force du sang sur la paroi des artères.
+
+## Récap
+- VOIX OFF : « À retenir : moins de sel, plus de mouvement. Abonne-toi ! »
+`;
+
+let world = null, tl = null, audio = null, playing = false, t = 0, startClock = 0, raf = 0, worldQ = null;
+
+async function getJSON(u, o) { const r = await fetch(u, o); return r.json(); }
+async function refreshStatus() {
+  const s = await getJSON('/api/status');
+  $('status').innerHTML = [
+    `<span class="pill ${s.tts ? 'ok' : 'bad'}">${s.tts ? '✔' : '✖'} Voix</span>`,
+    `<span class="pill ${s.ffmpeg ? 'ok' : 'bad'}">${s.ffmpeg ? '✔' : '✖'} ffmpeg</span>`,
+    `<span class="pill ${s.chrome ? 'ok' : 'bad'}">${s.chrome ? '✔' : '✖'} Navigateur</span>`,
+  ].join('');
+  $('voices').checked = s.tts; $('voices').disabled = !s.tts;
+}
+async function refreshScripts(select) {
+  const list = await getJSON('/api/scripts');
+  $('scriptList').innerHTML = list.map((f) => `<option${f === select ? ' selected' : ''}>${f}</option>`).join('');
+  return list;
+}
+async function loadScript(name) {
+  const r = await getJSON('/api/script?name=' + encodeURIComponent(name));
+  $('editor').value = r.content; $('scriptName').value = name.replace(/\.(md|txt)$/, '');
+  analyse();
+}
+async function refreshOutputs() {
+  const list = await getJSON('/api/outputs');
+  $('outs').innerHTML = list.length ? list.map((o) => `<div>🎞 <a href="${o.url}" download>${o.name}</a> <span class="help">${(o.size / 1e6).toFixed(1)} Mo</span></div>`).join('') : '<span class="help">Aucune vidéo pour l’instant.</span>';
+}
+let analyseTimer = 0;
+async function analyse() {
+  clearTimeout(analyseTimer);
+  analyseTimer = setTimeout(async () => {
+    try {
+      const r = await getJSON('/api/analyse', { method: 'POST', body: JSON.stringify({ content: $('editor').value }) });
+      $('cast').innerHTML = r.cast.map((c) => `<div><i style="background:${c.color}"></i><b>${c.name}</b> <span class="help">${c.role || ''}</span><small>${c.preset ? 'perso dédié' : 'archétype auto'}</small></div>`).join('') || '<span class="help">Aucun personnage trouvé.</span>';
+      $('analyseInfo').textContent = `${r.sections} sections · ${r.lines} répliques · durée estimée ~${fmt(r.duration)}`;
+    } catch (e) { $('analyseInfo').textContent = 'Erreur d’analyse : ' + e.message; }
+  }, 400);
+}
+
+async function ensureWorld(q) {
+  if (world && worldQ === q) return world;
+  await loadFonts();
+  $('screen').querySelectorAll('canvas').forEach((c) => c.remove());
+  world = new World({ quality: q }); worldQ = q;
+  $('screen').appendChild(world.canvas);
+  return world;
+}
+async function startPreview(withVoice) {
+  stop();
+  $('hint').style.display = 'flex'; $('hint').textContent = withVoice ? 'Génération des voix et préparation…' : 'Construction de la scène 3D…';
+  try {
+    let audioUrl = null;
+    if (withVoice) { const r = await getJSON('/api/prepare', { method: 'POST', body: JSON.stringify({ content: $('editor').value }) }); tl = r.timeline; audioUrl = r.audio; }
+    else tl = buildTimeline($('editor').value, {});
+    await ensureWorld($('previewQ').value);
+    $('hint').textContent = 'Chargement des personnages et décors…';
+    await new Promise((r) => setTimeout(r, 30));
+    world.load(tl);
+    world.renderAt(0);
+    $('hint').style.display = 'none';
+    audio = audioUrl ? new Audio(audioUrl) : null;
+    $('seek').max = tl.meta.duration; $('seek').disabled = false; $('play').disabled = false;
+    t = 0; play();
+  } catch (e) { $('hint').textContent = 'Erreur : ' + e.message; console.error(e); }
+}
+function play() {
+  if (!tl) return; playing = true; $('play').textContent = '⏸';
+  if (audio) { audio.currentTime = t; audio.play().catch(() => {}); }
+  startClock = performance.now() - t * 1000;
+  const loop = () => {
+    if (!playing) return;
+    t = audio ? audio.currentTime : (performance.now() - startClock) / 1000;
+    if (t >= tl.meta.duration) { stop(); return; }
+    world.renderAt(t); $('seek').value = t; $('time').textContent = `${fmt(t)} / ${fmt(tl.meta.duration)}`;
+    raf = requestAnimationFrame(loop);
+  };
+  raf = requestAnimationFrame(loop);
+}
+function stop() { playing = false; $('play').textContent = '▶'; cancelAnimationFrame(raf); if (audio) audio.pause(); }
+$('play').onclick = () => (playing ? stop() : play());
+$('seek').oninput = () => { t = +$('seek').value; if (audio) audio.currentTime = t; startClock = performance.now() - t * 1000; if (!playing && world) { world.renderAt(t); $('time').textContent = `${fmt(t)} / ${fmt(tl.meta.duration)}`; } };
+$('previewFast').onclick = () => startPreview(false);
+$('previewVoice').onclick = () => startPreview(true);
+$('editor').oninput = analyse;
+$('scriptList').onchange = () => loadScript($('scriptList').value);
+$('save').onclick = async () => { const r = await getJSON('/api/script', { method: 'POST', body: JSON.stringify({ name: $('scriptName').value, content: $('editor').value }) }); await refreshScripts(r.name); };
+$('newScript').onclick = () => { $('editor').value = TEMPLATE; $('scriptName').value = 'ep02-hypertension'; analyse(); };
+$('render').onclick = async () => {
+  const r = await getJSON('/api/render', { method: 'POST', body: JSON.stringify({ name: $('scriptName').value, content: $('editor').value, quality: $('quality').value, voices: $('voices').checked }) });
+  if (r.error) { alert(r.error); return; }
+  $('render').disabled = true; $('log').textContent = ''; $('result').innerHTML = '';
+};
+// suivi du rendu en direct
+const es = new EventSource('/api/events');
+es.onmessage = (m) => {
+  const ev = JSON.parse(m.data);
+  if (ev.type === 'hello') $('render').disabled = ev.busy;
+  if (ev.type === 'log') { $('log').textContent += ev.message + '\n'; $('log').scrollTop = 1e9; }
+  if (ev.type === 'frames') { $('prog').style.width = ev.pct.toFixed(1) + '%'; $('progText').textContent = `Images : ${ev.done} / ${ev.total} · reste environ ${fmt(ev.eta)}`; }
+  if (ev.type === 'finished') { $('render').disabled = false; $('prog').style.width = '100%'; $('progText').textContent = 'Terminé ✅'; $('result').innerHTML = `<video src="${ev.url}" controls></video><a href="${ev.url}" download>⬇ Télécharger la vidéo</a>`; refreshOutputs(); }
+  if (ev.type === 'error') { $('render').disabled = false; $('progText').textContent = '❌ ' + ev.message; }
+};
+
+await refreshStatus();
+const list = await refreshScripts();
+if (list.length) await loadScript(list[0]); else { $('editor').value = TEMPLATE; analyse(); }
+refreshOutputs();
+</script>
+</body></html>

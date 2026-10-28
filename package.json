@@ -1,0 +1,14 @@
+{
+  "name": "villa-studio",
+  "version": "1.0.0",
+  "description": "Studio 3D automatique pour La Villa des Pathologies : script -> vidéo verticale animée.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "studio": "node tools/studio-server.js",
+    "render": "node tools/render.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

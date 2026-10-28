@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Villa Studio — rendu</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/vendor/three/three.module.js","three/addons/":"/vendor/three/jsm/"}}</script>
+</head><body>
+<script type="module">
+import { World, loadFonts } from '/engine/world.js';
+import { canvasToBase64 } from '/app/capture.js';
+const qs = new URLSearchParams(location.search);
+await loadFonts();
+const world = new World({ quality: qs.get('q') || 'standard' });
+document.body.appendChild(world.canvas);
+window.world = world;
+window.loadTimeline = async (tl) => { if (typeof tl === 'string') tl = await (await fetch(tl)).json(); world.load(tl); return { W: world.W, H: world.H }; };
+window.renderFrame = async (t) => { world.renderAt(t); return canvasToBase64(world.canvas); };
+if (qs.get('tl')) await window.loadTimeline(qs.get('tl'));
+window.ready = true;
+</script></body></html>

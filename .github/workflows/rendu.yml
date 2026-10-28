@@ -1,0 +1,55 @@
+# Rendu automatique gratuit sur les serveurs de GitHub.
+# Se lance quand un script est ajouté/modifié dans scripts/, ou à la main (onglet Actions > Rendu vidéo > Run workflow).
+name: Rendu vidéo
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "Script à rendre (ex. scripts/ep01-diabete-type-2.md)"
+        required: true
+        default: scripts/ep01-diabete-type-2.md
+      qualite:
+        description: "brouillon | standard | max"
+        required: true
+        default: standard
+  push:
+    paths: ['scripts/**.md']
+permissions:
+  contents: write
+jobs:
+  rendu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Outils (ffmpeg, voix, moteur)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core >/dev/null
+          pip install --quiet edge-tts
+          PUPPETEER_SKIP_DOWNLOAD=1 npm install --no-audit --no-fund
+      - name: Choix du script
+        id: pick
+        run: |
+          if [ -n "${{ github.event.inputs.script }}" ]; then S="${{ github.event.inputs.script }}"; Q="${{ github.event.inputs.qualite }}";
+          else S=$( (git diff --name-only HEAD~1 HEAD -- 'scripts/*.md' 2>/dev/null || git ls-files 'scripts/*.md') | head -1); Q=standard; fi
+          echo "script=$S" >> $GITHUB_OUTPUT; echo "qualite=$Q" >> $GITHUB_OUTPUT
+          echo "Script : $S  ($Q)"
+      - name: Rendu 3D
+        if: steps.pick.outputs.script != ''
+        env: { CHROME_PATH: /usr/bin/google-chrome, VILLA_GPU: '0' }
+        run: node tools/render.js "${{ steps.pick.outputs.script }}" --qualite ${{ steps.pick.outputs.qualite }} --workers 2
+      - name: Vidéo en pièce jointe
+        if: steps.pick.outputs.script != ''
+        uses: actions/upload-artifact@v4
+        with: { name: video, path: sorties/*.mp4, retention-days: 30 }
+      - name: Publication sur la branche « villa-videos »
+        if: steps.pick.outputs.script != ''
+        run: |
+          mkdir -p /tmp/pub && cp sorties/*.mp4 /tmp/pub/
+          git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
+          git fetch origin villa-videos || true
+          git checkout --orphan videos-new && git rm -rfq . && cp /tmp/pub/*.mp4 .
+          git add *.mp4 && git commit -qm "Vidéo : ${{ steps.pick.outputs.script }}" && git push -f origin HEAD:villa-videos

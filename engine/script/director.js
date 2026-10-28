@@ -1,0 +1,393 @@
+// Le « réalisateur » : transforme le script analysé en timeline complète
+// (décors, placements, déplacements, émotions, gestes, plans caméra, habillage, bruitages, musique).
+// Fonctionne dans Node (rendu automatique) et dans le navigateur (aperçu).
+import { parseScript, slug } from './parser.js';
+import { buildCasting, findMentions, PRESET_META } from './casting.js';
+
+const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+// ------------------------------------------------------------------ règles de jeu d'acteur
+// Chaque règle : motif (sur didascalie + texte) -> émotion, pose, effets, plan.
+const ACTING = [
+  { re: /confessionnal/, loc: 'confessional' },
+  { re: /(epuise|en sueur|crame|a bout|heures sup|nuits blanches|fatigu)/, emotion: 'tired', pose: 'droop', sweat: 1 },
+  { re: /(sueur|transpir)/, sweat: 1, pose: 'wipe' },
+  { re: /entree stylee|entre en scene|fait son entree/, emotion: 'proud', pose: 'hips', enter: true, sfx: 'sting' },
+  { re: /(la cle ne tourne pas|cle bloquee|serrure bloquee)/, emotion: 'angry', pose: 'shakeKey', sfx: 'rattle', atDoor: true, crash: true },
+  { re: /(toc toc|frappe a la porte|a la porte de)/, emotion: 'happy', pose: 'knock', sfx: 'knock', atDoor: true },
+  { re: /(bloquee?|coince|dehors|a la rue|en pls)/, emotion: 'annoyed', pose: 'shrug' },
+  { re: /\?!|\battends\b|c'est moi qui fais|red flag/, emotion: 'shocked', pose: 'cheeks', sfx: 'record', crash: true },
+  { re: /\bcoucou\b|salut la villa|bonjour la villa/, emotion: 'excited', pose: 'wave', sfx: 'sparkle', enter: true },
+  { re: /(se prend pour qui|pour une folle|redescendre|n'importe qui|serieux)/, emotion: 'sassy', pose: 'hips', sfx: 'sting', crash: true },
+  { re: /\|\| entre\b|entre, ma|entre !|viens,? y a de la place|bienvenue/, emotion: 'happy', pose: 'welcome', openDoor: true },
+  { re: /(pas personnel|plus envie|j'entends qu'on frappe|je reponds pas)/, emotion: 'suspicious', pose: 'cross' },
+  { re: /(je souffle|enfin|soulage|ca va mieux)/, emotion: 'relieved', pose: 'idle' },
+  { re: /(ouverte|je bouge|depuis que|equilibre)/, emotion: 'happy', pose: 'gesture' },
+  { re: /(daron|c'est moi le|j'envoie)/, emotion: 'proud', pose: 'selfPoint' },
+  { re: /(pas de moi, pas d'entree|c'est simple|enchantee)/, emotion: 'proud', pose: 'holdKey' },
+  { re: /(ok \?|moi j'ouvre)/, emotion: 'proud', pose: 'cross' },
+  { re: /(abonne|a retenir)/, emotion: 'happy', pose: 'point' },
+  { re: /!/, emotion: 'excited' },
+];
+const VO_MOOD = [
+  { re: /(danger|abime|abiment|pire|silencieu|complication)/, emotion: 'worried', music: 'drama', sfx: 'heartbeat' },
+  { re: /(clash|trahison)/, emotion: 'shocked', sfx: 'boom', crash: true },
+  { re: /(match parfait|bonne sante|redescend|se relever|riposte)/, emotion: 'happy' },
+  { re: /(s'epuise|epuise|de moins en moins)/, emotion: 'tired' },
+  { re: /(resistance|ne repond plus|grippee|s'accumule|hyperglycemie)/, emotion: 'worried' },
+  { re: /(verdict|diabete)/, emotion: 'shocked', sfx: 'boom' },
+];
+const SECTION_MUSIC = [
+  [/teaser/, 'drama'], [/arrivee|regle|couple|parfait|accueil/, 'chill'], [/clash|rue|craque|conflit|dispute/, 'tense'],
+  [/twist|verdict|diagnostic|danger/, 'drama'], [/riposte|solution|traitement|victoire|happy/, 'happy'], [/recap|abonne/, 'outro'],
+];
+
+function actingFor(text, direction) {
+  const s = norm(`${direction} || ${text}`);
+  const res = {};
+  for (const r of ACTING) if (r.re.test(s)) { for (const k in r) if (k !== 're' && res[k] === undefined) res[k] = r[k]; }
+  return res;
+}
+
+// ------------------------------------------------------------------ durées de parole
+/** Estimation sans voix réelle : ~14 caractères/s + pauses de ponctuation. */
+export function estimateSpeech(text, rate = 1) {
+  const words = String(text).split(/\s+/).filter(Boolean);
+  let t = 0; const out = [];
+  for (const w of words) {
+    const d = (Math.max(2, w.replace(/[^\p{L}\p{N}]/gu, '').length) / 14.5 + 0.06) / rate;
+    out.push({ t, d, w }); t += d;
+    if (/[.!?]$/.test(w)) t += 0.28; else if (/[,;:…]$/.test(w)) t += 0.16;
+  }
+  return { dur: t, words: out, env: null, estimated: true };
+}
+
+/** Liste des répliques à vocaliser (pour la synthèse vocale). */
+export function collectLines(doc, casting) {
+  const out = [];
+  for (const s of doc.sections) for (const it of s.items) {
+    if (it.type !== 'line') continue;
+    const who = it.voiceOver ? casting.narrator : casting.byName[it.speaker.toUpperCase()] || casting.byName[slug(it.speaker)];
+    const voice = who?.voice || casting.narrator.voice;
+    out.push({ key: `L${it.line}`, text: ttsText(it.text), voice: voice.voice, rate: voice.rate, pitch: voice.pitch, speaker: who?.id || 'narrator' });
+  }
+  return out;
+}
+export function ttsText(t) {
+  return String(t).replace(/[«»"“”]/g, '').replace(/\bOK\b/g, 'O.K.').replace(/\bPLS\b/g, 'P.L.S.').replace(/\s+/g, ' ').trim();
+}
+
+// ------------------------------------------------------------------ construction de la timeline
+export function buildTimeline(src, opts = {}) {
+  const doc = typeof src === 'string' ? parseScript(src) : src;
+  const casting = buildCasting(doc);
+  // personnages préréglés cités par la voix off mais absents du casting (ex. Josh)
+  for (const s of doc.sections) for (const it of s.items) if (it.type === 'line') {
+    for (const id of Object.keys(PRESET_META)) if (!casting.list.find((e) => e.id === id) && new RegExp(`\\b${id}\\b`).test(norm(it.text))) {
+      const P = PRESET_META[id];
+      const e = { id, name: id[0].toUpperCase() + id.slice(1), def: id, color: P.color, role: P.role, gender: P.gender, voice: P.voice, description: '' };
+      casting.list.push(e); casting.byName[e.name.toUpperCase()] = e; casting.byName[id] = e;
+    }
+  }
+  // retire un éventuel « narrateur » listé dans le casting
+  casting.list = casting.list.filter((e) => !/voix|narrat/.test(norm(e.name + ' ' + e.description)));
+
+  const speech = opts.speech || {};
+  const fps = opts.fps || 30;
+  const beats = [], overlays = [], sfx = [], music = [], voices = [];
+  let t = 0;
+  const villa = { present: new Set(), pos: {}, door: 0, hidden: new Set() };
+  const marksOrder = ['center', 'left', 'right', 'farLeft', 'farRight'];
+  const introduced = new Set();
+  let lastSet = null, angleFlip = 1, lastSpeaker = null;
+  const lastEmotion = {};
+  const cellia = casting.list.find((e) => e.big || e.home === 'cellia');
+  const epLabel = `ÉP. ${doc.episode ?? 1} · ${(doc.pathology || doc.episodeName || '').toUpperCase()}`.trim();
+  const sweatOf = {};
+  let gauge = null, crowd = 0;
+
+  const entryOf = (name) => casting.byName[String(name).toUpperCase()] || casting.byName[slug(name)];
+  const doorSpot = (side = -1) => cellia ? { x: side * 0.78, dz: 1.0 } : null; // à côté de la porte (ne masque pas la cellule)
+  const cpos = () => ({ x: 1.75, z: -1.25 }); // repère « cellia » du décor villa
+  const nextMark = () => marksOrder.find((m) => !Object.values(villa.pos).includes(m)) || 'center';
+
+  function placeVilla(id) { if (!villa.pos[id]) villa.pos[id] = cellia && id === cellia.id ? 'cellia' : nextMark(); return villa.pos[id]; }
+  function villaActors(extra = {}) {
+    const actors = {};
+    if (cellia) { villa.present.add(cellia.id); placeVilla(cellia.id); }
+    for (const id of villa.present) {
+      if (villa.hidden.has(id)) continue;
+      const p = villa.pos[id];
+      const isCell = cellia && id === cellia.id;
+      actors[id] = { pos: typeof p === 'string' ? p : [p.x, p.z], emotion: lastEmotion[id] || (isCell ? 'proud' : 'neutral'), pose: isCell ? 'cross' : 'idle', face: isCell ? 0 : undefined, door: isCell ? villa.door : undefined, sweat: sweatOf[id] || 0 };
+    }
+    for (const id in extra) actors[id] = { ...(actors[id] || {}), ...extra[id] };
+    return actors;
+  }
+  function pushBeat(b) {
+    b.t1 = b.t0 + b.dur;
+    if (lastSet && b.set !== lastSet && !b.noWhoosh) sfx.push({ type: 'whoosh', t: Math.max(0, b.t0 - 0.12) });
+    lastSet = b.set;
+    beats.push(b); t = b.t1; return b;
+  }
+  function speechFor(it) {
+    const s = speech[`L${it.line}`] || estimateSpeech(ttsText(it.text));
+    return s;
+  }
+
+  // ---------------------------------------------------------------- sections
+  doc.sections.forEach((sec, si) => {
+    const secNorm = norm(sec.title);
+    const mood = (SECTION_MUSIC.find(([re]) => re.test(secNorm)) || [null, sec.kind === 'teaser' ? 'drama' : 'chill'])[1];
+    music.push({ t0: t, mood });
+    const teaser = sec.kind === 'teaser', recap = sec.kind === 'recap';
+    // décor par défaut de la section
+    const secText = norm(sec.items.map((i) => (i.type === 'line' ? (i.direction || '') : i.type === 'screen' ? i.text : '')).join(' '));
+    const secBlood = /dans le sang|circulation|vaisseau/.test(secText);
+    gauge = null;
+    if (secBlood) crowd = Math.max(crowd, 1);
+    let firstInSection = true;
+    const savedVilla = teaser ? { present: new Set(villa.present), pos: { ...villa.pos } } : null;
+    let pendingBox = null;
+    const items = sec.items;
+
+    items.forEach((it, ii) => {
+      if (it.type === 'title') {
+        const b = pushBeat({ t0: t, dur: 3.2, set: 'stage', shot: { type: 'wide' }, actors: {}, kind: 'title', noWhoosh: true });
+        overlays.push({ type: 'title', t0: b.t0, t1: b.t1, subtitle: doc.episodeName ? `Épisode ${doc.episode ?? 1} · ${doc.episodeName}` : '' });
+        sfx.push({ type: 'title', t: b.t0 }); music.push({ t0: b.t0, mood: 'theme' }); music.push({ t0: b.t1, mood: 'chill' });
+        return;
+      }
+      if (it.type === 'card') {
+        const b = pushBeat({ t0: t, dur: 2.4, set: lastSet || 'villa', shot: { type: 'wide' }, actors: {}, kind: 'card', noWhoosh: true });
+        overlays.push({ type: 'card', t0: b.t0, t1: b.t1, text: it.text });
+        sfx.push({ type: 'riser', t: b.t0 - 0.6 }, { type: 'boom', t: b.t0 });
+        // ellipse temporelle : la porte se referme, tout le monde ressort
+        villa.door = 0; villa.hidden.clear();
+        for (const k in lastEmotion) delete lastEmotion[k]; for (const k in sweatOf) delete sweatOf[k];
+        return;
+      }
+      if (it.type === 'box') { pendingBox = it; return; }
+      if (it.type === 'screen') {
+        const s = norm(it.text);
+        const m = s.match(/jauge (?:de |du |d')?([a-z ]+?)(?: passe| monte| baisse| descend| au | est|$)/);
+        const label = m ? m[1].trim() : 'niveau';
+        const to = /rouge|danger|explose|max/.test(s) ? 0.96 : /monte|augmente/.test(s) ? 0.75 : /vert|normal|baisse|descend/.test(s) ? 0.35 : 0.8;
+        gauge = { label: label.replace(/glycemie/, 'glycémie').toUpperCase(), from: 0.45, to, t0: Math.max(0, t - (beats.at(-1)?.dur || 0) * 0.5) };
+        if (to > 0.7) { crowd = 1; sfx.push({ type: 'alarm', t: gauge.t0 + 0.4 }); }
+        // l'indication s'applique au plan précédent si on est encore dedans
+        return;
+      }
+      if (it.type !== 'line') return;
+
+      // ---------------------------------------------- réplique
+      const vo = it.voiceOver;
+      const who = vo ? null : entryOf(it.speaker);
+      const id = who?.id;
+      const sp = speechFor(it);
+      const acting = vo ? {} : actingFor(it.text, it.direction);
+      const voMood = vo ? (VO_MOOD.find((r) => r.re.test(norm(it.text))) || {}) : {};
+      const mentions = findMentions(`${it.text} ${it.direction}`, casting).filter((m) => m !== id);
+      let set = 'villa';
+      if (acting.loc === 'confessional') set = 'confessional';
+      else if (/dans le sang|bloquee? dans le sang/.test(norm(it.direction)) || (secBlood && !vo)) set = 'blood';
+      else if (vo && mentions.includes('josh')) set = 'kitchen';
+      else if (vo && secBlood) set = 'blood';
+
+      const lead = 0.1, tail = teaser ? 0.15 : 0.24;
+      let dur = Math.max(1.2, sp.dur + lead + tail);
+      const t0 = t;
+      const actors = {};
+      let shot = { type: 'medium', subject: id, angle: angleFlip, seed: beats.length };
+      const extra = [];
+
+      if (set === 'confessional') {
+        actors[id] = { pos: 'center', emotion: acting.emotion || 'neutral', pose: acting.pose === 'droop' ? 'wipe' : acting.pose || 'gesture', sweat: acting.sweat || 0, look: 'camera' };
+        shot = { type: 'confession', subject: id, seed: beats.length, push: 0.1 };
+        if (acting.sweat) sweatOf[id] = 1;
+      } else if (set === 'kitchen') {
+        actors.josh = { pos: 'center', emotion: /(ne sent rien|silencieu)/.test(norm(it.text)) ? 'neutral' : 'happy', pose: 'idle', look: 'camera' };
+        shot = { type: 'medium', subject: 'josh', angle: 0.4, push: 0.12 };
+      } else if (set === 'blood') {
+        const present = vo ? (mentions.length ? mentions : [...villa.present].filter((x) => !cellia || x !== cellia.id)) : [id];
+        const sugarId = casting.list.find((e) => /glucose|sucre/.test(norm(e.role + ' ' + e.description)))?.id;
+        const ids = [...new Set([...(present || []), ...(sugarId ? [sugarId] : [])])].filter(Boolean).slice(0, 2);
+        ids.forEach((x, k) => { actors[x] = { pos: k === 0 ? 'center' : 'left', emotion: x === id ? (acting.emotion || 'annoyed') : 'worried', pose: x === id ? (acting.pose || 'shrug') : 'idle', float: true }; });
+        shot = vo ? { type: 'wide', angle: 0.3, seed: beats.length } : { type: 'medium', subject: id, angle: angleFlip, seed: beats.length };
+      } else {
+        // ---- villa
+        if (teaser) { for (const e of casting.list) if (e.id !== 'josh') { villa.present.add(e.id); placeVilla(e.id); } }
+        if (id && !villa.present.has(id)) {
+          villa.present.add(id); placeVilla(id);
+          if (!teaser) acting.enter = true;
+        }
+        Object.assign(actors, villaActors());
+        if (id) {
+          const a = actors[id] = { ...(actors[id] || { pos: villa.pos[id] }) };
+          a.emotion = acting.emotion || (/[!]/.test(it.text) ? 'excited' : 'neutral');
+          a.pose = acting.pose || 'idle';
+          if (acting.sweat) { a.sweat = 1; sweatOf[id] = 1; }
+          // entrée en scène : arrive depuis le bord du plateau
+          if (acting.enter && !introduced.has(`walk-${id}`) && !teaser) {
+            introduced.add(`walk-${id}`);
+            a.from = beats.length % 2 ? 'enterRight' : 'enterLeft'; a.walkDur = 1.7; a.speed = 2.2;
+            dur = Math.max(dur, 2.4 + sp.dur * 0.6);
+            if (acting.pose === 'wave' || acting.pose === 'hips') { a.pose = acting.pose; }
+          }
+          // aller à la porte de la cellule
+          if (acting.atDoor && cellia && id !== cellia.id) {
+            const c = cpos(), ds = doorSpot(-1);
+            const target = { x: c.x + ds.x, z: c.z + ds.dz };
+            const cur = villa.pos[id];
+            if (typeof cur === 'string') a.from = cur; else if (cur) a.from = [cur.x, cur.z];
+            if (!(cur && cur.x === target.x && cur.z === target.z)) { a.walkDur = 1.1; }
+            else delete a.from;
+            a.pos = [target.x, target.z]; villa.pos[id] = target;
+            a.face = cellia.id; a.faceStrict = true;
+            shot = { type: 'two', subject: id, other: cellia.id, angle: -1, seed: beats.length };
+          }
+          // la cellule ouvre sa porte
+          if (acting.openDoor && cellia && id === cellia.id) {
+            villa.door = 1;
+            a.door = { from: 0, to: 1, at: Math.min(0.6, sp.dur * 0.3), dur: 0.9 };
+            sfx.push({ type: 'door', t: t0 + Math.min(0.6, sp.dur * 0.3) });
+            // l'invité mentionné s'approche
+            for (const m of mentions) if (actors[m] && m !== cellia.id) {
+              const c = cpos(), ds = doorSpot(1);
+              const cur = villa.pos[m];
+              actors[m] = { ...actors[m], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [c.x + ds.x, c.z + ds.dz + 0.15], walkDelay: 0.6, walkDur: 1.2, emotion: 'excited', pose: 'idle' };
+              villa.pos[m] = { x: c.x + ds.x, z: c.z + ds.dz + 0.15 };
+            }
+            shot = { type: 'two', subject: id, other: mentions[0] || id, angle: -0.5, seed: beats.length };
+          }
+          if (cellia && id === cellia.id) { a.face = 0; a.door = a.door ?? villa.door; }
+          if (!acting.atDoor && !acting.openDoor) {
+            const punch = acting.crash && sp.dur < 5;
+            shot = { type: punch ? 'close' : 'medium', subject: id, angle: angleFlip, crash: !!acting.crash && !teaser, seed: beats.length };
+          }
+          lastEmotion[id] = a.emotion === 'excited' ? 'happy' : a.emotion;
+          // réactions des autres candidats
+          const REACT = { angry: 'worried', sassy: 'suspicious', shocked: 'shocked', tired: 'worried', excited: 'happy', happy: 'happy', proud: 'neutral', relieved: 'happy', suspicious: 'worried', annoyed: 'worried' };
+          const r = REACT[a.emotion];
+          for (const pid in actors) if (pid !== id && r) { actors[pid].emotion = cellia && pid === cellia.id && /angry|sassy/.test(a.emotion) ? 'suspicious' : r; actors[pid].look = id; lastEmotion[pid] = actors[pid].emotion; }
+        } else {
+          // voix off : réactions des personnages présents
+          for (const pid in actors) if (voMood.emotion && pid !== cellia?.id) actors[pid].emotion = voMood.emotion;
+          if (voMood.emotion === 'tired') for (const m of mentions) if (actors[m]) { actors[m].sweat = 1; actors[m].pose = 'droop'; sweatOf[m] = 1; }
+          // « le sucre entre » : l'invité passe la porte ouverte
+          const enterer = mentions.find((m) => actors[m] && villa.door > 0.5 && /\bentre\b/.test(norm(it.text)));
+          const sugarWord = /(le sucre|glucose) entre/.test(norm(it.text));
+          const ent = enterer || (sugarWord && villa.door > 0.5 ? casting.list.find((e) => /glucose|sucre/.test(norm(e.role + e.description)))?.id : null);
+          if (ent && actors[ent] && cellia) {
+            const c = cpos();
+            const cur = villa.pos[ent];
+            actors[ent] = { ...actors[ent], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [c.x, c.z + 0.75], walkDur: 1.5, walkDelay: 0.2, emotion: 'happy', pose: 'wave', shrink: { at: 1.1, dur: 0.6 } };
+            villa.hidden.add(ent);
+            shot = { type: 'two', subject: ent, other: cellia.id, angle: 0.6, seed: beats.length };
+            sfx.push({ type: 'sparkle', t: t0 + 1.4 });
+          } else if (firstInSection && !teaser) shot = { type: 'establish', seed: beats.length };
+          else if (mentions.length && actors[mentions[0]]) shot = { type: mentions[1] && actors[mentions[1]] ? 'two' : 'medium', subject: mentions[0], other: mentions[1], angle: angleFlip, seed: beats.length };
+          else shot = { type: 'wide', angle: angleFlip * 0.6, seed: beats.length };
+          if (teaser && /cette semaine/.test(norm(it.text))) shot = { type: 'establish', seed: 1 };
+          if (voMood.crash) shot.crash = true;
+          if (recap) { for (const pid in actors) { actors[pid].emotion = 'happy'; if (pid !== cellia?.id) actors[pid].pose = /abonne/.test(norm(it.text)) ? 'celebrate' : 'idle'; } }
+        }
+      }
+      // teaser : plans serrés et coups de zoom
+      if (teaser && !vo && set !== 'confessional') shot = { type: 'close', subject: id, crash: true, seed: beats.length };
+      if (teaser && shot.type !== 'establish') { shot.crash = shot.crash ?? (beats.length % 2 === 0); }
+
+      const b = { t0, dur, set, speaker: id || null, kind: vo ? 'vo' : 'line', shot, actors, line: it.line, flash: teaser && ii > 0 };
+      if (set === 'blood') b.setState = { crowd };
+      b.speech = { t0: t0 + lead, t1: t0 + lead + sp.dur, words: sp.words.map((w) => ({ t: t0 + lead + w.t, d: w.d, w: w.w })), env: sp.env || null, rate: sp.rate || 50 };
+      // découpage des longues répliques en plusieurs plans (rythme TikTok : un plan toutes les ~3,5 s)
+      const nShots = teaser ? 1 : Math.min(4, Math.max(1, Math.round(dur / 3.6)));
+      if (nShots > 1) {
+        const listeners = Object.keys(actors).filter((k) => k !== id && actors[k].visible !== false);
+        const alts = [];
+        if (set === 'confessional') alts.push({ type: 'close', subject: id, push: 0.06 }, { type: 'confession', subject: id, push: -0.05 });
+        else if (set === 'kitchen') alts.push({ type: 'close', subject: 'josh', push: 0.08 }, { type: 'low', subject: 'josh', angle: -0.6 });
+        else if (vo) {
+          if (mentions[0] && actors[mentions[0]]) alts.push({ type: 'medium', subject: mentions[0], angle: -angleFlip });
+          if (listeners[0]) alts.push({ type: 'close', subject: listeners[listeners.length - 1], angle: angleFlip });
+          alts.push({ type: 'wide', angle: -angleFlip * 0.7 });
+        } else {
+          if (listeners.length) alts.push({ type: 'medium', subject: listeners.find((l) => l !== cellia?.id) || listeners[0], angle: -angleFlip, reaction: true });
+          alts.push({ type: shot.type === 'close' ? 'medium' : 'close', subject: id, angle: -angleFlip });
+          alts.push({ type: 'two', subject: id, other: listeners[0] || id, angle: angleFlip * 0.5 });
+        }
+        let tt = t0; const seg = dur / nShots;
+        for (let k = 0; k < nShots; k++) {
+          const sh = k === 0 ? shot : { ...alts[(k - 1) % alts.length], seed: beats.length + k };
+          const bk = { ...b, t0: tt, dur: k === nShots - 1 ? t0 + dur - tt : seg, shot: sh, flash: k === 0 && b.flash, noWhoosh: k > 0 };
+          if (k > 0) {
+            bk.actors = JSON.parse(JSON.stringify(b.actors));
+            // la marche commencée au premier plan continue (même origine temporelle)
+            for (const kk in bk.actors) { const a = bk.actors[kk]; if (a.from) a.walkDelay = (a.walkDelay || 0) - (tt - t0); if (a.door && typeof a.door === 'object') a.door = { ...a.door, at: (a.door.at || 0) - (tt - t0) }; if (a.shrink) a.shrink = { ...a.shrink, at: a.shrink.at - (tt - t0) }; }
+          }
+          pushBeat(bk); tt = bk.t1;
+        }
+      } else pushBeat(b);
+      if (id) lastSpeaker = id;
+      angleFlip = -angleFlip;
+      firstInSection = false;
+
+      // ---------------------------------------------- habillage de la réplique
+      const color = vo ? '#ffe44d' : lighten(who?.color || '#ffe44d');
+      overlays.push({ type: 'subtitle', t0: b.speech.t0, t1: b.speech.t1 + 0.15, text: it.text, words: b.speech.words, color });
+      voices.push({ key: `L${it.line}`, t: b.speech.t0, speaker: id || 'narrator', dur: sp.dur });
+      if (set === 'confessional') overlays.push({ type: 'confession', t0, t1: t });
+      if (id && !introduced.has(id) && !teaser && who) {
+        introduced.add(id);
+        overlays.push({ type: 'name', t0: t0 + 0.15, t1: Math.min(t, t0 + 2.9), name: who.name, role: who.role, color: who.color });
+        sfx.push({ type: 'pop', t: t0 + 0.15 });
+      }
+      if (acting.sfx) sfx.push({ type: acting.sfx, t: t0 + (acting.sfx === 'door' ? 0.5 : 0.05) });
+      if (voMood.sfx) sfx.push({ type: voMood.sfx, t: t0 + 0.05 });
+      if (shot.crash) sfx.push({ type: 'zoom', t: t0 });
+      if (pendingBox) {
+        overlays.push({ type: 'box', t0: t0 + 0.25, t1: Math.max(t, t0 + 4.2), title: pendingBox.title, text: pendingBox.text, color: who?.color || '#7b2cff' });
+        sfx.push({ type: 'ding', t: t0 + 0.25 }); pendingBox = null;
+      }
+      if (gauge && set !== 'confessional') {
+        overlays.push({ type: 'gauge', t0: Math.max(gauge.t0, t0), t1: t, label: gauge.label, from: gauge.lastTo ?? gauge.from, to: gauge.to });
+        gauge.lastTo = gauge.to; gauge.t0 = t;
+      }
+      if (recap && /a retenir/.test(norm(it.text))) {
+        overlays.push({ type: 'recap', t0: t0 + 0.3, t1: t, text: it.text.replace(/^à retenir\s*:\s*/i, '') });
+      }
+      if (/abonne/.test(norm(it.text))) {
+        const nextT = it.note && /teaser|prochain/.test(norm(it.note)) ? it.note.replace(/^[^:]*:\s*/, '') : '';
+        overlays.push({ type: 'cta', t0: t0 + 0.2, t1: t + 1.2, text: 'ABONNE-TOI !', next: nextT ? `Prochain épisode : ${nextT.toUpperCase()}` : '' });
+        sfx.push({ type: 'bell', t: t0 + 0.3 });
+      }
+    });
+    // encadré resté seul en fin de section : on l'accroche au dernier plan
+    if (pendingBox && beats.length) {
+      const last = beats.at(-1);
+      overlays.push({ type: 'box', t0: last.t0, t1: last.t1 + 1, title: pendingBox.title, text: pendingBox.text });
+    }
+    if (savedVilla) { villa.present = savedVilla.present; villa.pos = savedVilla.pos; }
+    if (gauge && gauge.t0 < t) overlays.push({ type: 'gauge', t0: gauge.t0, t1: t, label: gauge.label, from: gauge.lastTo ?? gauge.from, to: gauge.to });
+  });
+  // fin : on prolonge un peu le dernier plan
+  if (beats.length) { const last = beats.at(-1); last.dur += 1.2; last.t1 += 1.2; t = last.t1; }
+  // badge d'épisode (hors générique et cartons)
+  const titleEnd = beats.find((b) => b.kind === 'title')?.t1 ?? 0;
+  if (epLabel.length > 6) overlays.push({ type: 'badge', t0: titleEnd + 0.3, t1: t, text: epLabel });
+
+  const usedIds = new Set(); beats.forEach((b) => Object.keys(b.actors).forEach((k) => usedIds.add(k)));
+  const cast = casting.list.filter((e) => usedIds.has(e.id)).map((e) => ({ id: e.id, def: e.def, name: e.name, color: e.color, voice: e.voice }));
+  return {
+    version: 1,
+    meta: { title: doc.title, episode: doc.episode, episodeName: doc.episodeName, pathology: doc.pathology, fps, duration: t },
+    cast, beats, overlays: overlays.filter((o) => o.t1 > o.t0), audio: { voices, sfx: sfx.filter((s) => s.t >= 0).sort((a, b) => a.t - b.t), music },
+    narratorVoice: casting.narrator.voice,
+  };
+}
+
+function lighten(hex) {
+  const n = parseInt(hex.slice(1), 16); const r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  const f = (v) => Math.round(v + (255 - v) * 0.35);
+  return `#${[f(r), f(g), f(b)].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+}
