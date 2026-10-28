@@ -112,7 +112,8 @@
       "premierEpisode": 1,
       "apparitions": [
         1,
-        2
+        2,
+        3
       ],
       "alias": []
     },
@@ -148,7 +149,8 @@
       },
       "premierEpisode": 2,
       "apparitions": [
-        2
+        2,
+        3
       ],
       "alias": []
     },
@@ -184,7 +186,8 @@
       },
       "premierEpisode": 2,
       "apparitions": [
-        2
+        2,
+        3
       ],
       "alias": []
     },
@@ -223,6 +226,82 @@
       "premierEpisode": 2,
       "apparitions": [
         2
+      ],
+      "alias": []
+    },
+    "choco": {
+      "id": "choco",
+      "nom": "Choco",
+      "role": "le cholestérol LDL",
+      "description": "le cholestérol LDL. Un gros dur jaune avec une casquette, il colle partout.",
+      "couleur": "#f6d03b",
+      "genre": "m",
+      "notions": [
+        "cholesterol"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "lumps": 0.06,
+        "w": 1.2,
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Choco"
+      },
+      "voix": {
+        "voice": "fr-CA-AntoineNeural",
+        "rate": "+3%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 3,
+      "apparitions": [
+        3
+      ],
+      "alias": []
+    },
+    "hector": {
+      "id": "hector",
+      "nom": "Hector",
+      "role": "le cholestérol HDL",
+      "description": "le cholestérol HDL. Il est bleu, avec des lunettes, il se la raconte.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [
+        "cholesterol"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "lumps": 0.06,
+        "w": 1.2,
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Hector"
+      },
+      "voix": {
+        "voice": "fr-CH-FabriceNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 3,
+      "apparitions": [
+        3
       ],
       "alias": []
     }
