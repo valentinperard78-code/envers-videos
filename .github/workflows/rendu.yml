@@ -1,5 +1,5 @@
-# Rendu automatique gratuit sur les serveurs de GitHub.
-# Se lance quand un script est ajouté/modifié dans scripts/, ou à la main (onglet Actions > Rendu vidéo > Run workflow).
+# Rendu automatique gratuit sur les serveurs de GitHub, réparti sur 12 machines en parallèle (~20 min).
+# Se lance quand un script est ajouté/modifié dans scripts/ (ou à la main si le workflow est sur la branche principale).
 name: Rendu vidéo
 on:
   workflow_dispatch:
@@ -19,20 +19,26 @@ permissions:
 concurrency:
   group: rendu-villa
   cancel-in-progress: false
+env:
+  MORCEAUX: 12
+
 jobs:
-  rendu:
+  # 1) voix, timeline, musique et bruitages
+  preparer:
     runs-on: ubuntu-latest
-    timeout-minutes: 350
+    timeout-minutes: 30
+    outputs:
+      script: ${{ steps.pick.outputs.script }}
+      qualite: ${{ steps.pick.outputs.qualite }}
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 2 }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - name: Outils (ffmpeg, voix, moteur)
+      - name: Outils
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core >/dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
           pip install --quiet edge-tts
-          PUPPETEER_SKIP_DOWNLOAD=1 npm install --no-audit --no-fund
       - name: Choix du script
         id: pick
         run: |
@@ -40,13 +46,13 @@ jobs:
           else S=$( (git diff --name-only HEAD~1 HEAD -- 'scripts/*.md' 2>/dev/null || git ls-files 'scripts/*.md') | head -1); Q=standard; fi
           echo "script=$S" >> $GITHUB_OUTPUT; echo "qualite=$Q" >> $GITHUB_OUTPUT
           echo "Script : $S  ($Q)"
-      - name: Rendu 3D
+      - name: Voix, timeline et son
         if: steps.pick.outputs.script != ''
-        env: { CHROME_PATH: /usr/bin/google-chrome, VILLA_GPU: '0' }
         run: |
-          mkdir -p sorties
+          mkdir -p travail sorties
           set -o pipefail
-          node tools/render.js "${{ steps.pick.outputs.script }}" --qualite ${{ steps.pick.outputs.qualite }} --workers 2 2>&1 | tee sorties/rendu.log
+          node tools/render.js "${{ steps.pick.outputs.script }}" --etape preparer --qualite ${{ steps.pick.outputs.qualite }} --travail travail 2>&1 | tee travail/preparation.log
+          cp sorties/*.timeline.json travail/ 2>/dev/null || true
       - name: Mémoire de la série (bible des personnages)
         if: success() && steps.pick.outputs.script != ''
         run: |
@@ -55,15 +61,66 @@ jobs:
             git add villa/ && git commit -qm "Bible : personnages de ${{ steps.pick.outputs.script }}"
             git pull -q --rebase origin "${GITHUB_REF_NAME}" && git push -q origin "HEAD:${GITHUB_REF_NAME}"
           fi
-      - name: Vidéo en pièce jointe
-        if: always() && steps.pick.outputs.script != ''
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
+        if: steps.pick.outputs.script != ''
+        with: { name: preparation, path: travail/, retention-days: 3 }
+
+  # 2) images 3D : chaque machine calcule un morceau de l'épisode
+  images:
+    needs: preparer
+    if: needs.preparer.outputs.script != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        k: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Outils
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          PUPPETEER_SKIP_DOWNLOAD=1 npm install --no-audit --no-fund --silent
+      - uses: actions/download-artifact@v4
+        with: { name: preparation, path: travail }
+      - name: Rendu du morceau ${{ matrix.k }}
+        env: { CHROME_PATH: /usr/bin/google-chrome, VILLA_GPU: '0' }
+        run: node tools/render.js "${{ needs.preparer.outputs.script }}" --etape images --travail travail --morceau ${{ matrix.k }}/${{ env.MORCEAUX }} --workers 2
+      - uses: actions/upload-artifact@v4
+        with: { name: morceau-${{ matrix.k }}, path: travail/morceau-*.mp4, retention-days: 3 }
+
+  # 3) assemblage + son, puis publication
+  assembler:
+    needs: [preparer, images]
+    if: always() && needs.preparer.outputs.script != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Outils
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - uses: actions/download-artifact@v4
+        with: { name: preparation, path: travail }
+      - uses: actions/download-artifact@v4
+        with: { pattern: morceau-*, path: travail, merge-multiple: true }
+      - name: Assemblage
+        run: |
+          mkdir -p sorties
+          ls travail/morceau-*.mp4 | wc -l | xargs echo "Morceaux reçus :" | tee -a travail/preparation.log
+          [ "$(ls travail/morceau-*.mp4 | wc -l)" = "${{ env.MORCEAUX }}" ] || { echo "❌ Il manque des morceaux" | tee -a travail/preparation.log; exit 1; }
+          node tools/render.js "${{ needs.preparer.outputs.script }}" --etape assembler --travail travail 2>&1 | tee -a travail/preparation.log
+          cp travail/preparation.log sorties/rendu.log; cp travail/*.timeline.json sorties/ 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
         with: { name: video, path: sorties/, retention-days: 30 }
       - name: Publication sur la branche « villa-videos »
-        if: always() && steps.pick.outputs.script != ''
+        if: always()
         run: |
+          cp travail/preparation.log sorties/rendu.log 2>/dev/null || true
           mkdir -p /tmp/pub && cd /tmp/pub && git init -q -b villa-videos
-          cp "$GITHUB_WORKSPACE"/sorties/*.mp4 "$GITHUB_WORKSPACE"/sorties/*.log "$GITHUB_WORKSPACE"/sorties/*.timeline.json . 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE"/sorties/* . 2>/dev/null || true
           git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
-          git add -A . && git commit -qm "Vidéo : ${{ steps.pick.outputs.script }}"
+          git add -A . && git commit -qm "Vidéo : ${{ needs.preparer.outputs.script }}"
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:villa-videos
