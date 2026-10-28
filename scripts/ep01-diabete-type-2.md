@@ -73,3 +73,4 @@ Script ton télé-réalité. Faits médicaux vérifiés (Inserm, Assurance Malad
 - HAS — Stratégie thérapeutique du diabète de type 2 : https://www.has-sante.fr/jcms/p_3520364/fr/strategie-therapeutique-du-patient-vivant-avec-un-diabete-de-type-2-recommandations
 
 
+

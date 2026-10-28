@@ -89,7 +89,10 @@ jobs:
         env: { CHROME_PATH: /usr/bin/google-chrome, VILLA_GPU: '0' }
         run: node tools/render.js "${{ needs.preparer.outputs.script }}" --etape images --travail travail --morceau ${{ matrix.k }}/${{ env.MORCEAUX }} --workers 2
       - uses: actions/upload-artifact@v4
-        with: { name: morceau-${{ matrix.k }}, path: travail/morceau-*.mp4, retention-days: 3 }
+        with:
+          name: morceau-${{ matrix.k }}
+          path: travail/morceau-*.mp4
+          retention-days: 3
 
   # 3) assemblage + son, puis publication
   assembler:
