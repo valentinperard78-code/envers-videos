@@ -70,7 +70,7 @@ export function collectLines(doc, casting) {
     if (it.type !== 'line') continue;
     const who = it.voiceOver ? casting.narrator : casting.byName[it.speaker.toUpperCase()] || casting.byName[slug(it.speaker)];
     const voice = who?.voice || casting.narrator.voice;
-    out.push({ key: `L${it.line}`, text: ttsText(it.text), voice: voice.voice, rate: voice.rate, pitch: voice.pitch, speaker: who?.id || 'narrator' });
+    out.push({ key: `L${it.line}`, text: ttsText(it.text), voice: voice.voice, rate: voice.rate, pitch: voice.pitch, speaker: who?.id || 'narrator', gender: who?.gender || 'm' });
   }
   return out;
 }

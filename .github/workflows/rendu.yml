@@ -62,8 +62,8 @@ jobs:
       - name: Publication sur la branche « villa-videos »
         if: always() && steps.pick.outputs.script != ''
         run: |
-          mkdir -p /tmp/pub && cp sorties/*.mp4 sorties/*.log sorties/*.timeline.json /tmp/pub/ 2>/dev/null || true
+          mkdir -p /tmp/pub && cd /tmp/pub && git init -q -b villa-videos
+          cp "$GITHUB_WORKSPACE"/sorties/*.mp4 "$GITHUB_WORKSPACE"/sorties/*.log "$GITHUB_WORKSPACE"/sorties/*.timeline.json . 2>/dev/null || true
           git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
-          git fetch origin villa-videos || true
-          git checkout --orphan videos-new && git rm -rfq . && cp /tmp/pub/* .
-          git add -A . && git commit -qm "Vidéo : ${{ steps.pick.outputs.script }}" && git push -f origin HEAD:villa-videos
+          git add -A . && git commit -qm "Vidéo : ${{ steps.pick.outputs.script }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:villa-videos

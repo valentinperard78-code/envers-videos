@@ -13,9 +13,9 @@
       ],
       "def": "sucrette",
       "voix": {
-        "voice": "fr-FR-EloiseNeural",
-        "rate": "+8%",
-        "pitch": "+12Hz"
+        "voice": "fr-BE-CharlineNeural",
+        "rate": "+10%",
+        "pitch": "+18Hz"
       },
       "premierEpisode": 1,
       "apparitions": [

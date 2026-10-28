@@ -22,7 +22,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}) {
   const log = opts.log || ((m) => { console.log(m); onProgress({ type: 'log', message: m }); });
   const quality = opts.quality || 'standard';
-  const qDefaults = { brouillon: 24, standard: 30, max: 30 };
+  const qDefaults = { brouillon: 24, standard: 25, max: 30 };
   const fps = +(opts.fps || qDefaults[quality] || 30);
   const src = fs.readFileSync(scriptPath, 'utf8');
   const base = path.basename(scriptPath).replace(/\.[^.]+$/, '') + (opts.part ? `-partie${String(opts.part).replace('/', 'sur')}` : '');
@@ -54,7 +54,7 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   fs.writeFileSync(path.join(work, 'timeline.json'), JSON.stringify(tl));
   fs.writeFileSync(outFile.replace(/\.mp4$/, '.timeline.json'), JSON.stringify(tl));
   const from = Math.max(0, +(opts.from ?? 0)), to = Math.min(tl.meta.duration, +(opts.to ?? tl.meta.duration));
-  log(`🎬 Timeline : ${tl.beats.length} plans, ${tl.meta.duration.toFixed(1)} s (${mode === 'tts' ? 'voix réelles' : 'sans voix'}).`);
+  log(`🎬 Timeline : ${tl.beats.length} plans, ${tl.meta.duration.toFixed(1)} s (${mode === 'tts' ? 'voix réelles' : mode === 'partial' ? 'voix réelles, quelques répliques sans voix' : 'sans voix'}).`);
 
   // 3) audio
   const wav = path.join(work, 'audio.wav');
@@ -77,12 +77,19 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   const browser = await (await import('puppeteer-core')).default.launch({ executablePath: findChrome(), args: chromeArgs(), protocolTimeout: 600000 });
   const t0 = Date.now(); let done = 0;
   const queue = todo.slice();
+  // les onglets démarrent l'un après l'autre (la compilation des shaders est lourde sans carte graphique)
+  let starting = Promise.resolve();
   async function worker(w) {
     const page = await browser.newPage();
     page.on('pageerror', (e) => log(`⚠ [onglet ${w}] ${e.message}`));
-    await page.goto(url);
-    await page.waitForFunction('window.ready===true', { timeout: 300000 });
-    await page.evaluate((json) => window.loadTimeline(JSON.parse(json)), JSON.stringify(tl));
+    const prev = starting; let release; starting = new Promise((r) => (release = r));
+    try {
+      await prev;
+      await page.goto(url, { timeout: 0 });
+      await page.waitForFunction('window.ready===true', { timeout: 0 });
+      await page.evaluate((json) => window.loadTimeline(JSON.parse(json)), JSON.stringify(tl));
+      await page.evaluate((t) => window.renderFrame(t), (queue[0] ?? 0) / fps); // préchauffage
+    } finally { release(); }
     while (queue.length) {
       const f = queue.shift();
       const b64 = await page.evaluate((t) => window.renderFrame(t), f / fps);
@@ -97,7 +104,13 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
     }
     await page.close();
   }
-  try { await Promise.all(Array.from({ length: workers }, (_, w) => worker(w))); }
+  try {
+    const res = await Promise.allSettled(Array.from({ length: workers }, (_, w) => worker(w)));
+    const failed = res.filter((r) => r.status === 'rejected');
+    failed.forEach((r) => log(`⚠ un onglet de rendu s'est arrêté : ${r.reason?.message}`));
+    if (failed.length === res.length) throw failed[0].reason;
+    if (queue.length) await worker(99); // termine les images restantes si besoin
+  }
   finally { await browser.close(); srv.close(); }
 
   // 5) encodage MP4 (H.264 + AAC, 1080x1920)

@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import { spawnSync, spawn } from 'node:child_process';
 import { estimateSpeech } from '../engine/script/director.js';
 
+const FALLBACKS = { f: ['fr-FR-DeniseNeural', 'fr-FR-VivienneMultilingualNeural', 'fr-CA-SylvieNeural'], m: ['fr-FR-HenriNeural', 'fr-FR-RemyMultilingualNeural', 'fr-CA-JeanNeural'] };
 const PY = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
 
 export function ttsAvailable() {
@@ -44,7 +45,7 @@ export async function synthesizeAll(lines, cacheDir, log = console.log) {
     const h = crypto.createHash('sha1').update([l.text, l.voice, l.rate, l.pitch].join('|')).digest('hex').slice(0, 16);
     const out = path.join(cacheDir, `${h}.mp3`);
     l.file = out;
-    if (!fs.existsSync(out) || !fs.existsSync(out + '.json')) jobs.push({ key: l.key, text: l.text, voice: l.voice, rate: l.rate, pitch: l.pitch, out });
+    if (!fs.existsSync(out) || !fs.existsSync(out + '.json')) jobs.push({ key: l.key, text: l.text, voice: l.voice, rate: l.rate, pitch: l.pitch, out, fallbacks: FALLBACKS[l.gender || 'f'] });
   }
   if (jobs.length) {
     log(`🎙 Synthèse de ${jobs.length} réplique(s)…`);

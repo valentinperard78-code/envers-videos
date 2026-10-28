@@ -8,7 +8,6 @@ export const VOICES = {
   f: [
     { voice: 'fr-FR-DeniseNeural', rate: '+6%', pitch: '+0Hz' },
     { voice: 'fr-FR-VivienneMultilingualNeural', rate: '+2%', pitch: '+2Hz' },
-    { voice: 'fr-FR-EloiseNeural', rate: '+8%', pitch: '+12Hz' },
     { voice: 'fr-BE-CharlineNeural', rate: '+4%', pitch: '+0Hz' },
     { voice: 'fr-CA-SylvieNeural', rate: '+4%', pitch: '+0Hz' },
     { voice: 'fr-CH-ArianeNeural', rate: '+4%', pitch: '+0Hz' },
@@ -27,7 +26,7 @@ export const VOICES = {
 export const PRESET_META = {
   insuline: { color: '#e8a317', gender: 'f', role: 'celle qui a les clés', voice: VOICES.f[0], keywords: ['insuline'] },
   cellia: { color: '#9b4dff', gender: 'f', role: 'la cellule, reine de la villa', voice: VOICES.f[1], keywords: ['cellule'], big: true, home: 'cellia' },
-  sucrette: { color: '#ff6fb0', gender: 'f', role: 'le glucose', voice: VOICES.f[2], keywords: ['glucose', 'sucre'] },
+  sucrette: { color: '#ff6fb0', gender: 'f', role: 'le glucose', voice: { voice: 'fr-BE-CharlineNeural', rate: '+10%', pitch: '+18Hz' }, keywords: ['glucose', 'sucre'] },
   pancho: { color: '#ef6a56', gender: 'm', role: 'le pancréas', voice: VOICES.m[0], keywords: ['pancréas', 'pancreas'] },
   josh: { color: '#2f7de1', gender: 'm', role: "l'humain", voice: VOICES.m[5], keywords: ['humain', 'josh'] },
 };
