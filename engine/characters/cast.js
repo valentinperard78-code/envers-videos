@@ -150,12 +150,22 @@ const ACC = {
     }
     ch.facePivot.add(g);
   },
-  cap(ch, ctx) {
+  cap(ch, ctx, opt = {}) {
+    // casquette ajustée à la forme du personnage : la calotte épouse le haut du corps, visière vers l'avant
     const top = ctx.S.top(0, 0); const y = top ? top.point.y : ctx.H;
-    const mat = M.fabric('#2b59c3');
-    const g = new THREE.Group(); g.position.set(0, y - 0.09, 0);
-    const dome = new THREE.Mesh(new THREE.SphereGeometry(ctx.W * 0.42, 48, 24, 0, TAU, 0, Math.PI / 2), mat); g.add(dome);
-    const visor = new THREE.Mesh(new THREE.CylinderGeometry(ctx.W * 0.3, ctx.W * 0.3, 0.015, 48, 1, false, -Math.PI / 2, Math.PI), mat); visor.position.set(0, 0.01, ctx.W * 0.3); visor.scale.z = 0.9; g.add(visor);
+    const yb = y - Math.min(0.2, ctx.H * 0.2);
+    const side = ctx.S.side(1, yb); const rx = (side ? Math.abs(side.point.x) : ctx.W * 0.42) + 0.012;
+    const fr = ctx.S.front(0, yb); const fz = fr ? fr.point.z : rx;
+    const mat = M.fabric(opt.color || '#d6262f'); const dark = M.fabric(opt.visor || '#1f1f2b');
+    const g = new THREE.Group(); g.position.set(0, yb, 0);
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24, 0, TAU, 0, Math.PI / 2), mat);
+    dome.scale.set(rx, (y + 0.035 - yb), Math.max(rx * 0.95, fz + 0.01)); g.add(dome);
+    const band = new THREE.Mesh(new THREE.TorusGeometry(1, 0.012, 10, 64), dark); band.rotation.x = Math.PI / 2; band.scale.set(rx, Math.max(rx * 0.95, fz + 0.01), 1); g.add(band);
+    const button = new THREE.Mesh(new THREE.SphereGeometry(0.02, 12, 8), mat); button.position.y = y + 0.035 - yb; g.add(button);
+    const visor = new THREE.Mesh(new THREE.CylinderGeometry(rx * 0.8, rx * 0.8, 0.03, 48, 1, false, -Math.PI / 2, Math.PI), mat);
+    visor.scale.z = 0.8; visor.position.set(0, 0.0, Math.max(rx * 0.95, fz) * 0.88); visor.rotation.x = 0.32; g.add(visor);
+    const under = new THREE.Mesh(new THREE.CylinderGeometry(rx * 0.79, rx * 0.79, 0.004, 48, 1, false, -Math.PI / 2, Math.PI), dark);
+    under.position.y = -0.017; visor.add(under);
     g.traverse((m) => { if (m.isMesh) m.castShadow = true; }); ch.bodyPivot.add(g);
   },
   tie(ch, ctx) {

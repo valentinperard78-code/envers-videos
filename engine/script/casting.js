@@ -50,7 +50,7 @@ const ARCHETYPES = [
   { k: ['os', 'squelette', 'calcium'], def: { shape: 'capsule', material: 'skin', color: '#f4efe2' } },
   { k: ['sel', 'sodium'], def: { shape: 'crystal', material: 'salt', color: '#e6eef7', accessories: ['sparkles'] } },
   { k: ['sucre', 'glucose'], def: { shape: 'cube', material: 'sugar', color: '#ffffff', accessories: ['sparkles'] } },
-  { k: ['cholesterol', 'cholestérol', 'graisse', 'lipide', 'gras'], def: { shape: 'blob', material: 'skin', color: '#f6d365', accessories: ['sunglasses'] } },
+  { k: ['cholesterol', 'cholestérol', 'graisse', 'lipide', 'gras'], def: { shape: 'blob', material: 'skin', color: '#f6d365', lumps: 0.06, w: 1.2 } },
   { k: ['medicament', 'médicament', 'pilule', 'comprime', 'comprimé', 'gelule', 'gélule', 'traitement', 'vaccin'], def: { shape: 'capsule', material: 'skin', color: '#4a90e2' } },
   { k: ['hormone', 'proteine', 'protéine', 'enzyme', 'anticorps'], def: { shape: 'blob', material: 'skin', color: '#ffb347' } },
   { k: ['pression', 'tension'], def: { shape: 'blob', material: 'skin', color: '#ff5a5f' } },
@@ -112,7 +112,9 @@ export function buildCasting(doc, bible = null) {
       usedVoices[P.gender]++;
     } else {
       let def = null;
-      for (const a of ARCHETYPES) if (a.k.some((k) => low.includes(k))) { def = JSON.parse(JSON.stringify(a.def)); break; }
+      // mot entier (sinon « gros » contient « os », « selle » contient « sel »…)
+      const hasWord = (k) => new RegExp(`(^|[^a-zà-ÿœ])${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i').test(low);
+      for (const a of ARCHETYPES) if (a.k.some(hasWord)) { def = JSON.parse(JSON.stringify(a.def)); break; }
       if (!def) def = { shape: 'blob', material: 'skin' };
       let color = def.color;
       for (const [w, c] of Object.entries(COLORS)) if (new RegExp(`\\b${w}`, 'i').test(low)) { color = c; break; }
