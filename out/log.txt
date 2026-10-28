@@ -1,4 +1,4 @@
-retry 06 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-retry 06 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-retry 06 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-échec voix 06
+retry T3 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
+retry T3 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
+retry T3 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
+échec voix T3
