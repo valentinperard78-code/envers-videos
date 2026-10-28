@@ -48,10 +48,12 @@ function pickHook(doc) {
   return cands[0]?.t || '';
 }
 /** Moment le plus expressif pour la miniature. */
-export function pickCoverTime(tl) {
+export function pickCoverTime(tl, prefer = null) {
   const after = tl.beats.find((b) => b.kind === 'title')?.t1 ?? 0;
   const emo = (b) => b.actors?.[b.speaker]?.emotion || '';
-  const strong = tl.beats.filter((b) => b.speaker && b.shot && b.shot.subject === b.speaker && (b.shot.type === 'close' || b.shot.type === 'medium') && b.set !== 'confessional' && b.t0 >= after);
+  let strong = tl.beats.filter((b) => b.speaker && b.shot && b.shot.subject === b.speaker && (b.shot.type === 'close' || b.shot.type === 'medium') && b.set !== 'confessional' && b.t0 >= after);
+  // le personnage de l'accroche (ou la vedette de l'épisode) en priorité sur la miniature
+  if (prefer) { const own = strong.filter((b) => b.speaker === prefer); if (own.length) strong = own; }
   const pick = strong.find((b) => /sassy|angry|shocked/.test(emo(b))) || strong.find((b) => b.shot.type === 'close') || strong[0] || tl.beats.find((b) => b.speaker) || tl.beats[0];
   return pick.t0 + Math.min(1.2, (pick.t1 - pick.t0) * 0.6);
 }
@@ -73,7 +75,10 @@ export async function coverAndQC(work, scriptPath, outFile, log = console.log) {
     await page.goto(`http://127.0.0.1:${srv.address().port}/app/render.html?q=max&w=1080`, { timeout: 0 });
     await page.waitForFunction('window.ready===true', { timeout: 0 });
     await page.evaluate((json) => window.loadTimeline(JSON.parse(json)), JSON.stringify(tl));
-    const t = pickCoverTime(tl);
+    const slug = (n) => String(n || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+    const hookLine = doc.sections.flatMap((x) => x.items).find((i) => i.type === 'line' && !i.voiceOver && post.accroche && i.text.includes(post.accroche.replace(/^./, (c) => c)));
+    const star = (doc.casting || []).find((c) => !/voix|narrat/i.test(c.name));
+    const t = pickCoverTime(tl, slug(hookLine?.speaker || star?.name));
     const b64 = await page.evaluate((t, c) => window.renderCover(t, c), t, { title: doc.pathology || doc.episodeName, hook: post.accroche, episode: doc.episode });
     fs.writeFileSync(`${base}.couverture.jpg`, Buffer.from(b64, 'base64'));
     log(`🖼  Miniature créée (moment : ${t.toFixed(1)} s).`);
