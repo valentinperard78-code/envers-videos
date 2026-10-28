@@ -153,7 +153,8 @@ const ACC = {
   cap(ch, ctx, opt = {}) {
     // casquette ajustée à la forme du personnage : la calotte épouse le haut du corps, visière vers l'avant
     const top = ctx.S.top(0, 0); const y = top ? top.point.y : ctx.H;
-    const yb = y - Math.min(0.2, ctx.H * 0.2);
+    // le bord de la casquette reste au-dessus des sourcils (jamais sur les yeux)
+    const yb = Math.min(y - 0.06, Math.max(y - Math.min(0.2, ctx.H * 0.2), ctx.face.eyeY + ctx.face.eyeR * 3.1));
     const side = ctx.S.side(1, yb); const rx = (side ? Math.abs(side.point.x) : ctx.W * 0.42) + 0.012;
     const fr = ctx.S.front(0, yb); const fz = fr ? fr.point.z : rx;
     const mat = M.fabric(opt.color || '#d6262f'); const dark = M.fabric(opt.visor || '#1f1f2b');
