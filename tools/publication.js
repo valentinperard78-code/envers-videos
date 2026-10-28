@@ -26,16 +26,26 @@ export function buildPostText(doc, tl) {
     '⚠️ Contenu éducatif : ne remplace pas l’avis d’un médecin.',
     next ? `👉 Demain dans la villa : ${next.pathologie}` : '',
   ].filter(Boolean);
-  const STOP = new Set(['type', 'avec', 'dans', 'chez', 'pour', 'sans', 'syndrome', 'maladie']);
+  const STOP = new Set(['type', 'avec', 'dans', 'chez', 'pour', 'sans', 'syndrome', 'maladie', 'arterielle', 'aigue', 'chronique', 'plaques', 'atherome', 'myocarde', 'cerebral']);
   const words = patho.split(/[\s,()'’]+/).filter((w) => w.length > 3 && !STOP.has(strip(w).toLowerCase()));
   const hashtags = [...new Set(['#villadespathologies', tag(patho), ...words.map(tag), '#sante', '#apprendresurtiktok', '#medecine', '#infirmier', '#education', '#telerealite', '#corpshumain'])].filter((h) => h.length > 2).slice(0, 12);
   return { titre: `${doc.episodeName || patho} — La Villa des Pathologies Ép. ${doc.episode ?? ''}`.trim(), accroche: hook, description: lines.join('\n'), hashtags, sources: doc.sources || [], texteComplet: `${lines.join('\n')}\n\n${hashtags.join(' ')}` };
 }
 function pickHook(doc) {
+  // 1) accroche écrite dans le script (« Accroche : … »)
+  const written = doc.hook || doc.sections.flatMap((s) => s.items).find((i) => i.type === 'hook')?.text; if (written && written.length <= 40) return written;
+  // 2) sinon une phrase (ou fin de phrase) choc du teaser : question ou exclamation d'abord, phrase complète de préférence
   const teaser = doc.sections.find((s) => s.kind === 'teaser');
-  const cands = (teaser?.items || []).filter((i) => i.type === 'line' && !i.voiceOver).flatMap((i) => i.text.match(/[^.!?…]+[.!?…]+/g) || [i.text]).map((t) => t.trim()).filter((t) => t.length >= 8 && t.length <= 34);
-  cands.sort((a, b) => (/[?!]/.test(b) ? 1 : 0) - (/[?!]/.test(a) ? 1 : 0) || a.length - b.length);
-  return cands[0] || '';
+  const cands = [];
+  for (const i of (teaser?.items || []).filter((i) => i.type === 'line' && !i.voiceOver)) {
+    for (const sent of (i.text.match(/[^.!?…]+[.!?…]*/g) || [i.text]).map((t) => t.trim())) {
+      if (sent.length >= 8 && sent.length <= 34) cands.push({ t: sent, full: 1 });
+      else if (sent.length > 34) { const tail = sent.split(/,\s*/).pop().trim(); if (tail.length >= 8 && tail.length <= 34) cands.push({ t: tail.charAt(0).toUpperCase() + tail.slice(1), full: 0 }); }
+    }
+  }
+  const score = (c) => (/\?/.test(c.t) ? 3 : /!/.test(c.t) ? 2 : 0) + c.full + (c.t.length >= 14 ? 2 : 0);
+  cands.sort((a, b) => score(b) - score(a) || a.t.length - b.t.length);
+  return cands[0]?.t || '';
 }
 /** Moment le plus expressif pour la miniature. */
 export function pickCoverTime(tl) {

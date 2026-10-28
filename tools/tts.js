@@ -72,13 +72,14 @@ export async function synthesizeAll(lines, cacheDir, log = console.log) {
   return { speech, mode: missing ? 'partial' : 'tts' };
 }
 
-function alignWords(text, words) {
+export function alignWords(text, words) {
   const disp = String(text).split(/\s+/).filter(Boolean);
   const out = []; let j = 0;
   const clean = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
   for (const w of words) {
     const c = clean(w.w);
-    let k = j; while (k < disp.length && clean(disp[k]) !== c && !clean(disp[k]).startsWith(c) && !c.startsWith(clean(disp[k]))) k++;
+    if (!c) continue;
+    let k = j; while (k < disp.length && (!clean(disp[k]) || (clean(disp[k]) !== c && !clean(disp[k]).startsWith(c) && !c.startsWith(clean(disp[k]))))) k++;
     if (k < disp.length) {
       // mots affichés sautés (ex. « … ») : rattachés au précédent
       for (let s = j; s < k; s++) if (out.length) out[out.length - 1].w += ' ' + disp[s];

@@ -25,6 +25,7 @@ export class Overlay {
 
   draw(c, t, ev) {
     const active = this.items.filter((o) => t >= o.t0 && t <= o.t1);
+    this._nameOn = active.some((o) => o.type === 'name');
     // ordre : fonds plein écran d'abord, texte ensuite
     const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
     active.sort((a, b) => (order[a.type] ?? 3) - (order[b.type] ?? 3));
@@ -112,7 +113,8 @@ export class Overlay {
   box(c, o, t) {
     const u = this.u, W = this.W; const s = ease((t - o.t0) / 0.4); const k = fadeIO(t, o.t0, o.t1, 0.2, 0.25);
     c.globalAlpha = k;
-    const x = W * 0.07, w = W * 0.86, y = this.H * 0.2;
+    // sous l'étiquette du nom si elle est affichée (jamais l'une sur l'autre)
+    const x = W * 0.07, w = W * 0.86, y = this._nameOn ? this.H * 0.135 + 210 * u : this.H * 0.2;
     c.font = `800 ${46 * u}px ${FONT_TEXT}`;
     const lines = wrap(c, o.text, w - 80 * u);
     const h = 130 * u + lines.length * 58 * u;

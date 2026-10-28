@@ -13,6 +13,8 @@ Script ton télé-réalité. Faits médicaux vérifiés (HAS, Assurance Maladie,
 - VOIX OFF : « Précédemment… Cellia a fermé sa porte à Insuline, Sucrette est restée bloquée dans le sang… et Pancho a craqué. »
 
 ## Teaser (avant le générique)
+- Accroche : Elle monte… et tu sens RIEN
+- Question : Tu as déjà fait prendre ta tension ?
 - VOIX OFF : « Ce soir dans la Villa des Pathologies… »
 - TENSIA (confessionnal) : « Moi je monte, je monte… et personne ne me voit venir. »
 - ARTIE (épuisé) : « Elle me met une pression de malade, je vais craquer ! »
