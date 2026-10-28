@@ -19,7 +19,8 @@
       },
       "premierEpisode": 1,
       "apparitions": [
-        1
+        1,
+        2
       ],
       "alias": []
     },
@@ -41,7 +42,8 @@
       },
       "premierEpisode": 1,
       "apparitions": [
-        1
+        1,
+        2
       ],
       "alias": []
     },
@@ -63,7 +65,8 @@
       },
       "premierEpisode": 1,
       "apparitions": [
-        1
+        1,
+        2
       ],
       "alias": []
     },
@@ -85,7 +88,8 @@
       },
       "premierEpisode": 1,
       "apparitions": [
-        1
+        1,
+        2
       ],
       "alias": []
     },
@@ -107,7 +111,118 @@
       },
       "premierEpisode": 1,
       "apparitions": [
-        1
+        1,
+        2
+      ],
+      "alias": []
+    },
+    "tensia": {
+      "id": "tensia",
+      "nom": "Tensia",
+      "role": "la pression artérielle",
+      "description": "la pression artérielle. Une diva rouge, toujours à cran, avec des créoles.",
+      "couleur": "#e2394a",
+      "genre": "f",
+      "notions": [
+        "pression"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#e2394a",
+        "accessories": [
+          "hoops"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Tensia"
+      },
+      "voix": {
+        "voice": "fr-CA-SylvieNeural",
+        "rate": "+4%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 2,
+      "apparitions": [
+        2
+      ],
+      "alias": []
+    },
+    "artie": {
+      "id": "artie",
+      "nom": "Artie",
+      "role": "une artère",
+      "description": "une artère. Il est rose, gentil, mais il en a marre d'être sous pression.",
+      "couleur": "#ff6fb0",
+      "genre": "m",
+      "notions": [
+        "artere",
+        "pression"
+      ],
+      "def": {
+        "shape": "tube",
+        "material": "organ-smooth",
+        "color": "#ff6fb0",
+        "h": 0.9,
+        "accessories": [],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Artie"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 2,
+      "apparitions": [
+        2
+      ],
+      "alias": []
+    },
+    "sel": {
+      "id": "sel",
+      "nom": "Sel",
+      "role": "le sodium",
+      "description": "le sodium. Un fêtard blanc avec des lunettes de soleil, il s'incruste partout.",
+      "couleur": "#f4f4f4",
+      "genre": "m",
+      "notions": [
+        "sel",
+        "sodium"
+      ],
+      "def": {
+        "shape": "crystal",
+        "material": "salt",
+        "color": "#f4f4f4",
+        "accessories": [
+          "sparkles",
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Sel"
+      },
+      "voix": {
+        "voice": "fr-CA-JeanNeural",
+        "rate": "+3%",
+        "pitch": "-2Hz"
+      },
+      "premierEpisode": 2,
+      "apparitions": [
+        2
       ],
       "alias": []
     }
