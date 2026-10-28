@@ -1,6 +1,2 @@
-retry 14 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-retry 14 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
 retry 18 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-retry 18 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-retry 18 NoAudioReceived('No audio was received. Please verify that your parameters are correct.')
-échec voix 18
+ok
