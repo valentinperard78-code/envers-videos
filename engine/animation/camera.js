@@ -118,6 +118,11 @@ export function computeShot(shot, u, dur, subs, all, tAbs, obstacles = []) {
     const k = smooth(clamp(u / 0.28));
     pos = target.clone().lerp(pos, lerp(1.9, 1, k));
   }
+  // « punch-in » : petit coup de zoom sur les mots forts (rythme TikTok)
+  if (shot.punches?.length) {
+    let k = 0; for (const pt of shot.punches) { const d = tAbs - pt; if (d > -0.02 && d < 0.35) k = Math.max(k, Math.sin(clamp(d / 0.35) * Math.PI) * (d < 0.08 ? d / 0.08 : 1)); }
+    if (k > 0) pos = pos.clone().lerp(target, 0.07 * k);
+  }
   // caméra portée
   const shake = (shot.shake ?? 0.6) + (shot.crash ? 2.5 * Math.max(0, 1 - u / 0.6) : 0);
   const off = handheld(tAbs, shake, shot.seed || 0);

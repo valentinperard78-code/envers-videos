@@ -116,16 +116,43 @@ export function renderSfx(list, duration) {
 
 // ------------------------------------------------------------------ musique
 const PROG = {
-  chill: { bpm: 96, chords: [[57, 60, 64, 67], [53, 57, 60, 64], [48, 52, 55, 59], [55, 59, 62, 65]], bass: [45, 41, 36, 43], drums: 'lofi', lead: true, bright: 1500 },
-  happy: { bpm: 108, chords: [[48, 52, 55, 60], [55, 59, 62, 67], [57, 60, 64, 69], [53, 57, 60, 65]], bass: [36, 43, 45, 41], drums: 'pop', lead: true, bright: 2600 },
-  tense: { bpm: 104, chords: [[57, 60, 64], [57, 60, 64], [53, 57, 60], [52, 56, 59]], bass: [45, 45, 41, 40], drums: 'tense', lead: false, bright: 900 },
-  drama: { bpm: 80, chords: [[45, 52, 57, 60], [44, 51, 56, 60], [41, 48, 53, 57], [40, 47, 52, 56]], bass: [33, 32, 29, 28], drums: 'drama', lead: false, bright: 800 },
-  theme: { bpm: 120, chords: [[57, 61, 64, 69], [54, 57, 61, 66], [50, 54, 57, 62], [52, 56, 59, 64]], bass: [45, 42, 38, 40], drums: 'four', lead: true, bright: 3200 },
-  outro: { bpm: 104, chords: [[48, 52, 55, 60], [57, 60, 64, 69], [53, 57, 60, 65], [55, 59, 62, 67]], bass: [36, 45, 41, 43], drums: 'pop', lead: true, bright: 2200 },
+  chill: { bpm: 96, chords: [[57, 60, 64, 67], [53, 57, 60, 64], [48, 52, 55, 59], [55, 59, 62, 65]], bass: [45, 41, 36, 43], drums: 'lofi', lead: 'pluck', bright: 1600, arp: false },
+  happy: { bpm: 110, chords: [[48, 52, 55, 60], [55, 59, 62, 67], [57, 60, 64, 69], [53, 57, 60, 65]], bass: [36, 43, 45, 41], drums: 'pop', lead: 'bell', bright: 2800, arp: true },
+  tense: { bpm: 104, chords: [[57, 60, 64], [57, 60, 64], [53, 57, 60], [52, 56, 59]], bass: [45, 45, 41, 40], drums: 'tense', lead: null, bright: 900, arp: true },
+  drama: { bpm: 80, chords: [[45, 52, 57, 60], [44, 51, 56, 60], [41, 48, 53, 57], [40, 47, 52, 56]], bass: [33, 32, 29, 28], drums: 'drama', lead: null, bright: 800, arp: false },
+  theme: { bpm: 120, chords: [[57, 61, 64, 69], [54, 57, 61, 66], [50, 54, 57, 62], [52, 56, 59, 64]], bass: [45, 42, 38, 40], drums: 'four', lead: 'bell', bright: 3400, arp: true },
+  outro: { bpm: 106, chords: [[48, 52, 55, 60], [57, 60, 64, 69], [53, 57, 60, 65], [55, 59, 62, 67]], bass: [36, 45, 41, 43], drums: 'pop', lead: 'pluck', bright: 2400, arp: false },
 };
+// mélodies (degrés relatifs à la fondamentale de l'accord) pour donner une identité à chaque ambiance
+const HOOKS = { chill: [0, 7, 12, 7, 10, 7, 5, 3], happy: [12, 7, 12, 14, 16, 14, 12, 7], theme: [12, 12, 14, 16, 19, 16, 14, 12], outro: [7, 12, 14, 12, 7, 5, 7, 0] };
+
+/** Réverbération de type Schroeder (4 filtres en peigne + 2 passe-tout). */
+function reverb(inp, room = 0.82, damp = 0.3, wet = 0.3) {
+  const n = inp.length, out = new Float32Array(n);
+  const combs = [1557, 1617, 1491, 1422].map((d) => ({ d, buf: new Float32Array(d), i: 0, f: 0 }));
+  const aps = [225, 556].map((d) => ({ d, buf: new Float32Array(d), i: 0 }));
+  for (let k = 0; k < n; k++) {
+    const x = inp[k]; let y = 0;
+    for (const c of combs) { const o = c.buf[c.i]; c.f = o * (1 - damp) + c.f * damp; c.buf[c.i] = x + c.f * room; c.i = (c.i + 1) % c.d; y += o; }
+    y *= 0.25;
+    for (const a of aps) { const o = a.buf[a.i]; const v = -y + o; a.buf[a.i] = y + o * 0.5; a.i = (a.i + 1) % a.d; y = v; }
+    out[k] = inp[k] * (1 - wet) + y * wet;
+  }
+  return out;
+}
+function saw(b, t0, dur, midi, gain, cutoff = 1800, pan = 0) {
+  const n = Math.floor((dur + 0.05) * SR), i0 = Math.floor(t0 * SR), f = mtof(midi); const tmp = new Float32Array(n); let ph = 0;
+  for (let i = 0; i < n; i++) { const t = i / SR; ph += f / SR; tmp[i] = (2 * (ph % 1) - 1) * env(t, 0.004, 0.08, 0.35, 0.04, dur); }
+  lowpass(tmp, cutoff); for (let i = 0; i < n; i++) b.add(i0 + i, tmp[i] * gain * 0.4 * (1 - pan), tmp[i] * gain * 0.4 * (1 + pan));
+}
+function sub808(b, t0, dur, midi, gain = 1) {
+  const n = Math.floor((dur + 0.1) * SR), i0 = Math.floor(t0 * SR), f = mtof(midi); let ph = 0;
+  for (let i = 0; i < n; i++) { const t = i / SR; const ff = f * (1 + 1.5 * Math.exp(-t * 30)); ph += 2 * Math.PI * ff / SR; b.add(i0 + i, Math.tanh(Math.sin(ph) * 1.6) * env(t, 0.003, 0.2, 0.7, 0.12, dur) * gain * 0.5); }
+}
 
 export function renderMusic(segments, duration) {
-  const b = new Buf(duration + 3);
+  const dry = new Buf(duration + 3), send = new Buf(duration + 3), drums = new Buf(duration + 3);
+  const kicks = [];
   const segs = segments.slice().sort((a, c) => a.t0 - c.t0);
   for (let s = 0; s < segs.length; s++) {
     const seg = segs[s]; const t1 = s + 1 < segs.length ? segs[s + 1].t0 : duration + 1.5;
@@ -137,27 +164,43 @@ export function renderMusic(segments, duration) {
       const ci = barIdx % 4, ch = P.chords[ci];
       const fadeIn = Math.min(1, (t - seg.t0) / 1 + 0.4), fadeOut = Math.min(1, (t1 - t) / bar);
       const g = Math.max(0.2, Math.min(fadeIn, fadeOut));
-      pad(b, t, Math.min(bar, t1 - t), ch, 0.9 * g, P.bright);
+      pad(send, t, Math.min(bar, t1 - t), ch, 0.9 * g, P.bright);
       for (let k = 0; k < 4; k++) {
         const bt = t + k * beat; if (bt >= t1) break;
         // basse
-        if (P.drums === 'tense') { bass(b, bt, beat * 0.45, P.bass[ci], g); bass(b, bt + beat / 2, beat * 0.45, P.bass[ci], g * 0.8); }
-        else if (P.drums === 'drama') { if (k === 0) bass(b, bt, bar * 0.95, P.bass[ci], g * 1.1); }
-        else bass(b, bt, beat * 0.8, P.bass[ci] + (k === 3 ? 7 : 0), g);
+        if (P.drums === 'tense') { sub808(dry, bt, beat * 0.45, P.bass[ci], g); sub808(dry, bt + beat / 2, beat * 0.45, P.bass[ci], g * 0.8); }
+        else if (P.drums === 'drama') { if (k === 0) sub808(dry, bt, bar * 0.9, P.bass[ci], g * 1.1); }
+        else bass(dry, bt, beat * 0.8, P.bass[ci] + (k === 3 ? 7 : 0), g);
         // batterie
         switch (P.drums) {
-          case 'lofi': if (k === 0 || k === 2.5) kick(b, bt, 0.55 * g); if (k === 2) kick(b, bt + beat / 2, 0.4 * g); if (k % 2 === 1) snare(b, bt, 0.35 * g); hat(b, bt, 0.5 * g); hat(b, bt + beat / 2, 0.3 * g); break;
-          case 'pop': kick(b, bt, (k % 2 === 0 ? 0.7 : 0.35) * g); if (k % 2 === 1) clap(b, bt, 0.6 * g); hat(b, bt + beat / 2, 0.5 * g, k === 3); break;
-          case 'four': kick(b, bt, 0.8 * g); if (k % 2 === 1) clap(b, bt, 0.7 * g); hat(b, bt + beat / 2, 0.6 * g, true); break;
-          case 'tense': if (k === 0) kick(b, bt, 0.7 * g); if (k === 2) snare(b, bt, 0.4 * g); for (let h = 0; h < 4; h++) hat(b, bt + h * beat / 4, (h % 2 ? 0.25 : 0.4) * g); break;
-          case 'drama': if (k === 0) boom(b, bt, 0.45 * g); if (k === 2) kick(b, bt, 0.5 * g); break;
+          case 'lofi': if (k === 0) { kick(drums, bt, 0.55 * g); kicks.push(bt); } if (k === 2) { kick(drums, bt + beat / 2, 0.4 * g); kicks.push(bt + beat / 2); } if (k % 2 === 1) snare(drums, bt, 0.35 * g); hat(drums, bt, 0.5 * g); hat(drums, bt + beat / 2, 0.3 * g); break;
+          case 'pop': kick(drums, bt, (k % 2 === 0 ? 0.7 : 0.35) * g); kicks.push(bt); if (k % 2 === 1) clap(drums, bt, 0.6 * g); hat(drums, bt + beat / 2, 0.5 * g, k === 3); if (barIdx % 4 === 3 && k === 3) for (let r = 0; r < 4; r++) hat(drums, bt + r * beat / 8, 0.35 * g); break;
+          case 'four': kick(drums, bt, 0.8 * g); kicks.push(bt); if (k % 2 === 1) clap(drums, bt, 0.7 * g); hat(drums, bt + beat / 2, 0.6 * g, true); break;
+          case 'tense': if (k === 0) { kick(drums, bt, 0.7 * g); kicks.push(bt); } if (k === 2) snare(drums, bt, 0.4 * g); for (let h = 0; h < 4; h++) hat(drums, bt + h * beat / 4, (h % 2 ? 0.25 : 0.4) * g); break;
+          case 'drama': if (k === 0) boom(drums, bt, 0.45 * g); if (k === 2) { kick(drums, bt, 0.5 * g); kicks.push(bt); } break;
         }
-        // mélodie pincée
-        if (P.lead && (barIdx + k) % 2 === 0) { const m = ch[(k + barIdx) % ch.length] + 12; pluck(b, bt + (k % 2 ? beat / 2 : 0), m, 0.55 * g, 0.5, k % 2 ? 0.3 : -0.3); }
+        // arpège (16es) : énergie / tension
+        if (P.arp) for (let a = 0; a < 4; a++) saw(send, bt + a * beat / 4, beat / 4 * 0.9, ch[(a + k) % ch.length] + 12, 0.32 * g, P.drums === 'tense' ? 1100 : 2600, a % 2 ? 0.35 : -0.35);
+        // mélodie « accroche »
+        const hook = HOOKS[seg.mood];
+        if (hook && P.lead) {
+          const m = P.chords[ci][0] + hook[(barIdx * 4 + k) % hook.length] + 12;
+          if (P.lead === 'bell') bell(send, bt, m, 0.42 * g, 0.7, k % 2 ? 0.25 : -0.25); else pluck(send, bt + (k % 2 ? beat / 2 : 0), m, 0.55 * g, 0.5, k % 2 ? 0.3 : -0.3);
+        }
       }
     }
   }
-  return b;
+  // réverbération sur le bus d'effets
+  const wetL = reverb(send.L, 0.84, 0.35, 0.32), wetR = reverb(send.R, 0.85, 0.32, 0.32);
+  // pompage : pads/arpèges s'effacent légèrement à chaque grosse caisse (effet « radio »)
+  const pump = new Float32Array(dry.n).fill(1);
+  for (const kt of kicks) { const i0 = Math.floor(kt * SR), len = Math.floor(0.22 * SR); for (let i = 0; i < len && i0 + i < pump.length; i++) pump[i0 + i] = Math.min(pump[i0 + i], 0.55 + 0.45 * (i / len)); }
+  const out = new Buf(duration + 3);
+  for (let i = 0; i < out.n; i++) {
+    out.L[i] = dry.L[i] + drums.L[i] + wetL[i] * pump[i];
+    out.R[i] = dry.R[i] + drums.R[i] + wetR[i] * pump[i];
+  }
+  return out;
 }
 
 // ------------------------------------------------------------------ WAV

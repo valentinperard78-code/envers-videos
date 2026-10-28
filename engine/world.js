@@ -121,6 +121,9 @@ export class World {
     }
     // caméra (après placement des personnages)
     ev.applyCamera(this.camera);
+    this.camera.updateMatrixWorld(true);
+    ev.heads = {};
+    for (const id in ev.actors) { const ch = this.chars[id]; if (!ch?.visible) continue; ch.updateMatrixWorld(true); const p = ch.localToWorld(new THREE.Vector3(0, ch.headTop ?? ch.height, 0)).project(this.camera); ev.heads[id] = { x: (p.x * 0.5 + 0.5) * this.W, y: (-p.y * 0.5 + 0.5) * this.H, visible: p.z < 1 && Math.abs(p.x) < 1.1 && Math.abs(p.y) < 1.1 }; }
     this.r3d.setFocus(ev.focus ?? 4, ev.aperture);
     this.r3d.render(t, ev.flash || 0);
     this.ctx.drawImage(this.r3d.renderer.domElement, 0, 0, this.W, this.H);

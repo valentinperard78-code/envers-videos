@@ -64,6 +64,10 @@ function actingFor(text, direction) {
   return res;
 }
 
+// Mots-clés médicaux mis en valeur (sous-titres colorés + petit coup de zoom)
+export const KEYWORDS = ['insuline', 'glucose', 'glycemie', 'hyperglycemie', 'hypoglycemie', 'pancreas', 'diabete', 'cellule', 'resistance', 'cholesterol', 'tension', 'pression', 'artere', 'coeur', 'infarctus', 'avc', 'cerveau', 'poumon', 'bronche', 'asthme', 'virus', 'bacterie', 'antibiotique', 'vaccin', 'allergie', 'histamine', 'hormone', 'thyroide', 'anemie', 'fer', 'rein', 'foie', 'urgence', 'medecin', 'symptome', 'traitement', 'sel', 'sodium', 'inflammation', 'immunite', 'globule', 'plaquette', 'oxygene', 'sang'];
+const KEYWORD_RE = new RegExp(`^(${KEYWORDS.join('|')})s?[^a-z]*$`);
+
 // ------------------------------------------------------------------ durées de parole
 /** Estimation sans voix réelle : ~14 caractères/s + pauses de ponctuation. */
 export function estimateSpeech(text, rate = 1) {
@@ -78,19 +82,40 @@ export function estimateSpeech(text, rate = 1) {
 }
 
 /** Liste des répliques à vocaliser (pour la synthèse vocale). */
+// Jeu vocal : la vitesse et la hauteur de la voix suivent l'émotion de la réplique.
+const PROSODY = {
+  angry: [12, 6], sassy: [6, 4], excited: [10, 10], shocked: [8, 14], happy: [5, 5], proud: [-2, 2],
+  tired: [-14, -7], sad: [-10, -5], worried: [-4, 2], suspicious: [-6, -3], relieved: [-6, 0], annoyed: [6, -2], neutral: [0, 0],
+};
+function shiftPct(base, d) { const v = parseFloat(String(base || '+0%')) || 0; const r = Math.max(-18, Math.min(16, Math.round(v + d))); return `${r >= 0 ? '+' : ''}${r}%`; }
+function shiftHz(base, d) { const v = parseFloat(String(base || '+0Hz')) || 0; const r = Math.max(-15, Math.min(22, Math.round(v + d))); return `${r >= 0 ? '+' : ''}${r}Hz`; }
+export function voiceFor(voice, emotion, { teaser = false, vo = false, mood = null } = {}) {
+  let [dr, dp] = PROSODY[emotion] || [0, 0];
+  if (vo) { dr = mood === 'drama' ? -5 : mood === 'happy' ? 4 : 0; dp = mood === 'drama' ? -3 : 0; }
+  if (teaser) dr += 6;
+  return { voice: voice.voice, rate: shiftPct(voice.rate, dr), pitch: shiftHz(voice.pitch, dp) };
+}
+
 export function collectLines(doc, casting) {
   // (casting construit avec la même bible que la timeline)
   const out = [];
   for (const s of doc.sections) for (const it of s.items) {
     if (it.type !== 'line') continue;
     const who = it.voiceOver ? casting.narrator : casting.byName[it.speaker.toUpperCase()] || casting.byName[slug(it.speaker)];
-    const voice = who?.voice || casting.narrator.voice;
-    out.push({ key: `L${it.line}`, text: ttsText(it.text), voice: voice.voice, rate: voice.rate, pitch: voice.pitch, speaker: who?.id || 'narrator', gender: who?.gender || 'm' });
+    const base = who?.voice || casting.narrator.voice;
+    const acting = it.voiceOver ? {} : actingFor(it.text, it.direction);
+    const voMood = it.voiceOver ? (VO_MOOD.find((r) => r.re.test(norm(it.text))) || {}) : {};
+    const emotion = acting.emotion || (/!/.test(it.text) ? 'excited' : 'neutral');
+    const v = voiceFor(base, emotion, { teaser: s.kind === 'teaser' || s.kind === 'previously', vo: it.voiceOver, mood: voMood.music || (voMood.emotion === 'worried' ? 'drama' : voMood.emotion === 'happy' ? 'happy' : null) });
+    out.push({ key: `L${it.line}`, text: ttsText(it.text), voice: v.voice, rate: v.rate, pitch: v.pitch, speaker: who?.id || 'narrator', gender: who?.gender || 'm', emotion });
   }
   return out;
 }
 export function ttsText(t) {
-  return String(t).replace(/[«»"“”]/g, '').replace(/\bOK\b/g, 'O.K.').replace(/\bPLS\b/g, 'P.L.S.').replace(/\s+/g, ' ').trim();
+  return String(t).replace(/[«»"“”]/g, '').replace(/\bOK\b/g, 'O.K.').replace(/\bPLS\b/g, 'P.L.S.')
+    .replace(/≥\s*/g, 'supérieur ou égal à ').replace(/≤\s*/g, 'inférieur ou égal à ').replace(/\bg\/L\b/g, 'gramme par litre').replace(/\bmmHg\b/g, 'millimètres de mercure')
+    .replace(/\bAVC\b/g, 'A.V.C.').replace(/\bIRM\b/g, 'I.R.M.').replace(/\bECG\b/g, 'électrocardiogramme').replace(/\bHbA1c\b/gi, 'hémoglobine glyquée')
+    .replace(/\s+/g, ' ').trim();
 }
 
 // ------------------------------------------------------------------ construction de la timeline
@@ -151,6 +176,7 @@ export function buildTimeline(src, opts = {}) {
   const epLabel = `ÉP. ${doc.episode ?? 1} · ${(doc.pathology || doc.episodeName || '').toUpperCase()}`.trim();
   const sweatOf = {};
   let gauge = null, crowd = 0;
+  let hookText = null, questionText = null;
 
   const entryOf = (name) => casting.byName[String(name).toUpperCase()] || casting.byName[slug(name)];
   const doorSpot = (side = -1) => cellia ? { x: side * 0.78, dz: 1.0 } : null; // à côté de la porte (ne masque pas la cellule)
@@ -203,13 +229,13 @@ export function buildTimeline(src, opts = {}) {
 
     items.forEach((it, ii) => {
       if (it.type === 'title') {
-        const b = pushBeat({ t0: t, dur: 3.2, set: 'stage', shot: { type: 'wide' }, actors: {}, kind: 'title', noWhoosh: true });
+        const b = pushBeat({ t0: t, dur: 2.5, set: 'stage', shot: { type: 'wide' }, actors: {}, kind: 'title', noWhoosh: true });
         overlays.push({ type: 'title', t0: b.t0, t1: b.t1, subtitle: doc.episodeName ? `Épisode ${doc.episode ?? 1} · ${doc.episodeName}` : '' });
         sfx.push({ type: 'title', t: b.t0 }); music.push({ t0: b.t0, mood: 'theme' }); music.push({ t0: b.t1, mood: 'chill' });
         return;
       }
       if (it.type === 'card') {
-        const b = pushBeat({ t0: t, dur: 2.4, set: lastSet || 'villa', shot: { type: 'wide' }, actors: {}, kind: 'card', noWhoosh: true });
+        const b = pushBeat({ t0: t, dur: 1.9, set: lastSet || 'villa', shot: { type: 'wide' }, actors: {}, kind: 'card', noWhoosh: true });
         overlays.push({ type: 'card', t0: b.t0, t1: b.t1, text: it.text });
         sfx.push({ type: 'riser', t: b.t0 - 0.6 }, { type: 'boom', t: b.t0 });
         // ellipse temporelle : la porte se referme, tout le monde ressort
@@ -218,6 +244,8 @@ export function buildTimeline(src, opts = {}) {
         return;
       }
       if (it.type === 'box') { pendingBox = it; return; }
+      if (it.type === 'hook') { hookText = it.text; return; }
+      if (it.type === 'question') { questionText = it.text; return; }
       if (it.type === 'screen') {
         const s = norm(it.text);
         const m = s.match(/jauge (?:de |du |d')?([a-z ]+?)(?: passe| monte| baisse| descend| au | est|$)/);
@@ -328,10 +356,23 @@ export function buildTimeline(src, opts = {}) {
           // émotion positive : fin de la sueur
           if (/happy|relieved|excited|proud/.test(a.emotion)) { a.sweat = 0; sweatOf[id] = 0; }
           lastEmotion[id] = a.emotion === 'excited' ? 'happy' : a.emotion;
+          // jeu physique du locuteur
+          if (!a.from) {
+            if (a.emotion === 'shocked') { a.react = 'doubleTake'; a.reactAt = 0.15; a.hop = 0.06; a.hopAt = 0.42; }
+            else if (a.emotion === 'excited') { a.hop = 0.1; a.hopAt = 0.12; }
+            else if (a.emotion === 'angry') { a.react = 'stomp'; a.reactAt = 0.1; }
+            else if (a.emotion === 'tired' || a.emotion === 'sad') { a.react = 'deflate'; a.reactAt = 0.2; }
+            else if (a.emotion === 'sassy' || a.emotion === 'suspicious') { a.react = 'tilt'; a.reactAt = 0.1; a.tilt = (beats.length % 2 ? 1 : -1) * 0.02; }
+          }
           // réactions des autres candidats
           const REACT = { angry: 'worried', sassy: 'suspicious', shocked: 'shocked', tired: 'worried', excited: 'happy', happy: 'happy', proud: 'neutral', relieved: 'happy', suspicious: 'worried', annoyed: 'worried' };
           const r = REACT[a.emotion];
-          for (const pid in actors) if (pid !== id && r) { actors[pid].emotion = cellia && pid === cellia.id && /angry|sassy/.test(a.emotion) ? 'suspicious' : r; actors[pid].look = id; lastEmotion[pid] = actors[pid].emotion; }
+          for (const pid in actors) if (pid !== id && r) {
+            actors[pid].emotion = cellia && pid === cellia.id && /angry|sassy/.test(a.emotion) ? 'suspicious' : r; actors[pid].look = id; lastEmotion[pid] = actors[pid].emotion;
+            // réaction des autres : double regard sur un choc / une colère, petit saut de joie
+            if (/shocked|angry/.test(a.emotion) && !(cellia && pid === cellia.id)) { actors[pid].react = 'doubleTake'; actors[pid].reactAt = 0.35 + (pid.length % 3) * 0.12; }
+            else if (a.emotion === 'excited' && r === 'happy' && !(cellia && pid === cellia.id)) { actors[pid].hop = 0.05; actors[pid].hopAt = 0.3 + (pid.length % 3) * 0.1; }
+          }
         } else {
           // voix off : réactions des personnages présents
           for (const pid in actors) if (voMood.emotion && pid !== cellia?.id) actors[pid].emotion = voMood.emotion;
@@ -362,6 +403,7 @@ export function buildTimeline(src, opts = {}) {
       const b = { t0, dur, set, speaker: id || null, kind: vo ? 'vo' : 'line', shot, actors, line: it.line, flash: teaser && ii > 0, isRecap: recap };
       if (set === 'blood') b.setState = { crowd };
       b.speech = { t0: t0 + lead, t1: t0 + lead + sp.dur, words: sp.words.map((w) => ({ t: t0 + lead + w.t, d: w.d, w: w.w })), env: sp.env || null, rate: sp.rate || 50 };
+      shot.punches = b.speech.words.filter((w) => /[!]/.test(w.w) || KEYWORD_RE.test(norm(w.w))).map((w) => w.t).filter((x, i, arr) => i === 0 || x - arr[i - 1] > 0.9).slice(0, 4);
       // découpage des longues répliques en plusieurs plans (rythme TikTok : un plan toutes les ~3,5 s)
       const nShots = teaser ? 1 : Math.min(4, Math.max(1, Math.round(dur / 3.6)));
       if (nShots > 1) {
@@ -385,7 +427,7 @@ export function buildTimeline(src, opts = {}) {
           if (k > 0) {
             bk.actors = JSON.parse(JSON.stringify(b.actors));
             // la marche commencée au premier plan continue (même origine temporelle)
-            for (const kk in bk.actors) { const a = bk.actors[kk]; if (a.from) a.walkDelay = (a.walkDelay || 0) - (tt - t0); if (a.door && typeof a.door === 'object') a.door = { ...a.door, at: (a.door.at || 0) - (tt - t0) }; if (a.shrink) a.shrink = { ...a.shrink, at: a.shrink.at - (tt - t0) }; }
+            for (const kk in bk.actors) { const a = bk.actors[kk]; if (a.from) a.walkDelay = (a.walkDelay || 0) - (tt - t0); if (a.door && typeof a.door === 'object') a.door = { ...a.door, at: (a.door.at || 0) - (tt - t0) }; if (a.shrink) a.shrink = { ...a.shrink, at: a.shrink.at - (tt - t0) }; if (a.hopAt !== undefined) a.hopAt -= (tt - t0); if (a.reactAt !== undefined) a.reactAt -= (tt - t0); }
           }
           pushBeat(bk); tt = bk.t1;
         }
@@ -405,6 +447,13 @@ export function buildTimeline(src, opts = {}) {
         sfx.push({ type: 'pop', t: t0 + 0.15 });
       }
       if (acting.sfx) sfx.push({ type: acting.sfx, t: t0 + (acting.sfx === 'door' ? 0.5 : 0.05) });
+      // stickers de réaction façon télé-réalité, près de la tête du personnage
+      if (id && !vo) {
+        const em = (actors[id] || {}).emotion;
+        const st = em === 'shocked' ? { text: '?!', color: '#ffe44d' } : em === 'angry' ? { text: 'GRRR !', color: '#ff3b3b' } : em === 'sassy' && acting.crash ? { text: 'OUPS…', color: '#ff3da8' } : em === 'tired' ? { icon: 'drop', text: '', color: '#7ad0ff' } : null;
+        if (st) overlays.push({ type: 'sticker', who: id, t0: t0 + 0.2, t1: Math.min(t, t0 + 2.2), ...st });
+      }
+      if (teaser && vo && /clash|trahison|danger/.test(norm(it.text))) overlays.push({ type: 'sticker', who: null, t0: t0 + 0.1, t1: t, text: 'CLASH !', color: '#ff3b3b', x: 0.72, y: 0.3 });
       if (voMood.sfx) sfx.push({ type: voMood.sfx, t: t0 + 0.05 });
       if (shot.crash) sfx.push({ type: 'zoom', t: t0 });
       if (pendingBox) {
@@ -435,6 +484,12 @@ export function buildTimeline(src, opts = {}) {
   });
   // fin : on prolonge un peu le dernier plan
   if (beats.length) { const last = beats.at(-1); last.dur += 1.2; last.t1 += 1.2; t = last.t1; }
+  // accroche des 3 premières secondes (rétention TikTok)
+  const hook = hookText || (doc.pathology ? `${doc.pathology} : ce qui se passe VRAIMENT dans ton corps` : null);
+  if (hook && beats.length) overlays.push({ type: 'hook', t0: 0.05, t1: Math.min(2.9, beats[0].t1 + 0.4), text: hook });
+  // question finale pour les commentaires
+  const q = questionText || 'Quel organe tu veux voir débarquer dans la villa ?';
+  overlays.push({ type: 'question', t0: Math.max(0, t - 3.4), t1: t, text: q });
   // sources affichées pendant le récap (crédibilité)
   if (doc.sources?.length) {
     const recapStart = beats.find((b) => doc.sections.find((sec) => sec.kind === 'recap') && b.t0 >= 0 && b.kind === 'vo' && b.isRecap)?.t0;

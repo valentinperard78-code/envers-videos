@@ -24,7 +24,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export async function prepare(scriptPath, opts = {}) {
   const log = opts.log || console.log;
   const quality = opts.quality || 'standard';
-  const qDefaults = { brouillon: 24, standard: 25, max: 30 };
+  const qDefaults = { brouillon: 24, standard: 25, haute: 25, max: 30 };
   const fps = +(opts.fps || qDefaults[quality] || 30);
   const src = fs.readFileSync(scriptPath, 'utf8');
   const base = path.basename(scriptPath).replace(/\.[^.]+$/, '') + (opts.part ? `-partie${String(opts.part).replace('/', 'sur')}` : '');
@@ -127,7 +127,7 @@ export async function assemble(work, segments, outFile) {
   const list = path.join(work, 'morceaux.txt');
   fs.writeFileSync(list, segments.map((s) => `file '${path.resolve(s).replace(/'/g, "'\\''")}'`).join('\n') + '\n');
   await run('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-i', path.join(work, 'audio.wav'),
-    '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', outFile]);
+    '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-maxrate', '6M', '-bufsize', '12M', '-pix_fmt', 'yuv420p', '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-ar', '48000', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', outFile]);
   return outFile;
 }
 

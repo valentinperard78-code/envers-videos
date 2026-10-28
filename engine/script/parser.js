@@ -90,6 +90,11 @@ export function parseItem(body, lineNo = 0) {
     const eq = txt.match(/^([^=:]{1,40}?)\s*[=:]\s*(.+)$/);
     return eq ? { type: 'box', title: eq[1].trim(), text: eq[2].trim(), line: lineNo } : { type: 'box', title: 'À savoir', text: txt, line: lineNo };
   }
+  // accroche à l'écran (premières secondes) / question pour les commentaires
+  m = body.match(/^accroche(?:\s+[àa]\s+l['’]?[ée]cran)?\s*[:\-–]\s*(.+)$/i);
+  if (m) return { type: 'hook', text: m[1].replace(/[«»"]/g, '').trim(), line: lineNo };
+  m = body.match(/^question(?:\s+(?:commentaires?|aux abonn[ée]s|finale))?\s*[:\-–]\s*(.+)$/i);
+  if (m) return { type: 'question', text: m[1].replace(/[«»"]/g, '').trim(), line: lineNo };
   // indication d'écran
   m = body.match(/^(?:[àa]\s+l['’]?[ée]cran|[ée]cran|visuel)\s*[:\-–]\s*(.+)$/i);
   if (m) return { type: 'screen', text: m[1].trim(), line: lineNo };

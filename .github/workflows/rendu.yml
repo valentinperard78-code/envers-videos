@@ -1,4 +1,4 @@
-# Rendu automatique gratuit sur les serveurs de GitHub, réparti sur 12 machines en parallèle (~20 min).
+# Rendu automatique gratuit sur les serveurs de GitHub, réparti sur 20 machines en parallèle (~15-20 min).
 # Se lance quand un script est ajouté/modifié dans scripts/ (ou à la main si le workflow est sur la branche principale).
 name: Rendu vidéo
 on:
@@ -9,18 +9,19 @@ on:
         required: true
         default: scripts/ep01-diabete-type-2.md
       qualite:
-        description: "brouillon | standard | max"
+        description: "brouillon | standard | haute | max"
         required: true
         default: standard
   push:
     paths: ['scripts/**.md']
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: rendu-villa
   cancel-in-progress: false
 env:
-  MORCEAUX: 12
+  MORCEAUX: 20
 
 jobs:
   # 1) voix, timeline, musique et bruitages
@@ -53,6 +54,15 @@ jobs:
           set -o pipefail
           node tools/render.js "${{ steps.pick.outputs.script }}" --etape preparer --qualite ${{ steps.pick.outputs.qualite }} --travail travail 2>&1 | tee travail/preparation.log
           cp sorties/*.timeline.json travail/ 2>/dev/null || true
+      - name: Miniature, texte de publication et contrôle qualité
+        if: steps.pick.outputs.script != ''
+        continue-on-error: true
+        env: { CHROME_PATH: /usr/bin/google-chrome, VILLA_GPU: '0' }
+        run: |
+          PUPPETEER_SKIP_DOWNLOAD=1 npm install --no-audit --no-fund --silent
+          node tools/render.js "${{ steps.pick.outputs.script }}" --etape couverture --travail travail 2>&1 | tee -a travail/preparation.log
+          mkdir -p travail/publication && cp sorties/*.couverture.jpg sorties/*.publication.* sorties/*.controle.json travail/publication/ 2>/dev/null || true
+          ls travail/publication
       - name: Mémoire de la série (bible des personnages)
         if: success() && steps.pick.outputs.script != ''
         run: |
@@ -74,7 +84,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        k: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        k: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -119,16 +129,27 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { name: preparation, path: travail }
       - uses: actions/download-artifact@v4
-        with: { pattern: morceau-*, path: travail, merge-multiple: true }
+        with: { pattern: morceau-*, path: recus }
       - uses: actions/download-artifact@v4
         with: { pattern: journal-*, path: travail/journaux, merge-multiple: true }
       - name: Assemblage
         run: |
           mkdir -p sorties
+          find recus -name 'morceau-*.mp4' | sort | tee -a travail/preparation.log
+          if [ "$(find recus -name 'morceau-*.mp4' | wc -l)" != "${{ env.MORCEAUX }}" ]; then
+            echo "⚠ téléchargement incomplet, deuxième tentative via l'API" | tee -a travail/preparation.log
+            GH_TOKEN=${{ github.token }} gh run download ${{ github.run_id }} -R ${{ github.repository }} -p 'morceau-*' -D recus2 || true
+            find recus2 -name 'morceau-*.mp4' -exec mv -n {} recus/ \; 2>/dev/null || true
+          fi
+          find recus -name 'morceau-*.mp4' -exec mv {} travail/ \;
           ls travail/morceau-*.mp4 | wc -l | xargs echo "Morceaux reçus :" | tee -a travail/preparation.log
           [ "$(ls travail/morceau-*.mp4 | wc -l)" = "${{ env.MORCEAUX }}" ] || { echo "❌ Il manque des morceaux" | tee -a travail/preparation.log; exit 1; }
           node tools/render.js "${{ needs.preparer.outputs.script }}" --etape assembler --travail travail 2>&1 | tee -a travail/preparation.log
           cp travail/preparation.log sorties/rendu.log; cp travail/*.timeline.json sorties/ 2>/dev/null || true
+          cp travail/publication/* sorties/ 2>/dev/null || true
+          V=$(ls sorties/*.mp4 | head -1)
+          D=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$V")
+          ffmpeg -v error -y -i "$V" -vf "fps=16/$D,scale=270:-1,tile=8x2" -frames:v 1 sorties/planche.jpg || true
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: video, path: sorties/, retention-days: 30 }
@@ -136,9 +157,12 @@ jobs:
         if: always()
         run: |
           cp travail/preparation.log sorties/rendu.log 2>/dev/null || true
-          for f in travail/journaux/*.log; do [ -f "$f" ] && { echo; echo "===== $(basename $f) ====="; grep -E "Morceau|✅|❌|⚠|ERR|Error|error" "$f" | tail -15; } >> sorties/rendu.log; done
+          for f in $(find travail/journaux -name '*.log' 2>/dev/null | sort); do { echo; echo "===== $(basename $f) ====="; grep -E "Morceau|✅|❌|⚠|ERR|Error|error|s/image" "$f" | tail -8; } >> sorties/rendu.log || true; done
           mkdir -p /tmp/pub && cd /tmp/pub && git init -q -b villa-videos
           cp "$GITHUB_WORKSPACE"/sorties/* . 2>/dev/null || true
+          # GitHub refuse les fichiers > 100 Mo : la vidéo est découpée en parts (à recoller avec cat)
+          for v in *.mp4; do if [ -f "$v" ] && [ "$(stat -c%s "$v")" -gt 95000000 ]; then split -b 90m -d "$v" "$v.part"; rm "$v"; fi; done
+          ls -la
           git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
           git add -A . && git commit -qm "Vidéo : ${{ needs.preparer.outputs.script }}"
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:villa-videos

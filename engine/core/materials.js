@@ -45,7 +45,7 @@ export function membrane(color = '#9b4dff', opts = {}) {
 export function sugar() {
   return new THREE.MeshPhysicalMaterial({
     color: C('#fbf8ff'), roughness: 0.32, metalness: 0, transmission: 0.18, thickness: 0.6, ior: 1.56,
-    clearcoat: 0.8, clearcoatRoughness: 0.18, sheen: 0.8, sheenColor: C('#ffd9f2'), sheenRoughness: 0.35,
+    clearcoat: 0.7, clearcoatRoughness: 0.3, sheen: 0.8, sheenColor: C('#ffd9f2'), sheenRoughness: 0.35,
     normalMap: crystalNormal(), normalScale: new THREE.Vector2(0.16, 0.16), iridescence: 0.35, iridescenceIOR: 1.5,
     envMapIntensity: 1.3, emissive: C('#3a3040'), emissiveIntensity: 0.1,
   });

@@ -1,5 +1,8 @@
 // Habillage 2D « télé-réalité » dessiné par-dessus l'image 3D.
 import { clamp, lerp, smooth, easeOutBack } from '../core/geo.js';
+import { KEYWORDS } from '../script/director.js';
+const KW = new RegExp(`^(${KEYWORDS.join('|')})s?$`);
+const normW = (w) => String(w).toLowerCase().replace(/œ/g, 'oe').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
 
 const FONT_TITLE = 'Anton, Impact, sans-serif';
 const FONT_TEXT = 'Montserrat, Arial, sans-serif';
@@ -23,9 +26,9 @@ export class Overlay {
   draw(c, t, ev) {
     const active = this.items.filter((o) => t >= o.t0 && t <= o.t1);
     // ordre : fonds plein écran d'abord, texte ensuite
-    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, confession: 2, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
+    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
     active.sort((a, b) => (order[a.type] ?? 3) - (order[b.type] ?? 3));
-    for (const o of active) { c.save(); try { (this[o.type] || (() => {})).call(this, c, o, t); } finally { c.restore(); } }
+    for (const o of active) { c.save(); try { (this[o.type] || (() => {})).call(this, c, o, t, ev); } finally { c.restore(); } }
   }
 
   // ------------------------------------------------ sous-titres dynamiques
@@ -60,7 +63,8 @@ export class Overlay {
         c.lineJoin = 'round'; c.lineWidth = size * 0.2; c.strokeStyle = '#000';
         c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 12 * u; c.shadowOffsetY = 5 * u;
         c.strokeText(s, cx, yy); c.shadowBlur = 0; c.shadowOffsetY = 0;
-        c.fillStyle = on ? (o.color || '#ffe44d') : '#ffffff';
+        const kw = KW.test(normW(w.w));
+        c.fillStyle = on ? (o.color || '#ffe44d') : kw ? '#6ff2ff' : '#ffffff';
         if (on) { c.save(); c.translate(cx, yy); c.scale(1.05, 1.05); c.fillText(s, 0, 0); c.restore(); } else c.fillText(s, cx, yy);
         x += widths[i] + space;
       }
@@ -229,6 +233,55 @@ export class Overlay {
       c.font = `${54 * u}px ${FONT_TITLE}`; const lab = `ÉP. ${o.episode}`; const w = c.measureText(lab).width + 50 * u;
       c.fillStyle = '#ff3da8'; rr(c, W - w - 40 * u, H * 0.93 - 45 * u, w, 90 * u, 45 * u); c.fill(); c.fillStyle = '#fff'; c.fillText(lab, W - w / 2 - 40 * u, H * 0.93);
     }
+  }
+
+  // accroche plein cadre des premières secondes
+  hook(c, o, t) {
+    const u = this.u, W = this.W; const k = fadeIO(t, o.t0, o.t1, 0.12, 0.3); const s = ease((t - o.t0) / 0.35);
+    c.globalAlpha = k;
+    c.font = `${86 * u}px ${FONT_TITLE}`;
+    const lines = wrap(c, String(o.text).toUpperCase(), W * 0.84);
+    const h = lines.length * 92 * u + 50 * u, y = this.H * 0.2;
+    c.translate(W / 2, y + h / 2); c.scale(lerp(0.7, 1, s), lerp(0.7, 1, s)); c.rotate(-0.025); c.translate(-W / 2, -(y + h / 2));
+    c.fillStyle = '#ffe44d'; c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 24 * u; rr(c, W * 0.06, y, W * 0.88, h, 26 * u); c.fill(); c.shadowBlur = 0;
+    c.fillStyle = '#1a0a24'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    lines.forEach((l, i) => c.fillText(l, W / 2, y + 25 * u + 46 * u + i * 92 * u));
+  }
+
+  // question finale (incite à commenter)
+  question(c, o, t) {
+    const u = this.u, W = this.W; const k = fadeIO(t, o.t0, o.t1, 0.25, 0.2); const s = ease((t - o.t0) / 0.4);
+    c.globalAlpha = k;
+    c.font = `800 ${44 * u}px ${FONT_TEXT}`;
+    const lines = wrap(c, o.text, W * 0.7);
+    const w = W * 0.84, h = lines.length * 54 * u + 50 * u, x = W * 0.08, y = this.H * 0.33;
+    c.translate(W / 2, y); c.scale(s, s); c.translate(-W / 2, -y);
+    c.fillStyle = '#ffffff'; c.shadowColor = 'rgba(0,0,0,0.45)'; c.shadowBlur = 24 * u; rr(c, x, y, w, h, 30 * u); c.fill(); c.shadowBlur = 0;
+    c.beginPath(); c.moveTo(x + 70 * u, y + h); c.lineTo(x + 50 * u, y + h + 40 * u); c.lineTo(x + 120 * u, y + h); c.fill();
+    // icône bulle
+    c.fillStyle = '#ff3da8'; c.beginPath(); c.arc(x + 62 * u, y + h / 2, 30 * u, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#fff'; for (let i = -1; i <= 1; i++) { c.beginPath(); c.arc(x + 62 * u + i * 11 * u, y + h / 2, 4.5 * u, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#1d1430'; c.textAlign = 'left'; c.textBaseline = 'middle';
+    lines.forEach((l, i) => c.fillText(l, x + 112 * u, y + 25 * u + 27 * u + i * 54 * u));
+  }
+
+  // sticker de réaction (près de la tête du personnage quand sa position est connue)
+  sticker(c, o, t, ev) {
+    const u = this.u, W = this.W, H = this.H; const local = t - o.t0; const k = fadeIO(t, o.t0, o.t1, 0.08, 0.25); const s = ease(local / 0.3);
+    let x = (o.x ?? 0.78) * W, y = (o.y ?? 0.32) * H;
+    const hp = ev?.heads?.[o.who];
+    if (hp && hp.visible) { x = clamp(hp.x + (hp.x < W / 2 ? 1 : -1) * 170 * u, 140 * u, W - 140 * u); y = clamp(hp.y - 150 * u, H * 0.16, H * 0.55); }
+    c.globalAlpha = k; c.translate(x, y); c.rotate(Math.sin(local * 9) * 0.05 - 0.12); c.scale(s, s);
+    if (o.icon === 'drop') {
+      c.fillStyle = o.color; c.beginPath(); c.moveTo(0, -60 * u); c.bezierCurveTo(40 * u, -10 * u, 40 * u, 30 * u, 0, 40 * u); c.bezierCurveTo(-40 * u, 30 * u, -40 * u, -10 * u, 0, -60 * u); c.fill();
+      c.fillStyle = 'rgba(255,255,255,0.7)'; c.beginPath(); c.ellipse(-12 * u, 10 * u, 8 * u, 14 * u, 0.3, 0, Math.PI * 2); c.fill();
+    } else {
+      // étoile « BD »
+      c.fillStyle = o.color; c.strokeStyle = '#000'; c.lineWidth = 7 * u; c.beginPath();
+      const n = 12; for (let i = 0; i <= n * 2; i++) { const a = (i / (n * 2)) * Math.PI * 2; const r = (i % 2 ? 70 : 110) * u; const px = Math.cos(a) * r * 1.25, py = Math.sin(a) * r; if (i) c.lineTo(px, py); else c.moveTo(px, py); }
+      c.closePath(); c.fill(); c.stroke();
+    }
+    if (o.text) { c.font = `${o.icon ? 46 : 70}px ${FONT_TITLE}`.replace(/^(\d+)px/, (m, n) => `${n * u}px`); c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineWidth = 10 * u; c.strokeStyle = '#000'; const ty = o.icon ? 90 * u : 4 * u; c.strokeText(o.text, 0, ty); c.fillStyle = '#fff'; c.fillText(o.text, 0, ty); }
   }
 
   sources(c, o, t) {

@@ -160,12 +160,31 @@ export function evaluate(tl, t, world) {
     const stepLen = 0.32 * I.sc;
     const doorOpen = a.door !== undefined ? (typeof a.door === 'number' ? a.door : lerp(a.door.from, a.door.to, smooth(clamp((local - (a.door.at || 0)) / (a.door.dur || 0.8))))) : 0;
     const sweat = a.sweat ?? 0;
-    const hop = a.hop ? Math.max(0, Math.sin(clamp((local - (a.hopAt || 0)) / 0.45) * Math.PI)) * a.hop : 0;
+    // --- réactions « dessin animé » (déterministes dans le temps du plan)
+    let hop = 0, squash = a.squash || 0, lean = a.lean || 0, eyeWide = 0, browBoost = 0, blink = 0, yawOff = 0, tilt = a.tilt || 0;
+    if (a.hop) {
+      const u = local - (a.hopAt || 0);
+      if (u > -0.14 && u < 0) squash -= 0.07 * Math.sin(((u + 0.14) / 0.14) * Math.PI / 2); // anticipation : on s'écrase avant de sauter
+      if (u >= 0 && u < 0.45) { hop = Math.sin((u / 0.45) * Math.PI) * a.hop; squash += 0.08 * Math.sin((u / 0.45) * Math.PI); }
+      if (u >= 0.45 && u < 0.6) squash -= 0.06 * Math.sin(((u - 0.45) / 0.15) * Math.PI); // réception
+    }
+    if (a.react === 'doubleTake') {
+      const u = local - (a.reactAt || 0);
+      if (u > 0 && u < 0.28) yawOff = 0.45 * Math.sin((u / 0.28) * Math.PI);           // premier regard… ailleurs
+      else if (u >= 0.28 && u < 0.62) yawOff = -0.12 * Math.sin(((u - 0.28) / 0.34) * Math.PI); // retour brusque
+      if (u > 0.28 && u < 1.1) { eyeWide = 0.28 * (1 - (u - 0.28) / 0.82); browBoost = 0.5 * (1 - (u - 0.28) / 0.82); }
+      if (u > 0.26 && u < 0.36) squash += 0.06;
+    }
+    if (a.react === 'deflate') { const k = smooth(clamp((local - (a.reactAt || 0)) / 0.7)); squash -= 0.07 * k; lean += 0.1 * k; }
+    if (a.react === 'stomp') { const u = local - (a.reactAt || 0); if (u > 0 && u < 0.5) { hop = Math.abs(Math.sin(u / 0.25 * Math.PI)) * 0.035; } lean += 0.06; }
+    if (a.react === 'tilt') tilt += 0.12 * smooth(clamp((local - (a.reactAt || 0)) / 0.4));
+    // les auditeurs clignent quand l'action change (naturel au montage)
+    if (b.speaker !== id && local < 0.13) blink = Math.sin((local / 0.13) * Math.PI);
     actors[id] = {
-      visible: true, x: I.pos.x, y: (a.y ?? 0) + (a.float ? Math.sin(t * 1.6 + I.pos.x) * 0.04 + 0.05 : 0), z: I.pos.z, yaw, scale: I.sc / (ch.def.scale ?? 1),
+      visible: true, x: I.pos.x, y: (a.y ?? 0) + (a.float ? Math.sin(t * 1.6 + I.pos.x) * 0.04 + 0.05 : 0), z: I.pos.z, yaw: yaw + yawOff, scale: I.sc / (ch.def.scale ?? 1),
       emotions, poses, mouth: m || { open: 0 }, talk: m ? m.talk : 0,
       walk: I.ap.walk, walkPhase: (I.ap.dist / stepLen) * Math.PI, look, sweat, doorOpen, hop,
-      lean: a.lean || 0, tilt: a.tilt || 0, squash: a.squash || 0, gestureAmt: a.gesture ?? 1,
+      lean, tilt, squash, gestureAmt: a.gesture ?? 1, eyeWide, browBoost, blink,
     };
   }
 
