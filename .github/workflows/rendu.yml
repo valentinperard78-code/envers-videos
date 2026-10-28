@@ -158,11 +158,19 @@ jobs:
         run: |
           cp travail/preparation.log sorties/rendu.log 2>/dev/null || true
           for f in $(find travail/journaux -name '*.log' 2>/dev/null | sort); do { echo; echo "===== $(basename $f) ====="; grep -E "Morceau|✅|❌|⚠|ERR|Error|error|s/image" "$f" | tail -8; } >> sorties/rendu.log || true; done
-          mkdir -p /tmp/pub && cd /tmp/pub && git init -q -b villa-videos
-          cp "$GITHUB_WORKSPACE"/sorties/* . 2>/dev/null || true
+          # chaque épisode a son dossier ; on garde les autres épisodes déjà publiés (un seul commit, sans historique, pour rester léger)
+          EP=$(basename "${{ needs.preparer.outputs.script }}" .md)
+          URL="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}"
+          rm -rf /tmp/pub && mkdir -p /tmp/pub && cd /tmp/pub
+          if git clone -q --depth 1 --branch villa-videos "$URL" anc 2>/dev/null; then rm -rf anc/.git; for d in anc/*/; do [ -d "$d" ] && cp -r "$d" . ; done; fi
+          rm -rf anc "$EP" && mkdir -p "$EP"
+          cp "$GITHUB_WORKSPACE"/sorties/* "$EP"/ 2>/dev/null || true
           # GitHub refuse les fichiers > 100 Mo : la vidéo est découpée en parts (à recoller avec cat)
-          for v in *.mp4; do if [ -f "$v" ] && [ "$(stat -c%s "$v")" -gt 95000000 ]; then split -b 90m -d "$v" "$v.part"; rm "$v"; fi; done
-          ls -la
+          for v in "$EP"/*.mp4; do if [ -f "$v" ] && [ "$(stat -c%s "$v")" -gt 95000000 ]; then split -b 90m -d "$v" "$v.part"; rm "$v"; fi; done
+          cp "$EP"/rendu.log ./dernier-rendu.log 2>/dev/null || true
+          echo "$EP" > dernier-episode.txt
+          ls -laR | head -60
+          git init -q -b villa-videos
           git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
           git add -A . && git commit -qm "Vidéo : ${{ needs.preparer.outputs.script }}"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:villa-videos
+          git push -qf "$URL" HEAD:villa-videos
