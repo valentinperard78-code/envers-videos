@@ -27,6 +27,7 @@ const which = (qs.get('who') || 'insuline,cellia,sucrette,pancho,josh').split(',
 const chars = which.map((k) => createCharacter(PRESETS[k], TX));
 let x = -(chars.length - 1) * 0.55;
 for (const c of chars) { c.position.x = x; x += 1.1; S.add(c); }
+window.chars = chars; window.THREE = THREE;
 const cam = R.camera;
 window.setView = (o) => { Object.assign(view, o); };
 const view = { x: 0, y: 0.9, z: 7, tx: 0, ty: 0.75, fov: 26, emotion: 'neutral', pose: 'idle', talk: 0, mouth: 0, t: 1 };

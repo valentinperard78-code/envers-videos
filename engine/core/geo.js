@@ -158,10 +158,10 @@ export function noodleLimb(length, rStart, rEnd, material, nBones = 4, radial = 
     const r = lerp(rStart, rEnd, t) * (1 + 0.06 * Math.sin(t * Math.PI));
     const x = p.getX(i), z = p.getZ(i);
     p.setXYZ(i, x * r, -y, z * r);
-    const f = clamp(y / seg, 0, nBones - 1e-4);
-    const b0 = Math.floor(f), w1 = f - b0;
-    const b1 = Math.min(nBones - 1, b0 + 1);
-    skinIndex.push(b0, b1, 0, 0); skinWeight.push(1 - w1, b1 === b0 ? 0 : w1, 0, 0);
+    // chaque sommet est partagé entre l'os du début et l'os de la fin de son segment (l'os du bout existe : index nBones)
+    const f = clamp(y / seg, 0, nBones);
+    const b0 = Math.min(nBones - 1, Math.floor(f)), w1 = f - b0;
+    skinIndex.push(b0, b0 + 1, 0, 0); skinWeight.push(1 - w1, w1, 0, 0);
   }
   geo.computeVertexNormals();
   geo.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(skinIndex, 4));
