@@ -38,7 +38,10 @@ export class Overlay {
     // découpage en groupes de ~3 mots (max 22 caractères)
     if (!o._chunks) {
       o._chunks = []; let cur = [];
-      for (const w of words) { cur.push(w); const len = cur.map((x) => x.w).join(' ').length; if (cur.length >= 3 || len > 18 || /[.!?…,]$/.test(w.w)) { o._chunks.push(cur); cur = []; } }
+      // ponctuation isolée (« Coucou ! ») : recollée au mot précédent pour ne jamais commencer une ligne par « ! »
+      const merged = [];
+      for (const w of words) { if (/^[!?:;.,…»]+$/.test(w.w) && merged.length) merged[merged.length - 1] = { ...merged[merged.length - 1], w: merged[merged.length - 1].w + ' ' + w.w }; else merged.push(w); }
+      for (const w of merged) { cur.push(w); const len = cur.map((x) => x.w).join(' ').length; if (cur.length >= 3 || len > 18 || /[.!?…,]$/.test(w.w)) { o._chunks.push(cur); cur = []; } }
       if (cur.length) o._chunks.push(cur);
     }
     let chunk = o._chunks[0];
@@ -167,7 +170,7 @@ export class Overlay {
     c.translate(W / 2, H * 0.42); c.scale(s, s); c.rotate(-0.05);
     c.textAlign = 'center'; c.textBaseline = 'middle';
     const neon = (txt, size, y, col) => { c.font = `${size}px ${FONT_TITLE}`; c.shadowColor = col; c.shadowBlur = 40 * u; c.fillStyle = col; c.fillText(txt, 0, y); c.shadowBlur = 0; c.fillStyle = '#fff'; c.fillText(txt, 0, y); };
-    c.font = `800 ${56 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('LA', 0, -230 * u);
+    c.font = `800 ${56 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('LA', 0, -305 * u);
     neon('VILLA', 250 * u, -90 * u, '#ff3da8');
     c.font = `800 ${62 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('DES', 0, 50 * u);
     neon('PATHOLOGIES', 150 * u, 160 * u, '#2fe0ff');

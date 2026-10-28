@@ -86,7 +86,7 @@ export class World {
       if (b.kind === 'title' || b.kind === 'card') continue;
       const t = (b.t0 + b.t1) / 2;
       const ev = evaluate(this.tl, t, this);
-      this.activate(ev.set);
+      const setObj = this.activate(ev.set); setObj.update?.(t, ev.setState || {}); setObj.group.updateMatrixWorld(true);
       for (const id in this.chars) { const st = ev.actors[id]; const ch = this.chars[id]; if (!st) { ch.visible = false; continue; } ch.applyState(st, t, {}); ch.updateMatrixWorld(true); }
       ev.applyCamera(this.camera); this.camera.updateMatrixWorld(true);
       const subj = b.shot?.subject && this.chars[b.shot.subject]?.visible ? this.chars[b.shot.subject] : null;
@@ -103,6 +103,13 @@ export class World {
       const blockers = Object.values(this.chars).filter((c) => c !== subj && c.visible && c.body);
       const hit = ray.intersectObjects(blockers.map((c) => c.body), false)[0];
       if (hit) issues.push({ t: b.t0, level: 'avertissement', msg: `visage masqué par un autre personnage à ${where}` });
+      // occultation par le décor (table, meuble…) : rayons vers le visage et vers le haut de la tête
+      const solid = (h) => h.object.visible && h.object.isMesh && !h.object.material?.transparent && !(h.object.material?.opacity < 0.9);
+      const decor = [faceW, subj.localToWorld(new THREE.Vector3(0, subj.headTop * 0.92, 0))].filter((p) => {
+        const r = new THREE.Raycaster(camPos, p.clone().sub(camPos).normalize(), 0.05, camPos.distanceTo(p) - 0.15);
+        return r.intersectObject(setObj.group, true).some(solid);
+      }).length;
+      if (decor === 2) issues.push({ t: b.t0, level: 'erreur', msg: `visage caché par le décor à ${where}` });
     }
     return issues;
   }

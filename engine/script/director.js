@@ -410,7 +410,7 @@ export function buildTimeline(src, opts = {}) {
         const listeners = Object.keys(actors).filter((k) => k !== id && actors[k].visible !== false);
         const alts = [];
         if (set === 'confessional') alts.push({ type: 'close', subject: id, push: 0.06 }, { type: 'confession', subject: id, push: -0.05 });
-        else if (set === 'kitchen') alts.push({ type: 'close', subject: 'josh', push: 0.08 }, { type: 'low', subject: 'josh', angle: -0.6 });
+        else if (set === 'kitchen') alts.push({ type: 'close', subject: 'josh', push: 0.08 }, { type: 'medium', subject: 'josh', angle: -0.45, push: 0.06 });
         else if (vo) {
           if (mentions[0] && actors[mentions[0]]) alts.push({ type: 'medium', subject: mentions[0], angle: -angleFlip });
           if (listeners[0]) alts.push({ type: 'close', subject: listeners[listeners.length - 1], angle: angleFlip });
