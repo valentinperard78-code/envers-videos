@@ -18,7 +18,7 @@ export const EMOTIONS = {
   shocked: { open: 1.15, lower: 0.05, brow: 1, angry: -0.3, smile: -0.2, asym: 0, browAsym: 0, droop: -0.05, round: 0.6, mouthBonus: 0.35 },
   worried: { open: 0.85, lower: 0.15, brow: 0.5, angry: -0.85, smile: -0.35, asym: 0, browAsym: 0, droop: 0.05 },
   proud: { open: 0.58, lower: 0.3, brow: 0.3, angry: 0, smile: 0.55, asym: 0.25, browAsym: 0.4, droop: -0.08 },
-  relieved: { open: 0.5, lower: 0.35, brow: 0.2, angry: -0.4, smile: 0.6, asym: 0, browAsym: 0, droop: 0.05 },
+  relieved: { open: 0.72, lower: 0.35, brow: 0.3, angry: -0.3, smile: 0.8, asym: 0, browAsym: 0, droop: 0 },
   suspicious: { open: 0.45, lower: 0.35, brow: -0.1, angry: 0.4, smile: -0.15, asym: 0.5, browAsym: -0.7, droop: 0 },
 };
 

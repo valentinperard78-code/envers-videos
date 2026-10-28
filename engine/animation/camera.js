@@ -16,7 +16,7 @@ function handheld(t, amt, seed = 0) {
  * shot : { type, angle, push, shake, fovStart, … } ; subs : infos des personnages concernés.
  * Retourne { pos, target, fov }.
  */
-export function computeShot(shot, u, dur, subs, all, tAbs) {
+export function computeShot(shot, u, dur, subs, all, tAbs, obstacles = []) {
   const type = shot.type || 'medium';
   const a = (shot.angle ?? 0) * 0.42; // angle 3/4 (radians)
   const p = clamp(u / Math.max(0.01, dur));
@@ -26,7 +26,7 @@ export function computeShot(shot, u, dur, subs, all, tAbs) {
   const dirFrom = (ang, base = 0) => V(Math.sin(ang + base), 0, Math.cos(ang + base));
   const fit = (h) => h / (2 * Math.tan(THREE.MathUtils.degToRad(fov) / 2)); // distance pour cadrer une hauteur h
 
-  if (!S && type !== 'wide') return computeShot({ ...shot, type: 'wide' }, u, dur, subs, all, tAbs);
+  if (!S && type !== 'wide') return computeShot({ ...shot, type: 'wide' }, u, dur, subs, all, tAbs, obstacles);
 
   switch (type) {
     case 'close': {
@@ -96,7 +96,8 @@ export function computeShot(shot, u, dur, subs, all, tAbs) {
   if (subs.length && type !== 'establish') {
     const ids = new Set(subs.map((x) => x.id));
     const blockers = all.filter((x) => !ids.has(x.id));
-    const blocked = (P) => blockers.some((o) => {
+    const obst = obstacles.map((o) => ({ pos: V(o.x, 0, o.z), headTop: 9, radius: o.r, fixed: true }));
+    const blocked = (P) => obst.some((o) => Math.hypot(P.x - o.pos.x, P.z - o.pos.z) < o.radius + 0.35) || [...blockers, ...obst].some((o) => {
       const c = V(o.pos.x, Math.min(o.headTop * 0.6, P.y), o.pos.z);
       const d = V().subVectors(target, P), len = d.length(); d.normalize();
       const u = V().subVectors(c, P).dot(d);
@@ -106,7 +107,7 @@ export function computeShot(shot, u, dur, subs, all, tAbs) {
     });
     if (blocked(pos)) {
       const rel = V().subVectors(pos, target);
-      for (const ang of [0.35, -0.35, 0.7, -0.7, 1.0, -1.0]) {
+      for (const ang of [0.3, -0.3, 0.6, -0.6, 0.9, -0.9, 1.2, -1.2]) {
         const cand = target.clone().add(rel.clone().applyAxisAngle(V(0, 1, 0), ang));
         if (!blocked(cand)) { pos = cand; break; }
       }

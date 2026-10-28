@@ -263,6 +263,7 @@ export function buildTimeline(src, opts = {}) {
             a.from = beats.length % 2 ? 'enterRight' : 'enterLeft'; a.walkDur = 1.7; a.speed = 2.2;
             dur = Math.max(dur, 2.4 + sp.dur * 0.6);
             if (acting.pose === 'wave' || acting.pose === 'hips') { a.pose = acting.pose; }
+            a.entering = true;
           }
           // aller à la porte de la cellule
           if (acting.atDoor && cellia && id !== cellia.id) {
@@ -294,7 +295,10 @@ export function buildTimeline(src, opts = {}) {
           if (!acting.atDoor && !acting.openDoor) {
             const punch = acting.crash && sp.dur < 5;
             shot = { type: punch ? 'close' : 'medium', subject: id, angle: angleFlip, crash: !!acting.crash && !teaser, seed: beats.length };
+            if (a.entering) shot = { type: 'wide', angle: a.from === 'enterLeft' ? -0.5 : 0.5, seed: beats.length };
           }
+          // émotion positive : fin de la sueur
+          if (/happy|relieved|excited|proud/.test(a.emotion)) { a.sweat = 0; sweatOf[id] = 0; }
           lastEmotion[id] = a.emotion === 'excited' ? 'happy' : a.emotion;
           // réactions des autres candidats
           const REACT = { angry: 'worried', sassy: 'suspicious', shocked: 'shocked', tired: 'worried', excited: 'happy', happy: 'happy', proud: 'neutral', relieved: 'happy', suspicious: 'worried', annoyed: 'worried' };

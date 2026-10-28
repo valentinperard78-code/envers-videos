@@ -65,3 +65,4 @@ Script ton télé-réalité. Faits médicaux vérifiés (FRM, Assurance Maladie)
 ## Récap et appel à l'abonnement
 - VOIX OFF : « À retenir : l'insuline, c'est la clé. Dans le type 2, les serrures résistent. Et le sucre reste dans le sang. »
 - VOIX OFF : « Prochain épisode… quelqu'un va faire monter la pression dans la villa. Abonne-toi ! » (teaser : hypertension)
+

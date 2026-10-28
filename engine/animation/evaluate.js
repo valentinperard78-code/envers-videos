@@ -104,7 +104,7 @@ export function evaluate(tl, t, world) {
   const subs = [shot.subject, shot.other].filter((s) => s && infos[s]).map((s) => infos[s]);
   const all = Object.values(infos).filter((i) => !i.a.offstage);
   const st0 = shot.start ?? b.t0, st1 = shot.end ?? b.t1;
-  const cam = computeShot(shot, t - st0, st1 - st0, subs, all, t);
+  const cam = computeShot(shot, t - st0, st1 - st0, subs, all, t, set.obstacles || []);
 
   // 3) états des personnages
   for (const id in infos) {

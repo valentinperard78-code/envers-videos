@@ -121,6 +121,7 @@ export function villaSet(quality) {
     id: 'villa', group: g, env, envIntensity: 0.9, background: sky, fog: new THREE.FogExp2('#1b1636', 0.02),
     look: { exposure: 1.05, bloom: 0.42, bloomRadius: 0.5, bloomThreshold: 0.88, vignette: 0.35, warm: 0.03, sat: 1.12 },
     // repères de mise en scène
+    obstacles: [...poles.map(([x, h, z]) => ({ x, z, r: 0.12 })), ...palms.map(([x, z]) => ({ x, z, r: 0.35 })), { x: -2.6, z: -1.6, r: 1.1 }, { x: 3.0, z: -2.2, r: 0.6 }, { x: 4.0, z: -2.2, r: 0.6 }, { x: -4.2, z: 0.6, r: 0.4 }, { x: 4.6, z: 0.4, r: 0.4 }, { x: -1.5, z: -2.9, r: 0.4 }, { x: -5, z: 2.5, r: 0.15 }, { x: 5, z: 2.5, r: 0.15 }],
     marks: { center: v(0, 0, 0.4), left: v(-1.0, 0, 0.6), right: v(1.0, 0, 0.6), farLeft: v(-1.9, 0, 0.3), farRight: v(1.9, 0, 0.3), back: v(0, 0, -1.2), cellia: v(1.75, 0, -1.25), enterLeft: v(-4.5, 0, 1.2), enterRight: v(4.5, 0, 1.2), sofa: v(-2.3, 0, -0.9) },
     update: (t) => upd.forEach((f) => f(t)),
   };
@@ -187,10 +188,10 @@ export function bloodSet(quality) {
   for (let i = 0; i < 34; i++) {
     const m = new THREE.Mesh(rbcGeo, rbcMat); m.castShadow = true;
     const a = r() * TAU, rr = 0.8 + r() * (R - 1.4);
-    cells.push({ m, x: Math.cos(a) * rr, y: R - 0.25 + Math.sin(a) * rr, z0: r() * L, sp: 0.6 + r() * 0.8, rx: r() * 3, ry: r() * 3, s: 0.7 + r() * 0.6 });
+    cells.push({ m, x: Math.cos(a) * rr, y: R - 0.25 + Math.sin(a) * rr, z0: r() * (L - 10), sp: 0.6 + r() * 0.8, rx: r() * 3, ry: r() * 3, s: 0.7 + r() * 0.6 });
     g.add(m);
   }
-  upd.push((t) => { for (const c of cells) { let z = ((c.z0 + t * c.sp) % L) - L + 8; c.m.position.set(c.x + Math.sin(t * 0.5 + c.rx) * 0.2, Math.max(0.35, c.y + Math.cos(t * 0.4 + c.ry) * 0.2), z); c.m.rotation.set(c.rx + t * 0.3, c.ry + t * 0.2, 0); c.m.scale.setScalar(c.s); } });
+  upd.push((t) => { for (const c of cells) { let z = ((c.z0 + t * c.sp) % (L - 10)) - L + 8; c.m.position.set(c.x + Math.sin(t * 0.5 + c.rx) * 0.2, Math.max(0.35, c.y + Math.cos(t * 0.4 + c.ry) * 0.2), z); c.m.rotation.set(c.rx + t * 0.3, c.ry + t * 0.2, 0); c.m.scale.setScalar(c.s); } });
   // particules de plasma
   const N = 600, pos = new Float32Array(N * 3), base = [];
   for (let i = 0; i < N; i++) { const a = r() * TAU, rr = r() * (R - 0.4); base.push([Math.cos(a) * rr, R - 0.25 + Math.sin(a) * rr, r() * L, 0.3 + r() * 0.6]); }
@@ -215,7 +216,7 @@ export function bloodSet(quality) {
   g.add(lights);
   const env = envFromPanels([{ w: 12, h: 6, pos: [0, 4, -8], color: '#ff2a3a', i: 2.5 }, { w: 6, h: 3, pos: [-5, 5, 6], color: '#ffe2dc', i: 3 }, { w: 20, h: 4, pos: [0, -3, 0], color: '#5a0008', i: 2 }], '#1a0204');
   return {
-    id: 'blood', group: g, env, envIntensity: 0.8, background: new THREE.Color('#1a0306'), fog: new THREE.FogExp2('#3a0610', 0.07),
+    id: 'blood', group: g, env, envIntensity: 0.8, background: new THREE.Color('#3a0610'), fog: new THREE.FogExp2('#3a0610', 0.08),
     look: { exposure: 1.0, bloom: 0.5, bloomRadius: 0.6, bloomThreshold: 0.85, vignette: 0.42, warm: 0.02, sat: 1.15 },
     marks: { center: new THREE.Vector3(0, 0, 0.6), left: new THREE.Vector3(-0.9, 0, 0.7), right: new THREE.Vector3(0.9, 0, 0.7) },
     update: (t, st = {}) => {
