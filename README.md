@@ -37,7 +37,7 @@ Le dépôt contient `.github/workflows/rendu.yml`. Dès qu'un script est ajouté
 - en pièce jointe de l'exécution (onglet **Actions**) ;
 - sur la branche **`villa-videos`** du dépôt.
 
-Tu peux aussi le lancer à la main : onglet **Actions** → **Rendu vidéo** → **Run workflow**.
+Le bouton manuel (onglet **Actions** → **Rendu vidéo** → **Run workflow**) n'apparaît que si le logiciel est sur la branche principale du dépôt. Sinon, il suffit d'ajouter ou modifier un script dans `scripts/`.
 
 C'est ce mode que Claude utilise pour fabriquer les vidéos tout seul : il écrit le script, le dépose dans `scripts/`, et récupère le MP4.
 
@@ -46,6 +46,7 @@ C'est ce mode que Claude utilise pour fabriquer les vidéos tout seul : il écri
 ```bash
 node tools/render.js scripts/ep01-diabete-type-2.md --qualite standard
 #   --sortie sorties/x.mp4   --fps 30   --workers 2   --de 10 --a 40 (extrait)   --sans-voix
+#   --partie 1/2  (coupe un épisode trop long en parties, avec carton « À SUIVRE… »)
 ```
 
 Un rendu interrompu reprend là où il s'était arrêté : il suffit de relancer la même commande.

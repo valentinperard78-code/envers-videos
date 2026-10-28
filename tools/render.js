@@ -9,7 +9,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { parseScript } from '../engine/script/parser.js';
 import { buildCasting } from '../engine/script/casting.js';
-import { buildTimeline, collectLines, estimateSpeech } from '../engine/script/director.js';
+import { buildTimeline, collectLines, estimateSpeech, splitDoc } from '../engine/script/director.js';
 import { synthesizeAll } from './tts.js';
 import { mixEpisode } from './audio-mix.js';
 import { startStaticServer } from './static-server.js';
@@ -23,14 +23,15 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   const qDefaults = { brouillon: 24, standard: 30, max: 30 };
   const fps = +(opts.fps || qDefaults[quality] || 30);
   const src = fs.readFileSync(scriptPath, 'utf8');
-  const base = path.basename(scriptPath).replace(/\.[^.]+$/, '');
+  const base = path.basename(scriptPath).replace(/\.[^.]+$/, '') + (opts.part ? `-partie${String(opts.part).replace('/', 'sur')}` : '');
   const outFile = path.resolve(opts.out || path.join(ROOT, 'sorties', `${base}.mp4`));
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   const work = path.join(ROOT, '.cache', 'rendu', `${base}-${quality}-${fps}`);
   fs.mkdirSync(work, { recursive: true });
 
   // 1) analyse + voix
-  const doc = parseScript(src);
+  let doc = parseScript(src);
+  if (opts.part) { doc = splitDoc(doc, opts.part); }
   const casting = buildCasting(doc);
   log(`📜 « ${doc.title || base} » : ${doc.sections.length} sections, ${casting.list.length} personnages.`);
   const lines = collectLines(doc, casting);
@@ -40,7 +41,7 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   onProgress({ type: 'stage', stage: 'voix', done: true, mode });
 
   // 2) timeline
-  const tl = buildTimeline(doc, { speech, fps });
+  const tl = buildTimeline(doc, { speech, fps });  // doc déjà découpé si --partie
   fs.writeFileSync(path.join(work, 'timeline.json'), JSON.stringify(tl));
   fs.writeFileSync(outFile.replace(/\.mp4$/, '.timeline.json'), JSON.stringify(tl));
   const from = Math.max(0, +(opts.from ?? 0)), to = Math.min(tl.meta.duration, +(opts.to ?? tl.meta.duration));
@@ -114,11 +115,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const has = (k) => argv.includes(k);
   const script = argv.find((a) => !a.startsWith('--') && /\.(md|txt)$/i.test(a));
   if (!script) {
-    console.log('Usage : node tools/render.js scripts/episode.md [--qualite brouillon|standard|max] [--sortie fichier.mp4] [--fps 30] [--workers N] [--de S] [--a S] [--sans-voix]');
+    console.log('Usage : node tools/render.js scripts/episode.md [--qualite brouillon|standard|max] [--sortie fichier.mp4] [--fps 30] [--workers N] [--de S] [--a S] [--partie 1/2] [--sans-voix]');
     process.exit(1);
   }
   renderEpisode(script, {
     quality: get('--qualite', get('--quality', 'standard')), out: get('--sortie', get('--out')), fps: get('--fps'), workers: get('--workers'),
-    from: get('--de'), to: get('--a'), noVoice: has('--sans-voix'), clean: has('--propre'), keepFrames: has('--garder-images'),
+    from: get('--de'), to: get('--a'), part: get('--partie'), noVoice: has('--sans-voix'), clean: has('--propre'), keepFrames: has('--garder-images'),
   }).catch((e) => { console.error('❌', e.message); process.exit(1); });
 }

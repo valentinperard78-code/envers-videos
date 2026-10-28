@@ -78,8 +78,38 @@ export function ttsText(t) {
 }
 
 // ------------------------------------------------------------------ construction de la timeline
+/**
+ * Découpe un épisode en parties (ex. part = '2/2') à une frontière de scène, en équilibrant la durée.
+ * Partie 1 : teaser + générique + premières scènes + carton « À SUIVRE ». Parties suivantes : générique « Partie N » + suite.
+ */
+export function splitDoc(doc, part) {
+  const m = String(part || '').match(/^(\d+)\s*\/\s*(\d+)$/); if (!m) return doc;
+  const k = +m[1], n = +m[2]; if (n < 2 || k < 1 || k > n) return doc;
+  const est = (sec) => sec.items.reduce((a, it) => a + (it.type === 'line' ? estimateSpeech(ttsText(it.text)).dur + 0.4 : it.type === 'card' || it.type === 'title' ? 2.6 : 0), 0);
+  const head = [], body = [];
+  let seenTitle = false;
+  for (const sec of doc.sections) { if (!seenTitle) head.push(sec); else body.push(sec); if (sec.items.some((i) => i.type === 'title')) seenTitle = true; }
+  if (!seenTitle) { body.push(...head.splice(0)); }
+  const total = body.reduce((a, s) => a + est(s), 0) + head.reduce((a, s) => a + est(s), 0);
+  // frontières : on remplit chaque partie jusqu'à ~total/n
+  const groups = Array.from({ length: n }, () => []);
+  let acc = head.reduce((a, s) => a + est(s), 0), g = 0;
+  for (const sec of body) {
+    if (g < n - 1 && acc + est(sec) / 2 > (total / n) * (g + 1) && groups[g].length) g++;
+    groups[g].push(sec); acc += est(sec);
+  }
+  const out = { ...doc, part: k, parts: n };
+  const label = `Partie ${k}/${n}`;
+  const titleSec = { kind: 'scene', title: label, name: label, items: [{ type: 'title', line: 99001 }] };
+  out.sections = k === 1 ? [...head, ...groups[0]] : [titleSec, ...groups[k - 1]];
+  if (k < n) out.sections = [...out.sections, { kind: 'scene', title: 'suite', name: 'suite', items: [{ type: 'card', text: `À SUIVRE… PARTIE ${k + 1}`, line: 99002 }] }];
+  out.episodeName = doc.episodeName ? `${doc.episodeName} · ${label}` : label;
+  return out;
+}
+
 export function buildTimeline(src, opts = {}) {
-  const doc = typeof src === 'string' ? parseScript(src) : src;
+  let doc = typeof src === 'string' ? parseScript(src) : src;
+  if (opts.part) doc = splitDoc(doc, opts.part);
   const casting = buildCasting(doc);
   // personnages préréglés cités par la voix off mais absents du casting (ex. Josh)
   for (const s of doc.sections) for (const it of s.items) if (it.type === 'line') {

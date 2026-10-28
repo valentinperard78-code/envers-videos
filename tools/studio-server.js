@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { startStaticServer } from './static-server.js';
 import { parseScript } from '../engine/script/parser.js';
 import { buildCasting } from '../engine/script/casting.js';
-import { buildTimeline, collectLines } from '../engine/script/director.js';
+import { buildTimeline, collectLines, splitDoc } from '../engine/script/director.js';
 import { synthesizeAll, ttsAvailable } from './tts.js';
 import { mixEpisode } from './audio-mix.js';
 import { renderEpisode } from './render.js';
@@ -54,7 +54,7 @@ async function api(req, res) {
     }
     if (p === 'prepare' && req.method === 'POST') {
       // timeline + voix + mixage pour l'aperçu temps réel (avec le son)
-      const b = await body(req); const doc = parseScript(b.content || ''); const casting = buildCasting(doc);
+      const b = await body(req); let doc = parseScript(b.content || ''); if (b.part) doc = splitDoc(doc, b.part); const casting = buildCasting(doc);
       const lines = collectLines(doc, casting);
       let speech = {}, mode = 'estimated';
       if (b.voices !== false) ({ speech, mode } = await synthesizeAll(lines, path.join(ROOT, '.cache', 'voix'), (m) => broadcast({ type: 'log', message: m })));
@@ -68,11 +68,11 @@ async function api(req, res) {
       if (job) return json(res, { error: 'Un rendu est déjà en cours.' }, 409), true;
       const b = await body(req); const name = safeName(b.name);
       const file = path.join(SCRIPTS, name + '.md'); fs.writeFileSync(file, b.content || '');
-      const out = path.join(OUT, `${name}-${b.quality || 'standard'}.mp4`);
+      const out = path.join(OUT, `${name}${b.part ? '-partie' + b.part.replace('/', 'sur') : ''}-${b.quality || 'standard'}.mp4`);
       history.length = 0;
       job = { name, started: Date.now() };
       broadcast({ type: 'start', name, quality: b.quality });
-      renderEpisode(file, { quality: b.quality || 'standard', out, noVoice: b.voices === false, workers: b.workers, log: (m) => broadcast({ type: 'log', message: m }) }, (ev) => { if (ev.type !== 'log') broadcast(ev); })
+      renderEpisode(file, { quality: b.quality || 'standard', out, part: b.part, noVoice: b.voices === false, workers: b.workers, log: (m) => broadcast({ type: 'log', message: m }) }, (ev) => { if (ev.type !== 'log') broadcast(ev); })
         .then((r) => broadcast({ type: 'finished', url: `/sorties/${encodeURIComponent(path.basename(r.file))}` }))
         .catch((e) => broadcast({ type: 'error', message: e.message }))
         .finally(() => { job = null; });

@@ -99,6 +99,12 @@ video { width:100%; border-radius:10px; margin-top:8px; background:#000; }
           <option value="max">Max (1080p, effets complets — carte graphique)</option>
         </select>
       </div>
+      <div class="row" style="margin-bottom:8px">
+        <select id="part" title="Découper un épisode trop long pour TikTok">
+          <option value="">Épisode entier</option><option value="1/2">Partie 1 / 2</option><option value="2/2">Partie 2 / 2</option>
+          <option value="1/3">Partie 1 / 3</option><option value="2/3">Partie 2 / 3</option><option value="3/3">Partie 3 / 3</option>
+        </select>
+      </div>
       <label class="help"><input type="checkbox" id="voices" checked> Voix des personnages (edge-tts)</label>
       <div style="margin-top:10px"><button class="go" id="render">🎥 GÉNÉRER LA VIDÉO</button></div>
       <div class="progress" style="margin-top:10px"><div id="prog"></div></div>
@@ -191,8 +197,8 @@ async function startPreview(withVoice) {
   $('hint').style.display = 'flex'; $('hint').textContent = withVoice ? 'Génération des voix et préparation…' : 'Construction de la scène 3D…';
   try {
     let audioUrl = null;
-    if (withVoice) { const r = await getJSON('/api/prepare', { method: 'POST', body: JSON.stringify({ content: $('editor').value }) }); tl = r.timeline; audioUrl = r.audio; }
-    else tl = buildTimeline($('editor').value, {});
+    if (withVoice) { const r = await getJSON('/api/prepare', { method: 'POST', body: JSON.stringify({ content: $('editor').value, part: $('part').value || undefined }) }); tl = r.timeline; audioUrl = r.audio; }
+    else tl = buildTimeline($('editor').value, { part: $('part').value || undefined });
     await ensureWorld($('previewQ').value);
     $('hint').textContent = 'Chargement des personnages et décors…';
     await new Promise((r) => setTimeout(r, 30));
@@ -227,7 +233,7 @@ $('scriptList').onchange = () => loadScript($('scriptList').value);
 $('save').onclick = async () => { const r = await getJSON('/api/script', { method: 'POST', body: JSON.stringify({ name: $('scriptName').value, content: $('editor').value }) }); await refreshScripts(r.name); };
 $('newScript').onclick = () => { $('editor').value = TEMPLATE; $('scriptName').value = 'ep02-hypertension'; analyse(); };
 $('render').onclick = async () => {
-  const r = await getJSON('/api/render', { method: 'POST', body: JSON.stringify({ name: $('scriptName').value, content: $('editor').value, quality: $('quality').value, voices: $('voices').checked }) });
+  const r = await getJSON('/api/render', { method: 'POST', body: JSON.stringify({ name: $('scriptName').value, content: $('editor').value, quality: $('quality').value, voices: $('voices').checked, part: $('part').value || undefined }) });
   if (r.error) { alert(r.error); return; }
   $('render').disabled = true; $('log').textContent = ''; $('result').innerHTML = '';
 };
