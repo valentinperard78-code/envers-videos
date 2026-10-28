@@ -15,9 +15,9 @@
  },
  {
   "id": "T3",
-  "voice": "fr-FR-EloiseNeural",
+  "voice": "fr-BE-CharlineNeural",
   "rate": "+8%",
-  "pitch": "+4Hz",
+  "pitch": "+0Hz",
   "text": "Elle se prend pour qui ? Elle va vite redescendre !"
  },
  {
@@ -57,9 +57,9 @@
  },
  {
   "id": "04",
-  "voice": "fr-FR-EloiseNeural",
+  "voice": "fr-BE-CharlineNeural",
   "rate": "+8%",
-  "pitch": "+4Hz",
+  "pitch": "+0Hz",
   "text": "Insuline, enchantée. C'est Pancho qui m'envoie. Pas de moi, pas d'entrée. C'est simple."
  },
  {
@@ -71,9 +71,9 @@
  },
  {
   "id": "06",
-  "voice": "fr-FR-EloiseNeural",
+  "voice": "fr-BE-CharlineNeural",
   "rate": "+8%",
-  "pitch": "+4Hz",
+  "pitch": "+0Hz",
   "text": "Toc toc toc ! Cellia, c'est moi, ouvre !"
  },
  {
@@ -106,9 +106,9 @@
  },
  {
   "id": "11",
-  "voice": "fr-FR-EloiseNeural",
+  "voice": "fr-BE-CharlineNeural",
   "rate": "+8%",
-  "pitch": "+4Hz",
+  "pitch": "+0Hz",
   "text": "Allô ? Cellia ? Ouvre ! … Non mais elle se prend pour une folle, à pas vouloir me laisser ouvrir ! Je sais pas pour qui elle se prend, mais il va falloir qu'elle redescende."
  },
  {
