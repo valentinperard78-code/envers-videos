@@ -1,0 +1,198 @@
+[
+ {
+  "id": "T1",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Cette semaine, dans la Villa des Pathologies…"
+ },
+ {
+  "id": "T2",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+4%",
+  "pitch": "+0Hz",
+  "text": "Moi, j'ouvre pas ma porte à n'importe qui, OK ?"
+ },
+ {
+  "id": "T3",
+  "voice": "fr-FR-EloiseNeural",
+  "rate": "+8%",
+  "pitch": "+4Hz",
+  "text": "Elle se prend pour qui ? Elle va vite redescendre !"
+ },
+ {
+  "id": "T4",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+4%",
+  "pitch": "-6Hz",
+  "text": "Je fais des heures sup' depuis dix ans… je suis à bout."
+ },
+ {
+  "id": "T5",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Clash, trahison… et un corps en danger."
+ },
+ {
+  "id": "01",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Après le dîner de Josh, une nouvelle candidate débarque dans la villa… par le sang."
+ },
+ {
+  "id": "02",
+  "voice": "fr-FR-VivienneMultilingualNeural",
+  "rate": "+10%",
+  "pitch": "+12Hz",
+  "text": "Coucou la villa ! Moi c'est Sucrette, le glucose. Je suis l'énergie, je suis la vie, et ce soir, je veux rentrer dans les chambres !"
+ },
+ {
+  "id": "03",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Petit problème : les chambres des cellules sont fermées à clé. Et la seule à avoir les clés… c'est elle."
+ },
+ {
+  "id": "04",
+  "voice": "fr-FR-EloiseNeural",
+  "rate": "+8%",
+  "pitch": "+4Hz",
+  "text": "Insuline, enchantée. C'est Pancho qui m'envoie. Pas de moi, pas d'entrée. C'est simple."
+ },
+ {
+  "id": "05",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+4%",
+  "pitch": "-6Hz",
+  "text": "Moi, c'est Pancho, le pancréas. Dès que le sucre monte, j'envoie Insuline. C'est moi, le daron de la villa."
+ },
+ {
+  "id": "06",
+  "voice": "fr-FR-EloiseNeural",
+  "rate": "+8%",
+  "pitch": "+4Hz",
+  "text": "Toc toc, c'est moi !"
+ },
+ {
+  "id": "07",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+4%",
+  "pitch": "+0Hz",
+  "text": "Entre, ma belle ! Sucrette, viens, y a de la place."
+ },
+ {
+  "id": "08",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le sucre entre, la glycémie redescend. Dans un corps en bonne santé, c'est le match parfait."
+ },
+ {
+  "id": "09",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Dix ans plus tard…"
+ },
+ {
+  "id": "10",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Surpoids, canapé, hérédité… Avec le temps, la serrure de Cellia s'est grippée."
+ },
+ {
+  "id": "11",
+  "voice": "fr-FR-EloiseNeural",
+  "rate": "+8%",
+  "pitch": "+4Hz",
+  "text": "Allô ? Cellia ? Ouvre ! … Non mais elle se prend pour une folle, à pas vouloir me laisser ouvrir ! Je sais pas pour qui elle se prend, mais il va falloir qu'elle redescende."
+ },
+ {
+  "id": "12",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+4%",
+  "pitch": "+0Hz",
+  "text": "J'entends qu'on frappe… mais j'ai plus envie de répondre. C'est pas personnel, hein."
+ },
+ {
+  "id": "13",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "C'est la résistance à l'insuline : la clé est là… mais la serrure ne répond plus."
+ },
+ {
+  "id": "14",
+  "voice": "fr-FR-VivienneMultilingualNeural",
+  "rate": "+10%",
+  "pitch": "+12Hz",
+  "text": "Sérieux, on est combien dehors, là ? On est en PLS dans le sang !"
+ },
+ {
+  "id": "15",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le sucre s'accumule dans le sang : c'est l'hyperglycémie."
+ },
+ {
+  "id": "16",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+4%",
+  "pitch": "-6Hz",
+  "text": "Alors j'envoie encore plus d'Insuline… je fais des nuits blanches. Mais à force, frère… je suis cramé."
+ },
+ {
+  "id": "17",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Et le pire ? Josh ne sent rien. Pendant des années, le sucre en trop peut abîmer ses yeux, ses reins, son cœur, et les nerfs de ses pieds."
+ },
+ {
+  "id": "18",
+  "voice": "fr-FR-VivienneMultilingualNeural",
+  "rate": "+10%",
+  "pitch": "+12Hz",
+  "text": "Attends… c'est moi qui fais tout ça ? C'est moi, le red flag de l'histoire ?!"
+ },
+ {
+  "id": "19",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Le verdict tombe à la prise de sang : à jeun, 1,26 gramme par litre ou plus, sur deux contrôles… c'est le diabète."
+ },
+ {
+  "id": "20",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "Mais la villa peut se relever."
+ },
+ {
+  "id": "21",
+  "voice": "fr-FR-DeniseNeural",
+  "rate": "+4%",
+  "pitch": "+0Hz",
+  "text": "Depuis que Josh bouge un peu, je suis plus ouverte d'esprit… et de serrure."
+ },
+ {
+  "id": "22",
+  "voice": "fr-FR-HenriNeural",
+  "rate": "+4%",
+  "pitch": "-6Hz",
+  "text": "Et quand il mange équilibré, je souffle enfin."
+ },
+ {
+  "id": "23",
+  "voice": "fr-FR-RemyMultilingualNeural",
+  "rate": "+6%",
+  "pitch": "+0Hz",
+  "text": "À retenir : l'insuline, c'est la clé. Dans le type 2, les serrures résistent, et le sucre reste dans le sang. Prochain épisode : quelqu'un va faire monter la pression dans la villa. Abonne-toi !"
+ }
+]
