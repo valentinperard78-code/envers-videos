@@ -28,6 +28,15 @@ Un script est un simple fichier texte (`.md`) dans le dossier `scripts/`. Le log
 - VOIX OFF : « Prochain épisode… Abonne-toi ! » (teaser : cholestérol)
 ```
 
+## Continuité de la série
+
+- **Personnages** : tout personnage créé est enregistré dans `villa/bible.json` (apparence, couleur, voix). S'il revient dans un autre épisode, sous son nom ou sous l'organe qu'il incarne (« le pancréas » → Pancho), le logiciel réutilise **exactement** le même. La liste : `node tools/bible.js`.
+- **Décors** : la villa, le confessionnal, le sang et la cuisine sont générés de façon fixe ; ils sont identiques d'un épisode à l'autre.
+- **Planning** : `villa/serie.json` et `villa/SAISON-1.md` (30 épisodes, chacun avec son teaser du lendemain).
+- **Précédemment** : une section `## Précédemment dans la villa` en tête d'épisode crée un rappel nerveux avec le bandeau « PRÉCÉDEMMENT DANS LA VILLA… ».
+- **Teaser du lendemain** : la dernière réplique « … Abonne-toi ! » (teaser : X) affiche « Demain dans la villa : X ». Sans teaser écrit, le logiciel prend l'épisode suivant du planning.
+- **Sources** : section `## Sources` en fin de script (une ligne par source : `- Nom — titre : URL`). Elles s'affichent pendant le récap. Règles : `docs/SOURCES.md`.
+
 ## Éléments reconnus
 
 | Ligne | Effet |

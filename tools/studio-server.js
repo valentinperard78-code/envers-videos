@@ -13,6 +13,7 @@ import { synthesizeAll, ttsAvailable } from './tts.js';
 import { mixEpisode } from './audio-mix.js';
 import { renderEpisode } from './render.js';
 import { findChrome } from './chrome.js';
+import { loadBible, nextEpisodeTitle } from './serie.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +(process.env.PORT || 5173);
@@ -43,22 +44,23 @@ async function api(req, res) {
     if (p === 'scripts') return json(res, fs.readdirSync(SCRIPTS).filter((f) => /\.(md|txt)$/i.test(f)).sort()), true;
     if (p === 'script' && req.method === 'GET') { const f = path.join(SCRIPTS, path.basename(url.searchParams.get('name') || '')); return json(res, { content: fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '' }), true; }
     if (p === 'script' && req.method === 'POST') { const b = await body(req); const name = safeName(b.name) + '.md'; fs.writeFileSync(path.join(SCRIPTS, name), b.content || ''); return json(res, { ok: true, name }), true; }
+    if (p === 'bible') return json(res, loadBible()), true;
     if (p === 'outputs') {
       const list = fs.readdirSync(OUT).filter((f) => f.endsWith('.mp4')).map((f) => ({ name: f, url: `/sorties/${encodeURIComponent(f)}`, size: fs.statSync(path.join(OUT, f)).size, date: fs.statSync(path.join(OUT, f)).mtimeMs })).sort((a, b) => b.date - a.date);
       return json(res, list), true;
     }
     if (p === 'analyse' && req.method === 'POST') {
-      const b = await body(req); const doc = parseScript(b.content || ''); const casting = buildCasting(doc);
-      const tl = buildTimeline(doc, {});
-      return json(res, { title: doc.title, sections: doc.sections.length, lines: collectLines(doc, casting).length, cast: casting.list.map((e) => ({ id: e.id, name: e.name, color: e.color, role: e.role, voice: e.voice.voice, preset: typeof e.def === 'string' })), duration: tl.meta.duration }), true;
+      const b = await body(req); const doc = parseScript(b.content || ''); const bible = loadBible(); const casting = buildCasting(doc, bible);
+      const tl = buildTimeline(doc, { bible });
+      return json(res, { title: doc.title, sections: doc.sections.length, lines: collectLines(doc, casting).length, cast: casting.list.map((e) => ({ id: e.id, name: e.name, color: e.color, role: e.role, voice: e.voice.voice, preset: typeof e.def === 'string', known: !!e.fromBible })), duration: tl.meta.duration }), true;
     }
     if (p === 'prepare' && req.method === 'POST') {
       // timeline + voix + mixage pour l'aperçu temps réel (avec le son)
-      const b = await body(req); let doc = parseScript(b.content || ''); if (b.part) doc = splitDoc(doc, b.part); const casting = buildCasting(doc);
+      const b = await body(req); let doc = parseScript(b.content || ''); if (b.part) doc = splitDoc(doc, b.part); const bible = loadBible(); const casting = buildCasting(doc, bible);
       const lines = collectLines(doc, casting);
       let speech = {}, mode = 'estimated';
       if (b.voices !== false) ({ speech, mode } = await synthesizeAll(lines, path.join(ROOT, '.cache', 'voix'), (m) => broadcast({ type: 'log', message: m })));
-      const tl = buildTimeline(doc, { speech });
+      const tl = buildTimeline(doc, { speech, bible, next: nextEpisodeTitle(doc.episode) });
       const name = `apercu-${Date.now()}.wav`;
       for (const f of fs.readdirSync(PREVIEW)) if (f.startsWith('apercu-')) fs.rmSync(path.join(PREVIEW, f), { force: true });
       mixEpisode(tl, speech, path.join(PREVIEW, name));

@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "personnages": {
+    "sucrette": {
+      "id": "sucrette",
+      "nom": "Sucrette",
+      "role": "le glucose",
+      "description": "le glucose. La nouvelle candidate, pétillante, un peu naïve.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [
+        "glucose"
+      ],
+      "def": "sucrette",
+      "voix": {
+        "voice": "fr-FR-EloiseNeural",
+        "rate": "+8%",
+        "pitch": "+12Hz"
+      },
+      "premierEpisode": 1,
+      "apparitions": [
+        1
+      ],
+      "alias": []
+    },
+    "cellia": {
+      "id": "cellia",
+      "nom": "Cellia",
+      "role": "une cellule",
+      "description": "une cellule. La reine de la villa, difficile d'accès.",
+      "couleur": "#9b4dff",
+      "genre": "f",
+      "notions": [
+        "cellule"
+      ],
+      "def": "cellia",
+      "voix": {
+        "voice": "fr-FR-VivienneMultilingualNeural",
+        "rate": "+2%",
+        "pitch": "+2Hz"
+      },
+      "premierEpisode": 1,
+      "apparitions": [
+        1
+      ],
+      "alias": []
+    },
+    "insuline": {
+      "id": "insuline",
+      "nom": "Insuline",
+      "role": "celle qui a les clés",
+      "description": "celle qui a les clés. Cash, elle n'a pas sa langue dans sa poche.",
+      "couleur": "#e8a317",
+      "genre": "f",
+      "notions": [
+        "insuline"
+      ],
+      "def": "insuline",
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 1,
+      "apparitions": [
+        1
+      ],
+      "alias": []
+    },
+    "pancho": {
+      "id": "pancho",
+      "nom": "Pancho",
+      "role": "le pancréas",
+      "description": "le pancréas. Le daron de la villa, il bosse trop.",
+      "couleur": "#ef6a56",
+      "genre": "m",
+      "notions": [
+        "pancreas"
+      ],
+      "def": "pancho",
+      "voix": {
+        "voice": "fr-FR-RemyMultilingualNeural",
+        "rate": "-5%",
+        "pitch": "-8Hz"
+      },
+      "premierEpisode": 1,
+      "apparitions": [
+        1
+      ],
+      "alias": []
+    },
+    "josh": {
+      "id": "josh",
+      "nom": "Josh",
+      "role": "l'humain",
+      "description": "",
+      "couleur": "#2f7de1",
+      "genre": "m",
+      "notions": [
+        "josh"
+      ],
+      "def": "josh",
+      "voix": {
+        "voice": "fr-FR-HenriNeural",
+        "rate": "+6%",
+        "pitch": "+4Hz"
+      },
+      "premierEpisode": 1,
+      "apparitions": [
+        1
+      ],
+      "alias": []
+    }
+  },
+  "maj": "2026-10-28"
+}

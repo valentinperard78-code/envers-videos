@@ -10,7 +10,7 @@ const VIS = {
   f: { open: 0.12, wide: 0.62, round: 0 }, c: { open: 0.32, wide: 0.6, round: 0 }, s: { open: 0.2, wide: 0.78, round: 0 }, _: { open: 0, wide: 0.5, round: 0 },
 };
 function charVis(ch) {
-  ch = ch.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  ch = ch.toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').normalize('NFD').replace(/[̀-ͯ]/g, '');
   if ('a'.includes(ch)) return 'a';
   if ('e'.includes(ch)) return 'e';
   if ('iy'.includes(ch)) return 'i';

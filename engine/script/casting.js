@@ -1,5 +1,6 @@
 // Distribution : relie chaque nom du script à un personnage 3D (préréglage ou archétype) et à une voix.
 import { slug } from './parser.js';
+import { findInBible } from './bible.js';
 
 // Voix françaises neuronales (edge-tts, gratuites).
 export const VOICES = {
@@ -74,11 +75,32 @@ function guessGender(name, desc) {
  * Construit la distribution à partir du casting du script + des noms qui parlent.
  * Retour : { byName: { 'INSULINE': entry }, list: [entry] } ; entry = { id, name, def, color, role, gender, voice }
  */
-export function buildCasting(doc) {
+export function buildCasting(doc, bible = null) {
   const entries = new Map();
   const usedVoices = { f: 0, m: 0 };
+  const aliases = {};
+  // voix déjà attribuées dans la série : un nouveau personnage en reçoit une autre
+  const takenVoices = new Set(Object.values(bible?.personnages || {}).map((p) => p.voix?.voice + p.voix?.pitch));
+  const pickVoice = (gender) => {
+    const pool = VOICES[gender];
+    for (let i = 0; i < pool.length * 2; i++) {
+      const v = pool[(usedVoices[gender]++) % pool.length];
+      if (!takenVoices.has(v.voice + v.pitch) || i >= pool.length) { takenVoices.add(v.voice + v.pitch); return v; }
+    }
+    return pool[0];
+  };
   const add = (name, desc = '') => {
-    const id = slug(name); if (!id || entries.has(id)) return entries.get(id);
+    let id = slug(name); if (!id) return null;
+    if (entries.has(id)) return entries.get(id);
+    if (aliases[id]) return entries.get(aliases[id]);
+    // 1) personnage déjà connu de la série -> identique (apparence + voix)
+    const B = findInBible(bible, name, `${name} ${desc}`);
+    if (B) {
+      const entry = { id: B.id, name: B.nom, def: B.def, color: B.couleur, role: B.role, gender: B.genre, voice: B.voix, description: desc || B.description, fromBible: true };
+      if (B.id !== id) { aliases[id] = B.id; entry.alias = name; }
+      if (!entries.has(B.id)) entries.set(B.id, entry);
+      return entries.get(B.id);
+    }
     const low = desc.toLowerCase();
     let entry;
     if (PRESET_META[id]) {
@@ -100,20 +122,21 @@ export function buildCasting(doc) {
       const gender = guessGender(name, desc);
       def.face = { lashes: gender === 'f', lips: gender === 'f' ? 'full' : 'line', lipColor: '#c2185b', iris: ['#5b3a1e', '#2f7d5a', '#3b6fb0', '#7a3f12'][hashStr(id) % 4], ...(def.face || {}) };
       def.name = cap(name);
-      const pool = VOICES[gender];
-      const voice = pool[(usedVoices[gender]++) % pool.length];
-      entry = { id, name: cap(name), def, color, role: shortRole(desc), gender, voice, big: def.shape === 'cell' };
+      const voice = pickVoice(gender);
+      entry = { id, name: cap(name), def, color, role: shortRole(desc), gender, voice, big: def.shape === 'cell', isNew: true };
     }
     entry.description = desc;
     entries.set(id, entry);
     return entry;
   };
-  for (const c of doc.casting) add(c.name, c.description);
+  for (const c of doc.casting) { if (/voix|narrat/i.test(c.name + ' ' + c.description.split('.')[0])) continue; add(c.name, c.description); }
   for (const s of doc.sections) for (const it of s.items) if (it.type === 'line' && !it.voiceOver) add(it.speaker, '');
   // personnages mentionnés par la voix off (ex. Josh) : ajoutés s'ils sont au casting
   const list = [...entries.values()];
   const byName = {};
   for (const e of list) { byName[e.name.toUpperCase()] = e; byName[e.id] = e; }
+  for (const a in aliases) { const e = entries.get(aliases[a]); byName[a] = e; byName[a.toUpperCase()] = e; }
+  for (const it of doc.sections.flatMap((s) => s.items)) if (it.type === 'line' && !it.voiceOver) { const e = add(it.speaker, ''); if (e) byName[it.speaker.toUpperCase()] = e; }
   return { list, byName, narrator: { id: 'narrator', name: 'Voix off', voice: VOICES.narrator, color: '#ffe44d' } };
 }
 
@@ -127,10 +150,10 @@ function shortRole(desc) {
 
 /** Retrouve un personnage cité dans un texte (nom ou mot-clé de son rôle). */
 export function findMentions(text, casting) {
-  const low = ` ${String(text).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')} `;
+  const low = ` ${String(text).toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').normalize('NFD').replace(/[̀-ͯ]/g, '')} `;
   const out = [];
   for (const e of casting.list) {
-    const keys = [e.name, ...(PRESET_META[e.id]?.keywords || [])].map((k) => k.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''));
+    const keys = [e.name, ...(PRESET_META[e.id]?.keywords || [])].map((k) => k.toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').normalize('NFD').replace(/[̀-ͯ]/g, ''));
     if (keys.some((k) => k && new RegExp(`[^a-z]${k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(low))) out.push(e.id);
   }
   return out;

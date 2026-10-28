@@ -23,7 +23,7 @@ export class Overlay {
   draw(c, t, ev) {
     const active = this.items.filter((o) => t >= o.t0 && t <= o.t1);
     // ordre : fonds plein écran d'abord, texte ensuite
-    const order = { card: 0, title: 0, gauge: 1, badge: 1, confession: 2, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
+    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, confession: 2, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
     active.sort((a, b) => (order[a.type] ?? 3) - (order[b.type] ?? 3));
     for (const o of active) { c.save(); try { (this[o.type] || (() => {})).call(this, c, o, t); } finally { c.restore(); } }
   }
@@ -46,7 +46,7 @@ export class Overlay {
     c.font = `900 ${size}px ${FONT_TEXT}`; c.textAlign = 'center'; c.textBaseline = 'middle';
     const y = H * 0.665;
     const text = chunk.map((w) => w.w.toUpperCase());
-    const widths = text.map((s) => c.measureText(s).width), space = size * 0.28;
+    const widths = text.map((s) => c.measureText(s).width * 1.06), space = size * 0.3;
     let lines = [[]], lw = [0];
     const maxW = W * 0.84;
     text.forEach((s, i) => { const L = lines.length - 1; if (lw[L] + widths[i] > maxW && lines[L].length) { lines.push([]); lw.push(0); } lines[lines.length - 1].push(i); lw[lines.length - 1] += widths[i] + space; });
@@ -61,7 +61,7 @@ export class Overlay {
         c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 12 * u; c.shadowOffsetY = 5 * u;
         c.strokeText(s, cx, yy); c.shadowBlur = 0; c.shadowOffsetY = 0;
         c.fillStyle = on ? (o.color || '#ffe44d') : '#ffffff';
-        if (on) { c.save(); c.translate(cx, yy); c.scale(1.08, 1.08); c.fillText(s, 0, 0); c.restore(); } else c.fillText(s, cx, yy);
+        if (on) { c.save(); c.translate(cx, yy); c.scale(1.05, 1.05); c.fillText(s, 0, 0); c.restore(); } else c.fillText(s, cx, yy);
         x += widths[i] + space;
       }
     });
@@ -194,6 +194,25 @@ export class Overlay {
     c.textAlign = 'right'; c.font = `${44 * u}px ${FONT_TITLE}`;
     c.fillStyle = danger ? (Math.floor(t * 4) % 2 ? '#ff2a3a' : '#fff') : '#fff';
     c.fillText(o.valueText ? o.valueText(v) : (danger ? 'DANGER' : v > 0.5 ? 'ÇA MONTE' : 'NORMAL'), x + w, y - 18 * u);
+  }
+
+  sources(c, o, t) {
+    const u = this.u; const k = fadeIO(t, o.t0, o.t1, 0.4, 0.4); c.globalAlpha = k * 0.92;
+    c.font = `700 ${26 * u}px ${FONT_TEXT}`; const lines = wrap(c, o.text, this.W * 0.6);
+    const w = Math.max(...lines.map((l) => c.measureText(l).width)) + 36 * u, h = lines.length * 34 * u + 20 * u;
+    const x = 36 * u, y = this.H * 0.085;
+    c.fillStyle = 'rgba(0,0,0,0.5)'; rr(c, x, y, w, h, 14 * u); c.fill();
+    c.fillStyle = '#fff'; c.textAlign = 'left'; c.textBaseline = 'top';
+    lines.forEach((l, i) => c.fillText(l, x + 18 * u, y + 12 * u + i * 34 * u));
+  }
+
+  banner(c, o, t) {
+    const u = this.u, W = this.W; const k = fadeIO(t, o.t0, o.t1, 0.25, 0.25); c.globalAlpha = k;
+    c.font = `${50 * u}px ${FONT_TITLE}`; const w = c.measureText(o.text).width + 80 * u, h = 76 * u, x = W / 2 - w / 2, y = this.H * 0.085;
+    c.fillStyle = 'rgba(255,209,102,0.95)'; rr(c, x, y, w, h, 12 * u); c.fill();
+    c.fillStyle = '#2a0f3a'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.text, W / 2, y + h / 2 + 2 * u);
+    // effet « magnétoscope »
+    c.globalAlpha = k * 0.12; c.fillStyle = '#fff'; for (let yy = (t * 90) % 10; yy < this.H; yy += 10 * u) c.fillRect(0, yy, W, 2 * u);
   }
 
   badge(c, o, t) {

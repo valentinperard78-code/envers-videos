@@ -1,0 +1,461 @@
+{
+  "titre": "La Villa des Pathologies",
+  "saison": 1,
+  "regle": "Chaque épisode se termine par un teaser de l'épisode suivant (champ teaserSuivant). Les personnages déjà créés sont dans villa/bible.json et reviennent à l'identique.",
+  "episodes": [
+    {
+      "numero": 1,
+      "slug": "diabete-type-2",
+      "pathologie": "Diabète de type 2",
+      "titre": "La clé de la discorde",
+      "pitch": "Insuline n'arrive plus à ouvrir la porte de Cellia : résistance à l'insuline.",
+      "personnagesPrevus": [
+        "Sucrette",
+        "Cellia",
+        "Insuline",
+        "Pancho",
+        "Josh"
+      ],
+      "teaserSuivant": "Hypertension artérielle",
+      "statut": "script prêt",
+      "script": "scripts/ep01-diabete-type-2.md",
+      "publication": null
+    },
+    {
+      "numero": 2,
+      "slug": "hypertension",
+      "pathologie": "Hypertension artérielle",
+      "titre": "Sous pression",
+      "pitch": "Tensia, la pression artérielle, débarque et met Artie l'artère sous pression ; Sel le fêtard en rajoute.",
+      "personnagesPrevus": [
+        "Tensia (pression artérielle)",
+        "Artie (artère)",
+        "Sel (sodium)",
+        "Josh"
+      ],
+      "teaserSuivant": "Cholestérol et plaques d'athérome",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 3,
+      "slug": "cholesterol",
+      "pathologie": "Cholestérol et plaques d'athérome",
+      "titre": "Les squatteurs des artères",
+      "pitch": "Choco le mauvais cholestérol colle aux murs d'Artie ; le bon cholestérol tente de faire le ménage.",
+      "personnagesPrevus": [
+        "Choco (cholestérol LDL)",
+        "Artie",
+        "Hector (cholestérol HDL)"
+      ],
+      "teaserSuivant": "Infarctus du myocarde",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 4,
+      "slug": "infarctus",
+      "pathologie": "Infarctus du myocarde",
+      "titre": "Le cœur qui lâche",
+      "pitch": "Une artère du cœur se bouche : Cardio manque d'oxygène. Les signes d'alerte et le réflexe 15.",
+      "personnagesPrevus": [
+        "Cardio (cœur)",
+        "Artie",
+        "Choco"
+      ],
+      "teaserSuivant": "Accident vasculaire cérébral (AVC)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 5,
+      "slug": "avc",
+      "pathologie": "Accident vasculaire cérébral (AVC)",
+      "titre": "Black-out au cerveau",
+      "pitch": "Neura, le cerveau, est privé de sang : les signes VITE et l'urgence du 15.",
+      "personnagesPrevus": [
+        "Neura (cerveau)",
+        "Tensia",
+        "Artie"
+      ],
+      "teaserSuivant": "Asthme",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 6,
+      "slug": "asthme",
+      "pathologie": "Asthme",
+      "titre": "Les bronches à cran",
+      "pitch": "Bronchita se resserre au moindre déclencheur ; le traitement de fond vs la crise.",
+      "personnagesPrevus": [
+        "Bronchita (bronches)",
+        "Poussière"
+      ],
+      "teaserSuivant": "Rhinite allergique (rhume des foins)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 7,
+      "slug": "allergie",
+      "pathologie": "Rhinite allergique (rhume des foins)",
+      "titre": "L'intrus du printemps",
+      "pitch": "Histamine sur-réagit au pollen, pourtant inoffensif.",
+      "personnagesPrevus": [
+        "Histamine",
+        "Pollen",
+        "Lympho (globule blanc)"
+      ],
+      "teaserSuivant": "Grippe",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 8,
+      "slug": "grippe",
+      "pathologie": "Grippe",
+      "titre": "Le virus qui s'incruste",
+      "pitch": "Flu le virus envahit la villa ; Lympho et le vaccin organisent la défense.",
+      "personnagesPrevus": [
+        "Flu (virus de la grippe)",
+        "Lympho"
+      ],
+      "teaserSuivant": "Angine : virale ou bactérienne ?",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 9,
+      "slug": "angine",
+      "pathologie": "Angine : virale ou bactérienne ?",
+      "titre": "Antibio, pas automatique",
+      "pitch": "Le test rapide départage virus et bactérie ; les antibiotiques ne servent pas contre les virus.",
+      "personnagesPrevus": [
+        "Strepto (bactérie)",
+        "Flu",
+        "Antibio (antibiotique)"
+      ],
+      "teaserSuivant": "Gastro-entérite",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 10,
+      "slug": "gastro-enterite",
+      "pathologie": "Gastro-entérite",
+      "titre": "Tempête dans le ventre",
+      "pitch": "Un virus retourne Gastro l'intestin ; le danger, c'est la déshydratation.",
+      "personnagesPrevus": [
+        "Gastro (intestin)",
+        "Rota (virus)"
+      ],
+      "teaserSuivant": "Reflux gastro-œsophagien",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 11,
+      "slug": "reflux",
+      "pathologie": "Reflux gastro-œsophagien",
+      "titre": "Ça remonte",
+      "pitch": "L'acide de l'estomac remonte là où il ne devrait pas.",
+      "personnagesPrevus": [
+        "Estoma (estomac)",
+        "Acidia (acide)"
+      ],
+      "teaserSuivant": "Anémie par manque de fer",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 12,
+      "slug": "anemie",
+      "pathologie": "Anémie par manque de fer",
+      "titre": "Plus de fer, plus d'énergie",
+      "pitch": "Les globules rouges de Josh manquent de fer : fatigue et essoufflement.",
+      "personnagesPrevus": [
+        "Hémo (globule rouge)",
+        "Ferro (fer)"
+      ],
+      "teaserSuivant": "Diabète de type 1",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 13,
+      "slug": "diabete-type-1",
+      "pathologie": "Diabète de type 1",
+      "titre": "La clé disparue",
+      "pitch": "Cette fois, Insuline disparaît : maladie auto-immune, à ne pas confondre avec l'épisode 1.",
+      "personnagesPrevus": [
+        "Insuline",
+        "Pancho",
+        "Sucrette",
+        "Lympho"
+      ],
+      "teaserSuivant": "Hypothyroïdie",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 14,
+      "slug": "hypothyroidie",
+      "pathologie": "Hypothyroïdie",
+      "titre": "Le thermostat en panne",
+      "pitch": "Thyro, la thyroïde, ralentit toute la villa.",
+      "personnagesPrevus": [
+        "Thyro (thyroïde)"
+      ],
+      "teaserSuivant": "Migraine",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 15,
+      "slug": "migraine",
+      "pathologie": "Migraine",
+      "titre": "Le cerveau en alerte",
+      "pitch": "Neura et ses crises : déclencheurs, aura, traitement.",
+      "personnagesPrevus": [
+        "Neura"
+      ],
+      "teaserSuivant": "Calculs rénaux (colique néphrétique)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 16,
+      "slug": "calculs-renaux",
+      "pathologie": "Calculs rénaux (colique néphrétique)",
+      "titre": "Les cailloux du rein",
+      "pitch": "Rénato, le rein, fabrique des cailloux qui bloquent la sortie.",
+      "personnagesPrevus": [
+        "Rénato (rein)"
+      ],
+      "teaserSuivant": "Infection urinaire (cystite)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 17,
+      "slug": "cystite",
+      "pathologie": "Infection urinaire (cystite)",
+      "titre": "La vessie s'enflamme",
+      "pitch": "Une bactérie remonte dans la vessie.",
+      "personnagesPrevus": [
+        "Vessie",
+        "E. coli (bactérie)"
+      ],
+      "teaserSuivant": "Ostéoporose",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 18,
+      "slug": "osteoporose",
+      "pathologie": "Ostéoporose",
+      "titre": "Les os en dentelle",
+      "pitch": "Ossian l'os perd sa solidité ; calcium, vitamine D et activité physique.",
+      "personnagesPrevus": [
+        "Ossian (os)",
+        "Calcium"
+      ],
+      "teaserSuivant": "Arthrose",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 19,
+      "slug": "arthrose",
+      "pathologie": "Arthrose",
+      "titre": "Ça grince dans la villa",
+      "pitch": "Le cartilage s'use dans les articulations.",
+      "personnagesPrevus": [
+        "Cartilo (cartilage)"
+      ],
+      "teaserSuivant": "Eczéma atopique",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 20,
+      "slug": "eczema",
+      "pathologie": "Eczéma atopique",
+      "titre": "La peau qui gratte",
+      "pitch": "La barrière de la peau est fragile et s'enflamme.",
+      "personnagesPrevus": [
+        "Dermia (peau)",
+        "Histamine"
+      ],
+      "teaserSuivant": "Acné",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 21,
+      "slug": "acne",
+      "pathologie": "Acné",
+      "titre": "Les boutons débarquent",
+      "pitch": "Sébum, bactérie et hormones s'invitent sur la peau.",
+      "personnagesPrevus": [
+        "Dermia",
+        "Sébum"
+      ],
+      "teaserSuivant": "Insomnie",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 22,
+      "slug": "insomnie",
+      "pathologie": "Insomnie",
+      "titre": "Nuit blanche dans la villa",
+      "pitch": "Neura n'arrive plus à éteindre la lumière.",
+      "personnagesPrevus": [
+        "Neura",
+        "Mélatonine"
+      ],
+      "teaserSuivant": "BPCO (bronchopneumopathie chronique obstructive)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 23,
+      "slug": "bpco",
+      "pathologie": "BPCO (bronchopneumopathie chronique obstructive)",
+      "titre": "La fumée de trop",
+      "pitch": "Le tabac abîme durablement Bronchita.",
+      "personnagesPrevus": [
+        "Bronchita",
+        "Fumée (tabac)"
+      ],
+      "teaserSuivant": "Stéatose hépatique (foie gras)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 24,
+      "slug": "steatose-hepatique",
+      "pathologie": "Stéatose hépatique (foie gras)",
+      "titre": "Le foie déborde",
+      "pitch": "Le foie stocke trop de graisse ; lien avec le diabète et l'alimentation.",
+      "personnagesPrevus": [
+        "Hépato (foie)",
+        "Choco"
+      ],
+      "teaserSuivant": "Appendicite",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 25,
+      "slug": "appendicite",
+      "pathologie": "Appendicite",
+      "titre": "L'appendice explose",
+      "pitch": "Une urgence chirurgicale : les signes à connaître.",
+      "personnagesPrevus": [
+        "Appendice"
+      ],
+      "teaserSuivant": "Varicelle",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 26,
+      "slug": "varicelle",
+      "pathologie": "Varicelle",
+      "titre": "Les boutons de l'enfance",
+      "pitch": "Un virus très contagieux, et pourquoi il peut revenir sous forme de zona.",
+      "personnagesPrevus": [
+        "Zoster (virus)",
+        "Dermia"
+      ],
+      "teaserSuivant": "Insuffisance veineuse (varices)",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 27,
+      "slug": "varices",
+      "pathologie": "Insuffisance veineuse (varices)",
+      "titre": "Les jambes lourdes",
+      "pitch": "Les veines n'arrivent plus à faire remonter le sang.",
+      "personnagesPrevus": [
+        "Veina (veine)"
+      ],
+      "teaserSuivant": "Crise de goutte",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 28,
+      "slug": "goutte",
+      "pathologie": "Crise de goutte",
+      "titre": "Le cristal qui pique",
+      "pitch": "L'acide urique forme des cristaux dans l'articulation du gros orteil.",
+      "personnagesPrevus": [
+        "Uricia (acide urique)"
+      ],
+      "teaserSuivant": "Syndrome de l'intestin irritable",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 29,
+      "slug": "intestin-irritable",
+      "pathologie": "Syndrome de l'intestin irritable",
+      "titre": "Le ventre en vrac",
+      "pitch": "Un syndrome fréquent, sans lésion visible, mais bien réel.",
+      "personnagesPrevus": [
+        "Gastro"
+      ],
+      "teaserSuivant": "Fibrillation atriale",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    },
+    {
+      "numero": 30,
+      "slug": "fibrillation-atriale",
+      "pathologie": "Fibrillation atriale",
+      "titre": "Le cœur s'emballe",
+      "pitch": "Cardio bat la chamade : risque d'AVC et traitement. Final de la saison.",
+      "personnagesPrevus": [
+        "Cardio",
+        "Neura"
+      ],
+      "teaserSuivant": "Saison 2",
+      "statut": "prévu",
+      "script": null,
+      "publication": null
+    }
+  ]
+}

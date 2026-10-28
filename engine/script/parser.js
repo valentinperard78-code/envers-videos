@@ -21,12 +21,12 @@ function quotes(s) {
   return out;
 }
 export function slug(s) {
-  return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return String(s).toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
 export function parseScript(src) {
   const lines = String(src).replace(/\r/g, '').split('\n');
-  const doc = { title: '', episode: null, episodeName: '', pathology: '', notes: [], casting: [], sections: [] };
+  const doc = { title: '', episode: null, episodeName: '', pathology: '', notes: [], casting: [], sections: [], sources: [] };
   let section = null, lineNo = 0;
   for (const raw of lines) {
     lineNo++;
@@ -46,11 +46,13 @@ export function parseScript(src) {
       let kind = 'scene';
       if (low.startsWith('casting') || low.startsWith('personnages')) kind = 'casting';
       else if (low.startsWith('teaser') || low.includes('cold-open')) kind = 'teaser';
+      else if (low.startsWith('precedemment') || low.startsWith('previously') || low.startsWith('resume-de-l-episode')) kind = 'previously';
       else if (low.startsWith('recap') || low.includes('a-retenir') || low.includes('conclusion')) kind = 'recap';
-      else if (low.startsWith('notes') || low.startsWith('sources')) kind = 'notes';
+      else if (low.startsWith('sources')) kind = 'sources';
+      else if (low.startsWith('notes')) kind = 'notes';
       const num = title.match(/(\d+)/);
       section = { kind, title, name: title.replace(/^sc[eè]ne\s*\d+\s*[:\-–]\s*/i, ''), number: num ? +num[1] : null, items: [] };
-      if (kind !== 'casting') doc.sections.push(section);
+      if (kind !== 'casting' && kind !== 'sources' && kind !== 'notes') doc.sections.push(section);
       continue;
     }
     const body = clean(line.replace(/^[-*•]\s+/, ''));
@@ -58,6 +60,12 @@ export function parseScript(src) {
     if (section.kind === 'casting') {
       const m = body.match(/^([^:]+?)\s*[:\-–]\s*(.+)$/);
       if (m) doc.casting.push({ name: m[1].trim(), description: m[2].trim() });
+      continue;
+    }
+    if (section.kind === 'sources') {
+      const url = (body.match(/https?:\/\/\S+/) || [''])[0].replace(/[)\].,]+$/, '');
+      const name = body.replace(/https?:\/\/\S+/, '').replace(/[\[\]()]/g, '').replace(/[:\-–]\s*$/, '').trim();
+      doc.sources.push({ name: name || url, url });
       continue;
     }
     if (section.kind === 'notes') continue;

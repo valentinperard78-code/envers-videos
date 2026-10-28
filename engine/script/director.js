@@ -4,7 +4,7 @@
 import { parseScript, slug } from './parser.js';
 import { buildCasting, findMentions, PRESET_META } from './casting.js';
 
-const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const norm = (s) => String(s || '').toLowerCase().replace(/œ/g, 'oe').replace(/æ/g, 'ae').normalize('NFD').replace(/[̀-ͯ]/g, '');
 
 // ------------------------------------------------------------------ règles de jeu d'acteur
 // Chaque règle : motif (sur didascalie + texte) -> émotion, pose, effets, plan.
@@ -64,6 +64,7 @@ export function estimateSpeech(text, rate = 1) {
 
 /** Liste des répliques à vocaliser (pour la synthèse vocale). */
 export function collectLines(doc, casting) {
+  // (casting construit avec la même bible que la timeline)
   const out = [];
   for (const s of doc.sections) for (const it of s.items) {
     if (it.type !== 'line') continue;
@@ -110,7 +111,7 @@ export function splitDoc(doc, part) {
 export function buildTimeline(src, opts = {}) {
   let doc = typeof src === 'string' ? parseScript(src) : src;
   if (opts.part) doc = splitDoc(doc, opts.part);
-  const casting = buildCasting(doc);
+  const casting = buildCasting(doc, opts.bible || null);
   // personnages préréglés cités par la voix off mais absents du casting (ex. Josh)
   for (const s of doc.sections) for (const it of s.items) if (it.type === 'line') {
     for (const id of Object.keys(PRESET_META)) if (!casting.list.find((e) => e.id === id) && new RegExp(`\\b${id}\\b`).test(norm(it.text))) {
@@ -170,7 +171,9 @@ export function buildTimeline(src, opts = {}) {
     const secNorm = norm(sec.title);
     const mood = (SECTION_MUSIC.find(([re]) => re.test(secNorm)) || [null, sec.kind === 'teaser' ? 'drama' : 'chill'])[1];
     music.push({ t0: t, mood });
-    const teaser = sec.kind === 'teaser', recap = sec.kind === 'recap';
+    const previously = sec.kind === 'previously';
+    const teaser = sec.kind === 'teaser' || previously, recap = sec.kind === 'recap';
+    const secStart = t;
     // décor par défaut de la section
     const secText = norm(sec.items.map((i) => (i.type === 'line' ? (i.direction || '') : i.type === 'screen' ? i.text : '')).join(' '));
     const secBlood = /dans le sang|circulation|vaisseau/.test(secText);
@@ -331,7 +334,7 @@ export function buildTimeline(src, opts = {}) {
       if (teaser && !vo && set !== 'confessional') shot = { type: 'close', subject: id, crash: true, seed: beats.length };
       if (teaser && shot.type !== 'establish') { shot.crash = shot.crash ?? (beats.length % 2 === 0); }
 
-      const b = { t0, dur, set, speaker: id || null, kind: vo ? 'vo' : 'line', shot, actors, line: it.line, flash: teaser && ii > 0 };
+      const b = { t0, dur, set, speaker: id || null, kind: vo ? 'vo' : 'line', shot, actors, line: it.line, flash: teaser && ii > 0, isRecap: recap };
       if (set === 'blood') b.setState = { crowd };
       b.speech = { t0: t0 + lead, t1: t0 + lead + sp.dur, words: sp.words.map((w) => ({ t: t0 + lead + w.t, d: w.d, w: w.w })), env: sp.env || null, rate: sp.rate || 50 };
       // découpage des longues répliques en plusieurs plans (rythme TikTok : un plan toutes les ~3,5 s)
@@ -391,8 +394,8 @@ export function buildTimeline(src, opts = {}) {
         overlays.push({ type: 'recap', t0: t0 + 0.3, t1: t, text: it.text.replace(/^à retenir\s*:\s*/i, '') });
       }
       if (/abonne/.test(norm(it.text))) {
-        const nextT = it.note && /teaser|prochain/.test(norm(it.note)) ? it.note.replace(/^[^:]*:\s*/, '') : '';
-        overlays.push({ type: 'cta', t0: t0 + 0.2, t1: t + 1.2, text: 'ABONNE-TOI !', next: nextT ? `Prochain épisode : ${nextT.toUpperCase()}` : '' });
+        const nextT = it.note && /teaser|prochain|demain/.test(norm(it.note)) ? it.note.replace(/^[^:]*:\s*/, '') : (opts.next || '');
+        overlays.push({ type: 'cta', t0: t0 + 0.2, t1: t + 1.2, text: 'ABONNE-TOI !', next: nextT ? `Demain dans la villa : ${nextT.toUpperCase()}` : '' });
         sfx.push({ type: 'bell', t: t0 + 0.3 });
       }
     });
@@ -402,10 +405,18 @@ export function buildTimeline(src, opts = {}) {
       overlays.push({ type: 'box', t0: last.t0, t1: last.t1 + 1, title: pendingBox.title, text: pendingBox.text });
     }
     if (savedVilla) { villa.present = savedVilla.present; villa.pos = savedVilla.pos; }
+    if (previously && t > secStart) overlays.push({ type: 'banner', t0: secStart, t1: t, text: 'PRÉCÉDEMMENT DANS LA VILLA…' });
     if (gauge && gauge.t0 < t) overlays.push({ type: 'gauge', t0: gauge.t0, t1: t, label: gauge.label, from: gauge.lastTo ?? gauge.from, to: gauge.to });
   });
   // fin : on prolonge un peu le dernier plan
   if (beats.length) { const last = beats.at(-1); last.dur += 1.2; last.t1 += 1.2; t = last.t1; }
+  // sources affichées pendant le récap (crédibilité)
+  if (doc.sources?.length) {
+    const recapStart = beats.find((b) => doc.sections.find((sec) => sec.kind === 'recap') && b.t0 >= 0 && b.kind === 'vo' && b.isRecap)?.t0;
+    const names = [...new Set(doc.sources.map((s) => s.name.split(/[—–:(]/)[0].trim()).filter(Boolean))].slice(0, 4);
+    const t0s = recapStart ?? Math.max(0, t - 8);
+    overlays.push({ type: 'sources', t0: t0s, t1: t, text: `Sources : ${names.join(' · ')}` });
+  }
   // badge d'épisode (hors générique et cartons)
   const titleEnd = beats.find((b) => b.kind === 'title')?.t1 ?? 0;
   if (epLabel.length > 6) overlays.push({ type: 'badge', t0: titleEnd + 0.3, t1: t, text: epLabel });
@@ -414,6 +425,8 @@ export function buildTimeline(src, opts = {}) {
   const cast = casting.list.filter((e) => usedIds.has(e.id)).map((e) => ({ id: e.id, def: e.def, name: e.name, color: e.color, voice: e.voice }));
   return {
     version: 1,
+    newCharacters: cast.filter((c) => casting.list.find((e) => e.id === c.id)?.isNew).map((c) => c.name),
+    castEntries: casting.list.filter((e) => usedIds.has(e.id)),
     meta: { title: doc.title, episode: doc.episode, episodeName: doc.episodeName, pathology: doc.pathology, fps, duration: t },
     cast, beats, overlays: overlays.filter((o) => o.t1 > o.t0), audio: { voices, sfx: sfx.filter((s) => s.t >= 0).sort((a, b) => a.t - b.t), music },
     narratorVoice: casting.narrator.voice,

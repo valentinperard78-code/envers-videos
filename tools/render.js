@@ -12,6 +12,8 @@ import { buildCasting } from '../engine/script/casting.js';
 import { buildTimeline, collectLines, estimateSpeech, splitDoc } from '../engine/script/director.js';
 import { synthesizeAll } from './tts.js';
 import { mixEpisode } from './audio-mix.js';
+import { registerCast } from '../engine/script/bible.js';
+import { loadBible, saveBible, nextEpisodeTitle } from './serie.js';
 import { startStaticServer } from './static-server.js';
 import { findChrome, chromeArgs } from './chrome.js';
 
@@ -32,7 +34,8 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   // 1) analyse + voix
   let doc = parseScript(src);
   if (opts.part) { doc = splitDoc(doc, opts.part); }
-  const casting = buildCasting(doc);
+  const bible = opts.bible || loadBible();
+  const casting = buildCasting(doc, bible);
   log(`📜 « ${doc.title || base} » : ${doc.sections.length} sections, ${casting.list.length} personnages.`);
   const lines = collectLines(doc, casting);
   let speech = {}, mode = 'estimated';
@@ -41,7 +44,13 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   onProgress({ type: 'stage', stage: 'voix', done: true, mode });
 
   // 2) timeline
-  const tl = buildTimeline(doc, { speech, fps });  // doc déjà découpé si --partie
+  const tl = buildTimeline(doc, { speech, fps, bible, next: opts.next ?? nextEpisodeTitle(doc.episode) });  // doc déjà découpé si --partie
+  // mémoire de la série : les nouveaux personnages sont enregistrés pour les prochains épisodes
+  if (opts.saveBible !== false) {
+    const added = registerCast(bible, tl.castEntries, doc.episode);
+    saveBible(bible);
+    if (added.length) log(`💾 Nouveaux personnages ajoutés à la bible de la série : ${added.join(', ')}`);
+  }
   fs.writeFileSync(path.join(work, 'timeline.json'), JSON.stringify(tl));
   fs.writeFileSync(outFile.replace(/\.mp4$/, '.timeline.json'), JSON.stringify(tl));
   const from = Math.max(0, +(opts.from ?? 0)), to = Math.min(tl.meta.duration, +(opts.to ?? tl.meta.duration));

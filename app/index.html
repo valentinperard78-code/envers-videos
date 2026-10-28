@@ -178,7 +178,7 @@ async function analyse() {
   analyseTimer = setTimeout(async () => {
     try {
       const r = await getJSON('/api/analyse', { method: 'POST', body: JSON.stringify({ content: $('editor').value }) });
-      $('cast').innerHTML = r.cast.map((c) => `<div><i style="background:${c.color}"></i><b>${c.name}</b> <span class="help">${c.role || ''}</span><small>${c.preset ? 'perso dédié' : 'archétype auto'}</small></div>`).join('') || '<span class="help">Aucun personnage trouvé.</span>';
+      $('cast').innerHTML = r.cast.map((c) => `<div><i style="background:${c.color}"></i><b>${c.name}</b> <span class="help">${c.role || ''}</span><small>${c.known ? 'déjà dans la série' : 'nouveau'}</small></div>`).join('') || '<span class="help">Aucun personnage trouvé.</span>';
       $('analyseInfo').textContent = `${r.sections} sections · ${r.lines} répliques · durée estimée ~${fmt(r.duration)}`;
     } catch (e) { $('analyseInfo').textContent = 'Erreur d’analyse : ' + e.message; }
   }, 400);
@@ -198,7 +198,7 @@ async function startPreview(withVoice) {
   try {
     let audioUrl = null;
     if (withVoice) { const r = await getJSON('/api/prepare', { method: 'POST', body: JSON.stringify({ content: $('editor').value, part: $('part').value || undefined }) }); tl = r.timeline; audioUrl = r.audio; }
-    else tl = buildTimeline($('editor').value, { part: $('part').value || undefined });
+    else { const bible = await getJSON('/api/bible'); tl = buildTimeline($('editor').value, { part: $('part').value || undefined, bible }); }
     await ensureWorld($('previewQ').value);
     $('hint').textContent = 'Chargement des personnages et décors…';
     await new Promise((r) => setTimeout(r, 30));

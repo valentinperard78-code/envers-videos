@@ -16,6 +16,9 @@ on:
     paths: ['scripts/**.md']
 permissions:
   contents: write
+concurrency:
+  group: rendu-villa
+  cancel-in-progress: false
 jobs:
   rendu:
     runs-on: ubuntu-latest
@@ -44,6 +47,14 @@ jobs:
           mkdir -p sorties
           set -o pipefail
           node tools/render.js "${{ steps.pick.outputs.script }}" --qualite ${{ steps.pick.outputs.qualite }} --workers 2 2>&1 | tee sorties/rendu.log
+      - name: Mémoire de la série (bible des personnages)
+        if: success() && steps.pick.outputs.script != ''
+        run: |
+          git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
+          if ! git diff --quiet -- villa/; then
+            git add villa/ && git commit -qm "Bible : personnages de ${{ steps.pick.outputs.script }}"
+            git pull -q --rebase origin "${GITHUB_REF_NAME}" && git push -q origin "HEAD:${GITHUB_REF_NAME}"
+          fi
       - name: Vidéo en pièce jointe
         if: always() && steps.pick.outputs.script != ''
         uses: actions/upload-artifact@v4

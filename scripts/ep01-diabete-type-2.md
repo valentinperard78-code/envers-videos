@@ -1,6 +1,6 @@
 # La Villa des Pathologies — Épisode 1 : « La clé de la discorde » (diabète de type 2)
 
-Script ton télé-réalité. Faits médicaux vérifiés (FRM, Assurance Maladie) : insuline = clé qui fait entrer le glucose dans les cellules ; résistance à l'insuline ; hyperglycémie ; épuisement du pancréas ; maladie silencieuse ; complications yeux / reins / cœur / nerfs des pieds ; diagnostic ≥ 1,26 g/L à jeun sur 2 contrôles ; facteurs : surpoids, sédentarité, hérédité.
+Script ton télé-réalité. Faits médicaux vérifiés (Inserm, Assurance Maladie, Vidal, HAS) : insuline = clé qui fait entrer le glucose dans les cellules ; résistance à l'insuline ; hyperglycémie ; épuisement du pancréas ; maladie silencieuse ; complications yeux / reins / cœur / nerfs des pieds ; diagnostic ≥ 1,26 g/L à jeun sur 2 contrôles ; facteurs : surpoids, sédentarité, hérédité.
 
 ## Casting
 - **Sucrette** : le glucose. La nouvelle candidate, pétillante, un peu naïve.
@@ -66,4 +66,8 @@ Script ton télé-réalité. Faits médicaux vérifiés (FRM, Assurance Maladie)
 - VOIX OFF : « À retenir : l'insuline, c'est la clé. Dans le type 2, les serrures résistent. Et le sucre reste dans le sang. »
 - VOIX OFF : « Prochain épisode… quelqu'un va faire monter la pression dans la villa. Abonne-toi ! » (teaser : hypertension)
 
-
+## Sources
+- Inserm — Diabète de type 2 : https://www.inserm.fr/dossier/diabete-type-2/
+- Assurance Maladie — Diagnostic du diabète : https://www.ameli.fr/assure/sante/themes/diabete-adulte/diabete-symptomes-evolution/diagnostic-diabete
+- Vidal — Diabète de type 2 : https://www.vidal.fr/maladies/metabolisme-diabete/diabete-type-2.html
+- HAS — Stratégie thérapeutique du diabète de type 2 : https://www.has-sante.fr/jcms/p_3520364/fr/strategie-therapeutique-du-patient-vivant-avec-un-diabete-de-type-2-recommandations
