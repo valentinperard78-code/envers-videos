@@ -221,7 +221,7 @@ export function buildTimeline(src, opts = {}) {
     const secLoc = locFrom(sec.location || '') || (sec.kind === 'scene' ? (locFrom(sec.name || '') !== 'villa' ? locFrom(sec.name || '') : null) : null);
     const organPos = {};
     gauge = null;
-    if (secBlood) crowd = Math.max(crowd, 1);
+    if (secBlood && /(diabet|glyc|sucre|glucose)/.test(norm(doc.pathology || ''))) crowd = Math.max(crowd, 1);
     let firstInSection = true;
     const savedVilla = teaser ? { present: new Set(villa.present), pos: { ...villa.pos } } : null;
     let pendingBox = null;
@@ -252,7 +252,7 @@ export function buildTimeline(src, opts = {}) {
         const label = m ? m[1].trim() : 'niveau';
         const to = /rouge|danger|explose|max/.test(s) ? 0.96 : /monte|augmente/.test(s) ? 0.75 : /vert|normal|baisse|descend/.test(s) ? 0.35 : 0.8;
         gauge = { label: label.replace(/glycemie/, 'glycémie').toUpperCase(), from: 0.45, to, t0: Math.max(0, t - (beats.at(-1)?.dur || 0) * 0.5) };
-        if (to > 0.7) { crowd = 1; sfx.push({ type: 'alarm', t: gauge.t0 + 0.4 }); }
+        if (to > 0.7) { if (/(glyc|sucre|glucose)/.test(label)) crowd = 1; sfx.push({ type: 'alarm', t: gauge.t0 + 0.4 }); }
         // l'indication s'applique au plan précédent si on est encore dedans
         return;
       }
@@ -293,7 +293,7 @@ export function buildTimeline(src, opts = {}) {
       } else if (ORGAN_SETS.has(set)) {
         // ---- intérieur du corps / cabinet médical : le locuteur et les personnages cités
         let present = vo ? mentions.filter((m) => m !== 'josh' || set === 'clinic') : [id, ...mentions.filter((m) => m !== 'josh' || set === 'clinic')];
-        if (set === 'blood') { const sugarId = casting.list.find((e) => /glucose|sucre/.test(norm(e.role + ' ' + e.description)))?.id; if (sugarId) present.push(sugarId); }
+        if (set === 'blood' && /(sucre|glucose|glyc|diabet)/.test(norm(`${doc.pathology || ''} ${it.text || ''}`))) { const sugarId = casting.list.find((e) => /glucose|sucre/.test(norm(e.role + ' ' + e.description)))?.id; if (sugarId) present.push(sugarId); }
         if (!present.length) present = Object.keys(organPos).length ? Object.keys(organPos) : set === 'clinic' && casting.list.find((e) => e.id === 'josh') ? ['josh'] : [...villa.present].filter((x) => !cellia || x !== cellia.id).slice(0, 1);
         const ids = [...new Set(present)].filter(Boolean).slice(0, 3);
         const slots = ['center', 'left', 'right'];

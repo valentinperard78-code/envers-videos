@@ -48,12 +48,12 @@ const ARCHETYPES = [
   { k: ['estomac', 'intestin'], def: { shape: 'bean', material: 'organ-smooth', color: '#f08d7e' } },
   { k: ['pancreas', 'pancréas'], def: { shape: 'tall', material: 'organ', color: '#ef8a76' } },
   { k: ['os', 'squelette', 'calcium'], def: { shape: 'capsule', material: 'skin', color: '#f4efe2' } },
-  { k: ['sel', 'sodium'], def: { shape: 'cube', material: 'sugar', color: '#f2f2f2', accessories: ['sparkles'] } },
+  { k: ['sel', 'sodium'], def: { shape: 'crystal', material: 'salt', color: '#e6eef7', accessories: ['sparkles'] } },
   { k: ['sucre', 'glucose'], def: { shape: 'cube', material: 'sugar', color: '#ffffff', accessories: ['sparkles'] } },
   { k: ['cholesterol', 'cholestérol', 'graisse', 'lipide', 'gras'], def: { shape: 'blob', material: 'skin', color: '#f6d365', accessories: ['sunglasses'] } },
   { k: ['medicament', 'médicament', 'pilule', 'comprime', 'comprimé', 'gelule', 'gélule', 'traitement', 'vaccin'], def: { shape: 'capsule', material: 'skin', color: '#4a90e2' } },
   { k: ['hormone', 'proteine', 'protéine', 'enzyme', 'anticorps'], def: { shape: 'blob', material: 'skin', color: '#ffb347' } },
-  { k: ['pression', 'tension'], def: { shape: 'blob', material: 'skin', color: '#ff5a5f', accessories: ['sweat'] } },
+  { k: ['pression', 'tension'], def: { shape: 'blob', material: 'skin', color: '#ff5a5f' } },
   { k: ['humain', 'patient', 'patiente', 'homme', 'femme', 'enfant', 'medecin', 'médecin', 'infirmi'], def: { human: true } },
 ];
 const COLORS = { rouge: '#e2394a', bleu: '#3b7ddd', vert: '#4cbf6b', jaune: '#f6d03b', orange: '#ff8a3d', rose: '#ff6fb0', violet: '#9b4dff', mauve: '#b07cff', 'doré': '#f2b632', or: '#f2b632', blanc: '#f4f4f4', noir: '#2a2a2a', gris: '#9aa0a6', marron: '#8a5a32', turquoise: '#2ec4c4', beige: '#e8d5b0' };
@@ -62,8 +62,11 @@ const PALETTE = ['#ff6f91', '#4cc9f0', '#ffd166', '#06d6a0', '#ef476f', '#9b5de5
 
 function hashStr(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 function guessGender(name, desc) {
-  const d = ` ${desc.toLowerCase()} `;
+  const d = ` ${desc.toLowerCase()} `.replace(/[.,;:!?]/g, ' ');
   let f = 0, m = 0;
+  // un pronom explicite (« Il est… », « Elle… ») l'emporte sur le genre grammatical de l'organe (« une artère »)
+  if (/ il(s)? /.test(d) && !/ elle(s)? /.test(d)) return 'm';
+  if (/ elle(s)? /.test(d) && !/ il(s)? /.test(d)) return 'f';
   for (const w of [' elle ', ' la nouvelle', ' candidate', ' reine', ' une ', 'pétillante', 'naïve', 'diva', ' sa ', 'heureuse', 'fatiguée', 'énervée']) if (d.includes(w)) f++;
   for (const w of [' il ', ' le daron', ' candidat ', ' roi', ' un ', 'daron', 'heureux', 'fatigué ', 'énervé']) if (d.includes(w)) m++;
   if (f === m) { const n = name.toLowerCase(); f += /(a|e|ette|ine|elle|ia)$/.test(n) ? 1 : 0; m += /(o|us|on|ar|ard|ix)$/.test(n) ? 1 : 0; }
@@ -79,12 +82,13 @@ export function buildCasting(doc, bible = null) {
   const usedVoices = { f: 0, m: 0 };
   const aliases = {};
   // voix déjà attribuées dans la série : un nouveau personnage en reçoit une autre
-  const takenVoices = new Set(Object.values(bible?.personnages || {}).map((p) => p.voix?.voice + p.voix?.pitch));
+  const takenVoices = new Set(Object.values(bible?.personnages || {}).map((p) => p.voix?.voice));
+  for (const P of Object.values(PRESET_META)) if (P.voice) takenVoices.add(P.voice.voice);
   const pickVoice = (gender) => {
     const pool = VOICES[gender];
     for (let i = 0; i < pool.length * 2; i++) {
       const v = pool[(usedVoices[gender]++) % pool.length];
-      if (!takenVoices.has(v.voice + v.pitch) || i >= pool.length) { takenVoices.add(v.voice + v.pitch); return v; }
+      if (!takenVoices.has(v.voice) || i >= pool.length) { takenVoices.add(v.voice); return v; }
     }
     return pool[0];
   };
@@ -116,7 +120,7 @@ export function buildCasting(doc, bible = null) {
       def.color = color;
       const acc = new Set((def.accessories || []).map((a) => (Array.isArray(a) ? a[0] : a)));
       const accList = def.accessories ? [...def.accessories] : [];
-      for (const [kw, a] of ACC_KW) if (low.includes(kw) && !acc.has(a)) { acc.add(a); accList.push(a); }
+      for (const [kw, a] of ACC_KW) if (low.includes(kw) && !acc.has(a) && !(a === 'glasses' && acc.has('sunglasses') && !/lunettes(?! de soleil)/.test(low.replace('lunettes de soleil', '')))) { acc.add(a); accList.push(a); }
       def.accessories = accList;
       const gender = guessGender(name, desc);
       def.face = { lashes: gender === 'f', lips: gender === 'f' ? 'full' : 'line', lipColor: '#c2185b', iris: ['#5b3a1e', '#2f7d5a', '#3b6fb0', '#7a3f12'][hashStr(id) % 4], ...(def.face || {}) };

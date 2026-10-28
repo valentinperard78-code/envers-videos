@@ -51,6 +51,15 @@ export function sugar() {
   });
 }
 
+/** Grain de sel : cristal net, plus froid et plus brillant que le sucre (pour ne jamais confondre Sel et Sucrette). */
+export function salt(color = '#e6eef7') {
+  return new THREE.MeshPhysicalMaterial({
+    color: C(color), roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08,
+    normalMap: crystalNormal(), normalScale: new THREE.Vector2(0.45, 0.45), sheen: 0.4, sheenColor: C('#bfe3ff'), sheenRoughness: 0.3,
+    envMapIntensity: 1.6, emissive: C('#20303a'), emissiveIntensity: 0.08,
+  });
+}
+
 /** Organe humide (pancréas, cœur…) : rosé, lobules, brillance mouillée. */
 export function organ(color = '#f08a7a', opts = {}) {
   return new THREE.MeshPhysicalMaterial({

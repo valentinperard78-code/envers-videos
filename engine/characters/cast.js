@@ -18,6 +18,7 @@ const SHAPES = {
   tall: (o) => blobBody({ w: 0.36 * o.w, h: 0.62 * o.h, d: 0.32 * o.d, belly: 0.05, top: -0.12, lumps: o.lumps ?? 0.025, lumpScale: 2.6 }),
   sphere: (o) => sculpt((n) => new THREE.Vector3(n.x * 0.82 * o.w, n.y * 0.8 * o.h, n.z * 0.82 * o.d)),
   cube: (o) => { const g = roundedBox(0.56 * o.w, 0.56 * o.h, 0.54 * o.d, 0.1, 8); return g; },
+  crystal: (o) => roundedBox(0.58 * o.w, 0.6 * o.h, 0.56 * o.d, 0.035, 4),
   heart: (o) => sculpt((n) => {
     // cœur (organe stylisé) : deux lobes en haut, pointe arrondie en bas
     const y = n.y, x = n.x;
@@ -43,6 +44,7 @@ export function materialFor(kind, color) {
     case 'gold': return M.livingGold();
     case 'membrane': return M.membrane(color);
     case 'sugar': return M.sugar();
+    case 'salt': return M.salt(color);
     case 'organ': return M.organ(color);
     case 'organ-smooth': return M.organ(color, { smooth: true, bump: 0.2 });
     case 'metal': return M.metal(color);
