@@ -196,6 +196,41 @@ export class Overlay {
     c.fillText(o.valueText ? o.valueText(v) : (danger ? 'DANGER' : v > 0.5 ? 'ÇA MONTE' : 'NORMAL'), x + w, y - 18 * u);
   }
 
+  /** Miniature : gros titre accrocheur + logo de la série + numéro d'épisode. */
+  cover(c, o) {
+    const u = this.u, W = this.W, H = this.H;
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, 'rgba(10,2,20,0.85)'); g.addColorStop(0.3, 'rgba(10,2,20,0)'); g.addColorStop(0.62, 'rgba(10,2,20,0)'); g.addColorStop(1, 'rgba(10,2,20,0.9)');
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = `800 ${44 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('LA VILLA DES PATHOLOGIES', W / 2, H * 0.06);
+    // titre principal (pathologie) en grand, sur 1 ou 2 lignes
+    // découpe équilibrée en 1 ou 2 lignes (pas de mot orphelin), taille ajustée à la largeur
+    const words = String(o.title).toUpperCase().split(/\s+/);
+    let size = 160 * u, lines = [words.join(' ')];
+    const fits = (ls, sz) => { c.font = `${sz}px ${FONT_TITLE}`; return ls.every((l) => c.measureText(l).width <= W * 0.9); };
+    if (!fits(lines, size)) {
+      let best = null;
+      for (let k = 1; k < words.length; k++) { const ls = [words.slice(0, k).join(' '), words.slice(k).join(' ')]; c.font = `${size}px ${FONT_TITLE}`; const m = Math.max(...ls.map((l) => c.measureText(l).width)); if (!best || m < best.m) best = { ls, m }; }
+      lines = best ? best.ls : lines;
+      while (!fits(lines, size) && size > 70 * u) size -= 6 * u;
+    }
+    c.font = `${size}px ${FONT_TITLE}`;
+    lines.forEach((l, i) => {
+      const y = H * 0.14 + i * size * 1.02;
+      c.lineWidth = size * 0.16; c.strokeStyle = '#000'; c.lineJoin = 'round'; c.strokeText(l, W / 2, y);
+      c.fillStyle = '#ffffff'; c.shadowColor = '#ff3da8'; c.shadowBlur = 30 * u; c.fillText(l, W / 2, y); c.shadowBlur = 0;
+    });
+    // accroche en bas
+    if (o.hook) {
+      c.font = `${92 * u}px ${FONT_TITLE}`; const hl = wrap(c, o.hook.toUpperCase(), W * 0.86);
+      hl.forEach((l, i) => { const y = H * 0.8 + i * 100 * u; c.lineWidth = 16 * u; c.strokeStyle = '#000'; c.strokeText(l, W / 2, y); c.fillStyle = '#ffe44d'; c.fillText(l, W / 2, y); });
+    }
+    if (o.episode) {
+      c.font = `${54 * u}px ${FONT_TITLE}`; const lab = `ÉP. ${o.episode}`; const w = c.measureText(lab).width + 50 * u;
+      c.fillStyle = '#ff3da8'; rr(c, W - w - 40 * u, H * 0.93 - 45 * u, w, 90 * u, 45 * u); c.fill(); c.fillStyle = '#fff'; c.fillText(lab, W - w / 2 - 40 * u, H * 0.93);
+    }
+  }
+
   sources(c, o, t) {
     const u = this.u; const k = fadeIO(t, o.t0, o.t1, 0.4, 0.4); c.globalAlpha = k * 0.92;
     c.font = `700 ${26 * u}px ${FONT_TEXT}`; const lines = wrap(c, o.text, this.W * 0.6);

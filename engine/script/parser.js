@@ -41,7 +41,9 @@ export function parseScript(src) {
       continue;
     }
     if (/^##+\s+/.test(line)) {
-      const title = clean(line.replace(/^##+\s+/, ''));
+      let title = clean(line.replace(/^##+\s+/, ''));
+      const lieu = title.match(/[\[(]\s*(?:lieu|d[ée]cor)\s*:\s*([^\])]+)[\])]/i);
+      if (lieu) title = title.replace(lieu[0], '').trim();
       const low = slug(title);
       let kind = 'scene';
       if (low.startsWith('casting') || low.startsWith('personnages')) kind = 'casting';
@@ -51,7 +53,7 @@ export function parseScript(src) {
       else if (low.startsWith('sources')) kind = 'sources';
       else if (low.startsWith('notes')) kind = 'notes';
       const num = title.match(/(\d+)/);
-      section = { kind, title, name: title.replace(/^sc[eè]ne\s*\d+\s*[:\-–]\s*/i, ''), number: num ? +num[1] : null, items: [] };
+      section = { kind, title, location: lieu ? lieu[1].trim() : '', name: title.replace(/^sc[eè]ne\s*\d+\s*[:\-–]\s*/i, ''), number: num ? +num[1] : null, items: [] };
       if (kind !== 'casting' && kind !== 'sources' && kind !== 'notes') doc.sections.push(section);
       continue;
     }
@@ -94,13 +96,16 @@ export function parseItem(body, lineNo = 0) {
   // réplique : NOM (didascalie) : « texte »
   m = body.match(/^([A-ZÀ-ÖØ-Þ][A-ZÀ-ÖØ-Þ0-9'’ .\-]{1,30}?)\s*(\(([^)]*)\))?\s*[:\-–]\s*(.+)$/);
   if (m) {
-    const who = m[1].trim(), dida = (m[3] || '').trim(), rest = m[4].trim();
+    const who = m[1].trim(), rest = m[4].trim();
+    let dida = (m[3] || '').trim();
+    const lieu = (dida + ' ' + rest).match(/\[\s*(?:lieu|d[ée]cor)\s*:\s*([^\]]+)\]/i);
+    dida = dida.replace(/\[[^\]]*\]/g, '').trim();
     const qs = quotes(rest);
     const text = (qs.length ? qs.join(' ') : rest).trim();
     const after = rest.replace(QUOTE_RE, '').trim();
     const noteM = after.match(/\(([^)]*)\)/);
     const isVO = /^(VOIX[ -]?OFF|NARRAT|LA VOIX)/i.test(who);
-    return { type: 'line', speaker: isVO ? 'VOIX OFF' : who, voiceOver: isVO, direction: dida, text, note: noteM ? noteM[1].trim() : '', line: lineNo };
+    return { type: 'line', speaker: isVO ? 'VOIX OFF' : who, voiceOver: isVO, direction: dida, text: text.replace(/\[[^\]]*\]/g, '').trim(), note: noteM ? noteM[1].trim() : '', location: lieu ? lieu[1].trim() : '', line: lineNo };
   }
   // ligne libre entre guillemets -> voix off
   const qs = quotes(body);

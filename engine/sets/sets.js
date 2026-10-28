@@ -288,4 +288,5 @@ export function stageSet(quality) {
   };
 }
 
-export const SET_BUILDERS = { villa: villaSet, confessional: confessionalSet, blood: bloodSet, kitchen: kitchenSet, stage: stageSet };
+import { heartSet, brainSet, lungsSet, gutSet, clinicSet } from './organs.js';
+export const SET_BUILDERS = { villa: villaSet, confessional: confessionalSet, blood: bloodSet, kitchen: kitchenSet, stage: stageSet, heart: heartSet, brain: brainSet, lungs: lungsSet, gut: gutSet, clinic: clinicSet };

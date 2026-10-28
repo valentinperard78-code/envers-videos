@@ -68,6 +68,45 @@ export class World {
     this.overlay.load(timeline);
   }
 
+  /** Miniature : image 3D à l'instant t + titre accrocheur (sans sous-titres ni bandeaux). */
+  renderCover(t, cover) {
+    const ev = evaluate(this.tl, t, this);
+    const set = this.activate(ev.set); set.update(t, ev.setState || {});
+    for (const id in this.chars) { const st = ev.actors[id]; const ch = this.chars[id]; if (!st) { ch.visible = false; continue; } ch.applyState(st, t, {}); }
+    ev.applyCamera(this.camera); this.r3d.setFocus(ev.focus ?? 4); this.r3d.render(t, 0);
+    this.ctx.drawImage(this.r3d.renderer.domElement, 0, 0, this.W, this.H);
+    this.overlay.cover(this.ctx, cover);
+  }
+
+  /** Contrôle qualité : pour chaque plan, vérifie que le sujet est bien cadré (tête et pieds visibles, pas masqué). */
+  qualityCheck() {
+    const issues = [];
+    const v = new THREE.Vector3();
+    for (const b of this.tl.beats) {
+      if (b.kind === 'title' || b.kind === 'card') continue;
+      const t = (b.t0 + b.t1) / 2;
+      const ev = evaluate(this.tl, t, this);
+      this.activate(ev.set);
+      for (const id in this.chars) { const st = ev.actors[id]; const ch = this.chars[id]; if (!st) { ch.visible = false; continue; } ch.applyState(st, t, {}); ch.updateMatrixWorld(true); }
+      ev.applyCamera(this.camera); this.camera.updateMatrixWorld(true);
+      const subj = b.shot?.subject && this.chars[b.shot.subject]?.visible ? this.chars[b.shot.subject] : null;
+      if (!subj) continue;
+      const head = subj.localToWorld(v.set(0, subj.def.faceY ?? subj.height * 0.7, 0)).clone().project(this.camera);
+      const top = subj.localToWorld(new THREE.Vector3(0, subj.headTop, 0)).project(this.camera);
+      const where = `${b.t0.toFixed(1)} s (${b.set}, ${b.shot.type}, ${b.shot.subject})`;
+      if (Math.abs(head.x) > 0.92 || head.y > 0.95 || head.y < -0.6) issues.push({ t: b.t0, level: 'erreur', msg: `visage hors cadre à ${where}` });
+      else if (top.y > 1.08 && b.shot.type !== 'close') issues.push({ t: b.t0, level: 'info', msg: `haut de la tête coupé à ${where}` });
+      if (head.z > 1 || head.z < -1) issues.push({ t: b.t0, level: 'erreur', msg: `caméra derrière ou dans le sujet à ${where}` });
+      // occultation : un autre personnage entre la caméra et le visage ?
+      const camPos = this.camera.position, faceW = subj.localToWorld(new THREE.Vector3(0, subj.def.faceY ?? subj.height * 0.7, 0));
+      const ray = new THREE.Raycaster(camPos, faceW.clone().sub(camPos).normalize(), 0.05, camPos.distanceTo(faceW) - 0.3);
+      const blockers = Object.values(this.chars).filter((c) => c !== subj && c.visible && c.body);
+      const hit = ray.intersectObjects(blockers.map((c) => c.body), false)[0];
+      if (hit) issues.push({ t: b.t0, level: 'avertissement', msg: `visage masqué par un autre personnage à ${where}` });
+    }
+    return issues;
+  }
+
   /** Rend l'image à l'instant t (secondes) et compose l'habillage. */
   renderAt(t) {
     if (this.overlay.covers(t)) { this.ctx.fillStyle = '#000'; this.ctx.fillRect(0, 0, this.W, this.H); this.overlay.draw(this.ctx, t, {}); return null; }

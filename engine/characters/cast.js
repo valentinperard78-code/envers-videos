@@ -408,7 +408,7 @@ export function buildHuman(def, tex) {
     return new THREE.Vector3(n.x * w, n.y * 0.21, n.z * lerp(0.095, 0.11, up) * (n.z < 0 ? 0.92 : 1));
   });
   const tb = placeOnGround(torsoGeo);
-  const torso = new THREE.Mesh(torsoGeo, shirt); torso.castShadow = true; torso.receiveShadow = true; ch.bodyPivot.add(torso);
+  const torso = new THREE.Mesh(torsoGeo, shirt); torso.castShadow = true; torso.receiveShadow = true; ch.bodyPivot.add(torso); ch.body = torso;
   const dark = new THREE.Color(shirtColor).multiplyScalar(0.7);
   const collar = new THREE.Mesh(new THREE.TorusGeometry(0.058, 0.016, 12, 40), M.fabric('#' + dark.getHexString(), 0.8)); collar.rotation.x = Math.PI / 2; collar.position.y = tb.max.y - 0.012; ch.bodyPivot.add(collar);
   const pocket = new THREE.Mesh(roundedBox(0.16, 0.06, 0.02, 0.01, 3), M.fabric('#' + dark.getHexString(), 0.8)); pocket.position.set(0, tb.max.y * 0.28, 0.1); pocket.rotation.x = -0.12; ch.bodyPivot.add(pocket);

@@ -42,6 +42,21 @@ const SECTION_MUSIC = [
   [/twist|verdict|diagnostic|danger/, 'drama'], [/riposte|solution|traitement|victoire|happy/, 'happy'], [/recap|abonne/, 'outro'],
 ];
 
+// Lieux : mots-clés (dans les didascalies, les titres de scène ou une balise [lieu : …]).
+const LOCS = [
+  ['confessional', /confessionnal/],
+  ['clinic', /(cabinet|medecin|consultation|diagnostic|verdict|prise de sang|analyse|hopital|urgences|labo)/],
+  ['heart', /(dans le coeur|^coeur|\bcoeur\b|cardiaque|ventricule|oreillette)/],
+  ['brain', /(cerveau|neurone|cerebr|crane)/],
+  ['lungs', /(poumon|bronche|alveole|respir|trachee)/],
+  ['gut', /(estomac|intestin|ventre|digest|colon)/],
+  ['blood', /(dans le sang|^sang$|vaisseau|artere|circulation|veine)/],
+  ['kitchen', /(cuisine|chez josh|appartement)/],
+  ['villa', /(villa|piscine|jardin|terrasse|salon)/],
+];
+export const ORGAN_SETS = new Set(['blood', 'heart', 'brain', 'lungs', 'gut', 'clinic']);
+function locFrom(text) { const s = norm(text).trim(); if (!s) return null; for (const [id, re] of LOCS) if (re.test(s)) return id; return null; }
+
 function actingFor(text, direction) {
   const s = norm(`${direction} || ${text}`);
   const res = {};
@@ -177,6 +192,8 @@ export function buildTimeline(src, opts = {}) {
     // décor par défaut de la section
     const secText = norm(sec.items.map((i) => (i.type === 'line' ? (i.direction || '') : i.type === 'screen' ? i.text : '')).join(' '));
     const secBlood = /dans le sang|circulation|vaisseau/.test(secText);
+    const secLoc = locFrom(sec.location || '') || (sec.kind === 'scene' ? (locFrom(sec.name || '') !== 'villa' ? locFrom(sec.name || '') : null) : null);
+    const organPos = {};
     gauge = null;
     if (secBlood) crowd = Math.max(crowd, 1);
     let firstInSection = true;
@@ -222,10 +239,14 @@ export function buildTimeline(src, opts = {}) {
       const voMood = vo ? (VO_MOOD.find((r) => r.re.test(norm(it.text))) || {}) : {};
       const mentions = findMentions(`${it.text} ${it.direction}`, casting).filter((m) => m !== id);
       let set = 'villa';
+      const tagLoc = locFrom(it.location || '') || null;
+      const dirLoc = locFrom(it.direction || '');
       if (acting.loc === 'confessional') set = 'confessional';
-      else if (/dans le sang|bloquee? dans le sang/.test(norm(it.direction)) || (secBlood && !vo)) set = 'blood';
+      else if (tagLoc) set = tagLoc;
+      else if (dirLoc && dirLoc !== 'confessional') set = dirLoc;
+      else if (secLoc) set = secLoc;
+      else if ((secBlood && !vo) || (vo && secBlood)) set = 'blood';
       else if (vo && mentions.includes('josh')) set = 'kitchen';
-      else if (vo && secBlood) set = 'blood';
 
       const lead = 0.1, tail = teaser ? 0.15 : 0.24;
       let dur = Math.max(1.2, sp.dur + lead + tail);
@@ -241,12 +262,16 @@ export function buildTimeline(src, opts = {}) {
       } else if (set === 'kitchen') {
         actors.josh = { pos: 'center', emotion: /(ne sent rien|silencieu)/.test(norm(it.text)) ? 'neutral' : 'happy', pose: 'idle', look: 'camera' };
         shot = { type: 'medium', subject: 'josh', angle: 0.4, push: 0.12 };
-      } else if (set === 'blood') {
-        const present = vo ? (mentions.length ? mentions : [...villa.present].filter((x) => !cellia || x !== cellia.id)) : [id];
-        const sugarId = casting.list.find((e) => /glucose|sucre/.test(norm(e.role + ' ' + e.description)))?.id;
-        const ids = [...new Set([...(present || []), ...(sugarId ? [sugarId] : [])])].filter(Boolean).slice(0, 2);
-        ids.forEach((x, k) => { actors[x] = { pos: k === 0 ? 'center' : 'left', emotion: x === id ? (acting.emotion || 'annoyed') : 'worried', pose: x === id ? (acting.pose || 'shrug') : 'idle', float: true }; });
-        shot = vo ? { type: 'wide', angle: 0.3, seed: beats.length } : { type: 'medium', subject: id, angle: angleFlip, seed: beats.length };
+      } else if (ORGAN_SETS.has(set)) {
+        // ---- intérieur du corps / cabinet médical : le locuteur et les personnages cités
+        let present = vo ? mentions.filter((m) => m !== 'josh' || set === 'clinic') : [id, ...mentions.filter((m) => m !== 'josh' || set === 'clinic')];
+        if (set === 'blood') { const sugarId = casting.list.find((e) => /glucose|sucre/.test(norm(e.role + ' ' + e.description)))?.id; if (sugarId) present.push(sugarId); }
+        if (!present.length) present = Object.keys(organPos).length ? Object.keys(organPos) : set === 'clinic' && casting.list.find((e) => e.id === 'josh') ? ['josh'] : [...villa.present].filter((x) => !cellia || x !== cellia.id).slice(0, 1);
+        const ids = [...new Set(present)].filter(Boolean).slice(0, 3);
+        const slots = ['center', 'left', 'right'];
+        ids.forEach((x) => { if (!organPos[x]) organPos[x] = slots.find((sl) => !Object.values(organPos).includes(sl)) || 'center'; });
+        ids.forEach((x) => { actors[x] = { pos: organPos[x], emotion: x === id ? (acting.emotion || (/!/.test(it.text) ? 'excited' : 'neutral')) : (voMood.emotion || 'worried'), pose: x === id ? (acting.pose || 'gesture') : 'idle', float: set !== 'clinic', sweat: acting.sweat || sweatOf[x] || 0 }; });
+        shot = vo ? (mentions[0] && actors[mentions[0]] ? { type: 'medium', subject: mentions[0], angle: angleFlip * 0.6, seed: beats.length } : { type: 'wide', angle: 0.3, seed: beats.length }) : { type: acting.crash ? 'close' : 'medium', subject: id, angle: angleFlip, crash: !!acting.crash && !teaser, seed: beats.length };
       } else {
         // ---- villa
         if (teaser) { for (const e of casting.list) if (e.id !== 'josh') { villa.present.add(e.id); placeVilla(e.id); } }

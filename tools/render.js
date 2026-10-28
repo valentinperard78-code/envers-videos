@@ -16,6 +16,7 @@ import { registerCast } from '../engine/script/bible.js';
 import { loadBible, saveBible, nextEpisodeTitle } from './serie.js';
 import { startStaticServer } from './static-server.js';
 import { findChrome, chromeArgs } from './chrome.js';
+import { coverAndQC } from './publication.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -141,6 +142,7 @@ export async function renderEpisode(scriptPath, opts = {}, onProgress = () => {}
   const t0 = Date.now();
   const { work, tl, meta, outFile, mode } = await prepare(scriptPath, { ...opts, log });
   onProgress({ type: 'stage', stage: 'audio', done: true, mode });
+  if (opts.cover !== false && !opts.from && !opts.to) { try { await coverAndQC(work, scriptPath, outFile, log); } catch (e) { log(`⚠ miniature / contrôle : ${e.message}`); } }
   const from = Math.max(0, +(opts.from ?? 0)), to = Math.min(meta.duration, +(opts.to ?? meta.duration));
   const f0 = Math.floor(from * meta.fps), f1 = Math.min(meta.frames, Math.ceil(to * meta.fps));
   await renderFrames(work, { f0, f1, workers: opts.workers, log, onProgress, clean: opts.clean });
@@ -177,6 +179,9 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const fail = (e) => { console.error('❌', e.message); process.exit(1); };
   if (!stage) renderEpisode(script, common).catch(fail);
   else if (stage === 'preparer') prepare(script, common).then((r) => console.log(`Préparé : ${r.meta.frames} images à ${r.meta.fps} i/s -> ${r.work}`)).catch(fail);
+  else if (stage === 'couverture') {
+    (async () => { const meta = JSON.parse(fs.readFileSync(path.join(work, 'meta.json'), 'utf8')); const out = path.resolve(common.out || path.join(ROOT, 'sorties', meta.outName)); fs.mkdirSync(path.dirname(out), { recursive: true }); await coverAndQC(work, script, out); })().catch(fail);
+  }
   else if (stage === 'images') {
     // --morceau k/N : rend la k-ième part des images et encode le morceau vidéo correspondant
     (async () => {

@@ -7,11 +7,13 @@ import { World, loadFonts } from '/engine/world.js';
 import { canvasToBase64 } from '/app/capture.js';
 const qs = new URLSearchParams(location.search);
 await loadFonts();
-const world = new World({ quality: qs.get('q') || 'standard' });
+const world = new World({ quality: qs.get('q') || 'standard', width: +(qs.get('w') || 0) || undefined });
 document.body.appendChild(world.canvas);
 window.world = world;
 window.loadTimeline = async (tl) => { if (typeof tl === 'string') tl = await (await fetch(tl)).json(); world.load(tl); return { W: world.W, H: world.H }; };
 window.renderFrame = async (t) => { world.renderAt(t); return canvasToBase64(world.canvas); };
+window.renderCover = async (t, cover) => { world.renderCover(t, cover); return canvasToBase64(world.canvas, 'image/jpeg', 0.95); };
+window.qualityCheck = () => world.qualityCheck();
 if (qs.get('tl')) await window.loadTimeline(qs.get('tl'));
 window.ready = true;
 </script></body></html>
