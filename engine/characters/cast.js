@@ -45,7 +45,8 @@ const SHAPES = {
   capsule: (o) => sculpt((n) => new THREE.Vector3(n.x * 0.3 * o.w, n.y * 0.62 * o.h + Math.sign(n.y) * 0.0, n.z * 0.3 * o.d)),
   virus: (o) => sculpt((n) => { const k = 1 + fbm3(n.x * 3, n.y * 3, n.z * 3, 2) * 0.06; return new THREE.Vector3(n.x * 0.55 * k * o.w, n.y * 0.55 * k * o.h, n.z * 0.55 * k * o.d); }),
   bean: (o) => sculpt((n) => { const bend = -0.18 * Math.cos(n.y * Math.PI * 0.5); return new THREE.Vector3(n.x * 0.36 * o.w + (n.x < 0 ? bend * (1 - Math.abs(n.y)) : 0), n.y * 0.55 * o.h, n.z * 0.3 * o.d); }),
-  tube: (o) => sculpt((n) => new THREE.Vector3(n.x * 0.26 * o.w, n.y * 0.75 * o.h, n.z * 0.26 * o.d)),
+  // artère : vrai tube (paroi épaisse, légèrement annelée), coupé net en haut pour montrer la lumière du vaisseau
+  tube: (o) => sculpt((n) => { const y = n.y; const flat = Math.min(y, 0.82); const rr = Math.sqrt(Math.max(0, 1 - y * y)); const k = y > 0 ? Math.max(rr, y > 0.82 ? rr : 0.92) : rr; const ring = 1 + 0.025 * Math.sin(y * 26); return new THREE.Vector3((n.x / Math.max(1e-3, rr)) * Math.min(1, k * 1.15) * 0.25 * o.w * ring, flat * 0.75 * o.h, (n.z / Math.max(1e-3, rr)) * Math.min(1, k * 1.15) * 0.25 * o.d * ring); }),
 };
 
 // ---------------------------------------------------------------- matériaux par nom
@@ -419,6 +420,16 @@ export function buildMascot(def, tex) {
     ch.buildLegs({ hipX: W * (def.hipX ?? 0.2), length: def.legLen ?? 0.17, r: 0.04 * (def.limbScale ?? 1), material: legMat, footSize: 0.1 * (def.limbScale ?? 1), footColor: def.shoeColor || '#ffffff' });
   }
   if (def.shape === 'cell') { addOrganelles(ch, ctx); if (def.door !== false) addCellDoor(ch, ctx); }
+  // une artère montre toujours sa « lumière » (le trou du vaisseau) en haut
+  if (def.shape === 'tube') {
+    const top = ctx.S.top(0, 0); const y = top ? top.point.y : ctx.H; const sd = ctx.S.side(1, y - 0.03); const r = sd ? Math.abs(sd.point.x) : ctx.W * 0.4;
+    const g = new THREE.Group(); g.position.y = y + 0.002;
+    const wallM = M.organ(def.color || '#d8434f', { smooth: true, bump: 0.15 });
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(r * 0.82, r * 0.17, 20, 64), wallM); rim.rotation.x = Math.PI / 2; g.add(rim);
+    const layer = new THREE.Mesh(new THREE.RingGeometry(r * 0.5, r * 0.68, 48), M.skin('#f6c3a0', { roughness: 0.5 })); layer.rotation.x = -Math.PI / 2; layer.position.y = 0.004; g.add(layer);
+    const hole = new THREE.Mesh(new THREE.CircleGeometry(r * 0.52, 48), new THREE.MeshStandardMaterial({ color: '#3a0208', emissive: '#a0101e', emissiveIntensity: 0.5, roughness: 0.3 })); hole.rotation.x = -Math.PI / 2; hole.position.y = -0.004; g.add(hole);
+    g.traverse((m) => { if (m.isMesh) m.castShadow = true; }); ch.bodyPivot.add(g);
+  }
   for (const a of def.accessories || []) { const [name, opt] = Array.isArray(a) ? a : [a, {}]; if (ACC[name]) ACC[name](ch, ctx, opt); }
   ch.headTop = (ctx.headTop ?? H) + (def.legs !== false ? (def.legLen ?? 0.17) : 0);
   ch.ctx = ctx;
