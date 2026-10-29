@@ -54,7 +54,7 @@ jobs:
         working-directory: studio
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
-          node tools/publier.js --preparer --videos $GITHUB_WORKSPACE/videos
+          node tools/publier.js --preparer --videos $GITHUB_WORKSPACE/videos ${{ github.event.inputs.episode && format('--episode {0}', github.event.inputs.episode) || '' }}
           cd $GITHUB_WORKSPACE/videos
           git config user.name "Villa Publisher" && git config user.email "villa-studio@users.noreply.github.com"
           git add -A
