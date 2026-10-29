@@ -18,6 +18,16 @@ const SHAPES = {
   tall: (o) => blobBody({ w: 0.36 * o.w, h: 0.62 * o.h, d: 0.32 * o.d, belly: 0.05, top: -0.12, lumps: o.lumps ?? 0.025, lumpScale: 2.6 }),
   sphere: (o) => sculpt((n) => new THREE.Vector3(n.x * 0.82 * o.w, n.y * 0.8 * o.h, n.z * 0.82 * o.d)),
   cube: (o) => { const g = roundedBox(0.56 * o.w, 0.56 * o.h, 0.54 * o.d, 0.1, 8); return g; },
+  // pancréas réaliste : allongé, tête large (à droite) avec son crochet, corps, queue effilée qui remonte ; surface en lobules
+  pancreas: (o) => sculpt((n) => {
+    const x = n.x; // -1 = queue, +1 = tête
+    const k = (x + 1) / 2;
+    const r = 0.15 + 0.17 * smooth(clamp((k - 0.15) / 0.75)) + 0.05 * Math.exp(-Math.pow((k - 0.86) * 6, 2));
+    const yc = 0.2 * Math.pow(Math.max(0, -x - 0.15), 2); // la queue remonte, crochet de la tête vers le bas
+    const lob = 1 + 0.06 * fbm3(n.x * 5.5, n.y * 5.5, n.z * 5.5, 3) + 0.025 * fbm3(n.x * 14, n.y * 14, n.z * 14, 2);
+    const ry = n.y < 0 ? Math.max(r, 0.26 * Math.sqrt(Math.max(0, 1 - Math.pow(Math.max(0, -x - 0.2) / 0.8, 2)))) : r * 1.05; // ventre plat pour poser les jambes
+    return new THREE.Vector3(x * 0.7 * o.w, (yc + n.y * ry) * o.h * lob, n.z * r * 0.9 * o.d * lob);
+  }),
   crystal: (o) => roundedBox(0.58 * o.w, 0.6 * o.h, 0.56 * o.d, 0.035, 4),
   heart: (o) => sculpt((n) => {
     // cœur (organe stylisé) : deux lobes en haut, pointe arrondie en bas
@@ -46,6 +56,7 @@ export function materialFor(kind, color) {
     case 'sugar': return M.sugar();
     case 'salt': return M.salt(color);
     case 'organ': return M.organ(color);
+    case 'organ-lobules': return M.organ(color, { lobules: true });
     case 'organ-smooth': return M.organ(color, { smooth: true, bump: 0.2 });
     case 'metal': return M.metal(color);
     default: return M.skin(color);
@@ -195,6 +206,7 @@ const ACC = {
     key.scale.setScalar(1.25);
     key.position.set(0, -0.01, 0.02); key.rotation.set(-0.15, 0.2, 0.0);
     ch.anchors.handR.add(key); ch.anchors.key = key;
+    ch.extras.push((t, st) => { key.visible = st.handKey !== 0; });
   },
   sweat(ch, ctx) {
     // gouttes de sueur qui perlent puis glissent (activées par l'état « sweat »)
@@ -315,8 +327,16 @@ function addCellDoor(ch, ctx) {
   // petit paillasson
   const mat = new THREE.Mesh(roundedBox(w * 1.1, 0.02, 0.18, 0.01, 2), M.fabric('#c23b6b')); mat.position.set(0, 0.0, depth + 0.1); mat.receiveShadow = true; door.add(mat);
   ch.bodyPivot.add(door);
+  // clé de la serrure (apparaît quand Insuline l'insère, puis tourne)
+  const lk = new THREE.Group(); lk.position.set(w * 0.82, h * 0.42 + 0.012, 0.06); hinge.add(lk);
+  const lkInner = makeKey(); lkInner.scale.setScalar(0.62); lk.add(lkInner); lk.visible = false;
+  ch.def.keyhole = [-w / 2 + w * 0.82, y0 + h * 0.42, zFront + 0.02];
   ch.anchors.door = door; ch.anchors.keyhole = plate;
   ch.anchors.doorFront = new THREE.Vector3(0, 0, zFront + 0.32);
+  ch.extras.push((t, st) => {
+    const v = st.lockKey || 0; lk.visible = v > 0;
+    if (v > 0) { const ins = clamp(v), turn = clamp(v - 1); lk.position.z = 0.06 + (1 - smooth(ins)) * 0.2; lkInner.rotation.set(Math.PI / 2, turn * Math.PI / 2, 0); }
+  });
   ch.extras.push((t, st) => { hinge.rotation.y = -(st.doorOpen || 0) * 1.9; inside.material.emissiveIntensity = 0.4 + (st.doorOpen || 0) * 2.2; });
 }
 
@@ -389,13 +409,14 @@ export function buildMascot(def, tex) {
   if (def.arms !== false) {
     const sy = H * (def.shoulderY ?? 0.42);
     const sh = ctx.S.side(1, sy, 0);
-    const sx = (sh ? sh.point.x : W / 2) - 0.032 * (def.limbScale ?? 1) * 1.6;
+    let sx = (sh ? sh.point.x : W / 2) - 0.032 * (def.limbScale ?? 1) * 1.6, sz = 0;
+    if (def.shoulderX) { sx = W * def.shoulderX; const fr = ctx.S.front(sx, sy); sz = fr ? fr.point.z * 0.55 : 0; } // corps très allongé : bras plantés sur l'avant
     const scale = def.limbScale ?? 1;
-    ch.buildArms({ shoulderX: sx, shoulderY: sy, shoulderZ: 0, length: (def.armLen ?? 0.36) * scale, r0: 0.032 * scale, r1: 0.026 * scale, handSize: 0.042 * scale, material: armMat });
+    ch.buildArms({ shoulderX: sx, shoulderY: sy, shoulderZ: sz, length: (def.armLen ?? 0.36) * scale, r0: 0.032 * scale, r1: 0.026 * scale, handSize: 0.042 * scale, material: armMat });
   }
   if (def.legs !== false) {
     const legMat = def.legMaterial ? materialFor(def.legMaterial, def.legColor || def.color) : armMat;
-    ch.buildLegs({ hipX: W * 0.2, length: def.legLen ?? 0.17, r: 0.04 * (def.limbScale ?? 1), material: legMat, footSize: 0.1 * (def.limbScale ?? 1), footColor: def.shoeColor || '#ffffff' });
+    ch.buildLegs({ hipX: W * (def.hipX ?? 0.2), length: def.legLen ?? 0.17, r: 0.04 * (def.limbScale ?? 1), material: legMat, footSize: 0.1 * (def.limbScale ?? 1), footColor: def.shoeColor || '#ffffff' });
   }
   if (def.shape === 'cell') { addOrganelles(ch, ctx); if (def.door !== false) addCellDoor(ch, ctx); }
   for (const a of def.accessories || []) { const [name, opt] = Array.isArray(a) ? a : [a, {}]; if (ACC[name]) ACC[name](ch, ctx, opt); }
@@ -516,9 +537,9 @@ export const PRESETS = {
     accessories: ['bow', 'sparkles'], legMaterial: 'skin', legColor: '#f7f2fa', armMaterial: 'skin', armColor: '#f7f2fa', shoeColor: '#ff6fb0', legLen: 0.15, limbScale: 0.85, voice: 'sucrette', gender: 'f',
   },
   pancho: {
-    name: 'Pancho', role: 'le pancréas', shape: 'tall', material: 'organ', color: '#ef8a76', w: 1.05, h: 1.1, d: 1,
-    face: { eyeY: 0.68, eyeX: 0.2, eyeR: 0.08, iris: '#5a3420', lips: 'line', lineColor: '#5a1a14', browColor: '#4a2e1c', browThick: 0.32, mouthY: 0.45, mouthW: 0.36 },
-    accessories: ['mustache', 'sweat', 'eyebags'], shoeColor: '#3a3a3a', voice: 'pancho', gender: 'm', lumps: 0.02,
+    name: 'Pancho', role: 'le pancréas', shape: 'pancreas', material: 'organ-lobules', color: '#f2a58e', w: 1.05, h: 1.55, d: 1,
+    face: { eyeY: 0.63, eyeX: 0.115, eyeR: 0.092, iris: '#5a3420', lips: 'line', lineColor: '#5a1a14', browColor: '#4a2e1c', browThick: 0.32, mouthY: 0.33, mouthW: 0.3 },
+    accessories: ['mustache', 'sweat', 'eyebags'], shoeColor: '#3a3a3a', voice: 'pancho', gender: 'm', lumps: 0.02, shoulderX: 0.24, shoulderY: 0.45, hipX: 0.12, legLen: 0.2,
   },
   josh: { name: 'Josh', role: "l'humain", human: true, shirt: '#2f7de1', hairColor: '#3b2414', skin: '#f0c2a0', voice: 'josh', gender: 'm' },
 };

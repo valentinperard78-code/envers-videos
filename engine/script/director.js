@@ -14,6 +14,7 @@ const ACTING = [
   { re: /(sueur|transpir)/, sweat: 1, pose: 'wipe' },
   { re: /entree stylee|entre en scene|fait son entree/, emotion: 'proud', pose: 'hips', enter: true, sfx: 'sting' },
   { re: /(la cle ne tourne pas|cle bloquee|serrure bloquee)/, emotion: 'angry', pose: 'shakeKey', sfx: 'rattle', atDoor: true, crash: true },
+  { re: /(avec sa cle|met la cle|tourne la cle|deverrouille|ouvre la porte avec)/, emotion: 'proud', pose: 'holdKey', sfx: 'unlock', atDoor: true, unlock: true },
   { re: /(toc toc|frappe a la porte|a la porte de)/, emotion: 'happy', pose: 'knock', sfx: 'knock', atDoor: true },
   { re: /(bloquee?|coince|dehors|a la rue|en pls)/, emotion: 'annoyed', pose: 'shrug' },
   { re: /\?!|\battends\b|c'est moi qui fais|red flag/, emotion: 'shocked', pose: 'cheeks', sfx: 'record', crash: true },
@@ -93,6 +94,7 @@ export function voiceFor(voice, emotion, { teaser = false, vo = false, mood = nu
   let [dr, dp] = PROSODY[emotion] || [0, 0];
   if (vo) { dr = mood === 'drama' ? -5 : mood === 'happy' ? 4 : 0; dp = mood === 'drama' ? -3 : 0; }
   if (teaser) dr += 6;
+  dr += 7; // rythme TikTok : on parle un peu plus vite partout (épisodes d'environ 2 min)
   return { voice: voice.voice, rate: shiftPct(voice.rate, dr), pitch: shiftHz(voice.pitch, dp) };
 }
 
@@ -167,12 +169,12 @@ export function buildTimeline(src, opts = {}) {
   const fps = opts.fps || 30;
   const beats = [], overlays = [], sfx = [], music = [], voices = [];
   let t = 0;
-  const villa = { present: new Set(), pos: {}, door: 0, hidden: new Set() };
+  const villa = { present: new Set(), pos: {}, door: 0, hidden: new Set(), keyIn: false, keyHolder: null };
   const marksOrder = ['center', 'left', 'right', 'farLeft', 'farRight'];
   const introduced = new Set();
   let lastSet = null, angleFlip = 1, lastSpeaker = null;
   const lastEmotion = {};
-  const cellia = casting.list.find((e) => e.big || e.home === 'cellia');
+  const cellia = casting.list.find((e) => e.big || e.home === 'cellia' || e.def === 'cellia' || e.def?.shape === 'cell');
   const epLabel = `ÉP. ${doc.episode ?? 1} · ${(doc.pathology || doc.episodeName || '').toUpperCase()}`.trim();
   const sweatOf = {};
   let gauge = null, crowd = 0;
@@ -192,6 +194,8 @@ export function buildTimeline(src, opts = {}) {
       const p = villa.pos[id];
       const isCell = cellia && id === cellia.id;
       actors[id] = { pos: typeof p === 'string' ? p : [p.x, p.z], emotion: lastEmotion[id] || (isCell ? 'proud' : 'neutral'), pose: isCell ? 'cross' : 'idle', face: isCell ? 0 : undefined, door: isCell ? villa.door : undefined, sweat: sweatOf[id] || 0 };
+      if (villa.keyIn && isCell) actors[id].lockKey = 2;
+      if (villa.keyIn && id === villa.keyHolder) actors[id].giveKeyAt = -1;
     }
     for (const id in extra) actors[id] = { ...(actors[id] || {}), ...extra[id] };
     return actors;
@@ -239,7 +243,7 @@ export function buildTimeline(src, opts = {}) {
         overlays.push({ type: 'card', t0: b.t0, t1: b.t1, text: it.text });
         sfx.push({ type: 'riser', t: b.t0 - 0.6 }, { type: 'boom', t: b.t0 });
         // ellipse temporelle : la porte se referme, tout le monde ressort
-        villa.door = 0; villa.hidden.clear();
+        villa.door = 0; villa.hidden.clear(); villa.keyIn = false;
         for (const k in lastEmotion) delete lastEmotion[k]; for (const k in sweatOf) delete sweatOf[k];
         return;
       }
@@ -276,7 +280,7 @@ export function buildTimeline(src, opts = {}) {
       else if ((secBlood && !vo) || (vo && secBlood)) set = 'blood';
       else if (vo && mentions.includes('josh')) set = 'kitchen';
 
-      const lead = 0.1, tail = teaser ? 0.15 : 0.24;
+      const lead = 0.08, tail = teaser ? 0.12 : 0.17;
       let dur = Math.max(1.2, sp.dur + lead + tail);
       const t0 = t;
       const actors = {};
@@ -332,12 +336,34 @@ export function buildTimeline(src, opts = {}) {
             a.pos = [target.x, target.z]; villa.pos[id] = target;
             a.face = cellia.id; a.faceStrict = true;
             shot = { type: 'two', subject: id, other: cellia.id, angle: -1, seed: beats.length };
+            if (acting.unlock) {
+              // la clé entre dans la serrure, tourne (clic), puis la porte s'ouvre — plan d'insert puis recul
+              const tIn = 1.0, tTurn = 2.0, tOpen = 2.75;
+              a.pos = [c.x + ds.x * 0.62, c.z + ds.dz * 0.9]; villa.pos[id] = { x: c.x + ds.x * 0.62, z: c.z + ds.dz * 0.9 };
+              a.giveKeyAt = tIn; a.pose = 'holdKey';
+              if (!actors[cellia.id]) actors[cellia.id] = { pos: 'cellia', emotion: 'proud', pose: 'cross', face: 0 };
+              actors[cellia.id] = { ...actors[cellia.id], lockKey: { at: tIn, dur: (tTurn + 0.6 - tIn) }, door: { from: 0, to: 1, at: tOpen, dur: 1.0 }, emotion: 'happy' };
+              villa.door = 1; villa.keyIn = true; villa.keyHolder = id;
+              sfx.push({ type: 'unlock', t: t0 + tIn }, { type: 'door', t: t0 + tOpen });
+              shot = { type: 'keyhole', subject: cellia.id, other: id, pullAt: tOpen - 0.2, seed: beats.length, shake: 0.25 };
+              dur = Math.max(dur, tOpen + 1.6); shot.noSplit = true;
+            }
           }
           // la cellule ouvre sa porte
           if (acting.openDoor && cellia && id === cellia.id) {
+            if (villa.door >= 1) a.door = 1; // déjà ouverte par la clé d'Insuline
+            else {
+              a.door = { from: 0, to: 1, at: Math.min(0.6, sp.dur * 0.3), dur: 0.9 };
+              sfx.push({ type: 'door', t: t0 + Math.min(0.6, sp.dur * 0.3) });
+            }
             villa.door = 1;
-            a.door = { from: 0, to: 1, at: Math.min(0.6, sp.dur * 0.3), dur: 0.9 };
-            sfx.push({ type: 'door', t: t0 + Math.min(0.6, sp.dur * 0.3) });
+            // celle qui a ouvert avec la clé s'écarte pour laisser passer
+            if (villa.keyHolder && actors[villa.keyHolder] && villa.keyHolder !== id) {
+              const c = cpos(); const kh = villa.keyHolder; const cur = villa.pos[kh];
+              const to = { x: c.x - 1.35, z: c.z + 1.25 };
+              actors[kh] = { ...actors[kh], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [to.x, to.z], walkDur: 0.9, walkDelay: 0.1, face: cellia.id, emotion: 'happy' };
+              villa.pos[kh] = to;
+            }
             // l'invité mentionné s'approche
             for (const m of mentions) if (actors[m] && m !== cellia.id) {
               const c = cpos(), ds = doorSpot(1);
@@ -384,10 +410,12 @@ export function buildTimeline(src, opts = {}) {
           if (ent && actors[ent] && cellia) {
             const c = cpos();
             const cur = villa.pos[ent];
-            actors[ent] = { ...actors[ent], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [c.x, c.z + 0.75], walkDur: 1.5, walkDelay: 0.2, emotion: 'happy', pose: 'wave', shrink: { at: 1.1, dur: 0.6 } };
+            // il marche jusqu'au seuil, passe la porte et disparaît dans la cellule (lumière + étincelles)
+            actors[ent] = { ...actors[ent], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [c.x, c.z + 0.5], walkDur: 2.0, walkDelay: 0.15, emotion: 'excited', pose: 'wave', shrink: { at: 1.15, dur: 1.0 } };
+            dur = Math.max(dur, 2.6);
             villa.hidden.add(ent);
-            shot = { type: 'two', subject: ent, other: cellia.id, angle: 0.6, seed: beats.length };
-            sfx.push({ type: 'sparkle', t: t0 + 1.4 });
+            shot = { type: 'two', subject: ent, other: cellia.id, angle: 0.45, seed: beats.length, push: 0.15, noSplit: true };
+            sfx.push({ type: 'sparkle', t: t0 + 1.8 });
           } else if (firstInSection && !teaser) shot = { type: 'establish', seed: beats.length };
           else if (mentions.length && actors[mentions[0]]) shot = { type: mentions[1] && actors[mentions[1]] ? 'two' : 'medium', subject: mentions[0], other: mentions[1], angle: angleFlip, seed: beats.length };
           else shot = { type: 'wide', angle: angleFlip * 0.6, seed: beats.length };
@@ -405,7 +433,7 @@ export function buildTimeline(src, opts = {}) {
       b.speech = { t0: t0 + lead, t1: t0 + lead + sp.dur, words: sp.words.map((w) => ({ t: t0 + lead + w.t, d: w.d, w: w.w })), env: sp.env || null, rate: sp.rate || 50 };
       shot.punches = b.speech.words.filter((w) => /[!]/.test(w.w) || KEYWORD_RE.test(norm(w.w))).map((w) => w.t).filter((x, i, arr) => i === 0 || x - arr[i - 1] > 0.9).slice(0, 4);
       // découpage des longues répliques en plusieurs plans (rythme TikTok : un plan toutes les ~3,5 s)
-      const nShots = teaser ? 1 : Math.min(4, Math.max(1, Math.round(dur / 3.6)));
+      const nShots = teaser || shot.noSplit ? 1 : Math.min(4, Math.max(1, Math.round(dur / 3.6)));
       if (nShots > 1) {
         const listeners = Object.keys(actors).filter((k) => k !== id && actors[k].visible !== false);
         const alts = [];
@@ -441,6 +469,9 @@ export function buildTimeline(src, opts = {}) {
       overlays.push({ type: 'subtitle', t0: b.speech.t0, t1: b.speech.t1 + 0.15, text: it.text, words: b.speech.words, color });
       voices.push({ key: `L${it.line}`, t: b.speech.t0, speaker: id || 'narrator', dur: sp.dur });
       if (set === 'confessional') overlays.push({ type: 'confession', t0, t1: t });
+      // qui parle ? nom + organe affichés pendant toute la réplique (grand bandeau au confessionnal, pastille ailleurs)
+      if (id && who && !teaser) overlays.push({ type: 'tag', t0: t0 + 0.1, t1: t, name: who.name, role: who.role, color: who.color, big: set === 'confessional', after: introduced.has(id) ? 0 : 2.9 });
+      else if (id && who && teaser && set === 'confessional') overlays.push({ type: 'tag', t0: t0 + 0.1, t1: t, name: who.name, role: who.role, color: who.color, big: true, after: 0 });
       if (id && !introduced.has(id) && !teaser && who) {
         introduced.add(id);
         overlays.push({ type: 'name', t0: t0 + 0.15, t1: Math.min(t, t0 + 2.9), name: who.name, role: who.role, color: who.color });

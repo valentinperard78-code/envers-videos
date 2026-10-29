@@ -25,9 +25,9 @@ export class Overlay {
 
   draw(c, t, ev) {
     const active = this.items.filter((o) => t >= o.t0 && t <= o.t1);
-    this._nameOn = active.some((o) => o.type === 'name');
+    this._nameOn = active.some((o) => o.type === 'name' || (o.type === 'tag' && !o.big && t >= o.t0 + (o.after || 0)));
     // ordre : fonds plein écran d'abord, texte ensuite
-    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
+    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, tag: 3, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
     active.sort((a, b) => (order[a.type] ?? 3) - (order[b.type] ?? 3));
     for (const o of active) { c.save(); try { (this[o.type] || (() => {})).call(this, c, o, t, ev); } finally { c.restore(); } }
   }
@@ -107,6 +107,42 @@ export class Overlay {
     // point rouge « REC »
     if (Math.floor(t * 2) % 2 === 0) { c.fillStyle = '#ff2a2a'; c.beginPath(); c.arc(W - 70 * u, y + h / 2, 12 * u, 0, Math.PI * 2); c.fill(); }
     c.font = `800 ${28 * u}px ${FONT_TEXT}`; c.fillStyle = '#fff'; c.textAlign = 'right'; c.fillText('REC', W - 92 * u, y + h / 2 + 2 * u);
+  }
+
+  // ------------------------------------------------ qui parle (nom + organe), affiché toute la réplique
+  tag(c, o, t) {
+    const u = this.u, W = this.W, H = this.H;
+    if (t < o.t0 + (o.after || 0)) return; // laisse d'abord passer la grande étiquette de présentation
+    const t0 = o.t0 + (o.after || 0); const k = fadeIO(t, t0, o.t1, 0.2, 0.2); const s = ease((t - t0) / 0.3);
+    c.globalAlpha = k;
+    const name = String(o.name || '').toUpperCase(), role = String(o.role || '');
+    if (o.big) {
+      // bandeau bas façon télé-réalité : NOM + « le pancréas »
+      const y = H * 0.755, h = 150 * u;
+      c.font = `${92 * u}px ${FONT_TITLE}`; const nw = c.measureText(name).width;
+      c.font = `800 ${44 * u}px ${FONT_TEXT}`; const rw = c.measureText(role).width;
+      const w = Math.max(nw, rw) + 90 * u; const x = W / 2 - w / 2 + (1 - s) * -W;
+      c.save(); c.translate(W / 2, y + h / 2); c.rotate(-0.025); c.translate(-W / 2, -(y + h / 2));
+      c.shadowColor = 'rgba(0,0,0,0.45)'; c.shadowBlur = 24 * u; c.shadowOffsetY = 8 * u;
+      c.fillStyle = o.color || '#ff2f8f'; rr(c, x, y, w, h * 0.62, [26 * u, 26 * u, 0, 0]); c.fill();
+      c.fillStyle = '#ffffff'; rr(c, x, y + h * 0.62, w, h * 0.42, [0, 0, 26 * u, 26 * u]); c.fill();
+      c.shadowBlur = 0; c.shadowOffsetY = 0;
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = `${92 * u}px ${FONT_TITLE}`; c.lineWidth = 8 * u; c.strokeStyle = 'rgba(0,0,0,0.25)'; c.strokeText(name, x + w / 2, y + h * 0.33); c.fillStyle = '#fff'; c.fillText(name, x + w / 2, y + h * 0.33);
+      c.font = `800 ${44 * u}px ${FONT_TEXT}`; c.fillStyle = '#1d1430'; c.fillText(role, x + w / 2, y + h * 0.83);
+      c.restore();
+    } else {
+      // pastille discrète en haut à gauche
+      const x = 40 * u + (1 - s) * -300 * u, y = H * 0.135, h = 92 * u;
+      c.font = `${54 * u}px ${FONT_TITLE}`; const nw = c.measureText(name).width;
+      c.font = `800 ${30 * u}px ${FONT_TEXT}`; const rw = c.measureText(role).width;
+      const w = Math.max(nw, rw) + 56 * u;
+      c.shadowColor = 'rgba(0,0,0,0.35)'; c.shadowBlur = 14 * u;
+      c.fillStyle = o.color || '#ff2f8f'; rr(c, x, y, w, h, 20 * u); c.fill(); c.shadowBlur = 0;
+      c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+      c.font = `${54 * u}px ${FONT_TITLE}`; c.fillStyle = '#fff'; c.fillText(name, x + 28 * u, y + 52 * u);
+      c.font = `800 ${30 * u}px ${FONT_TEXT}`; c.fillStyle = 'rgba(255,255,255,0.92)'; c.fillText(role, x + 28 * u, y + 82 * u);
+    }
   }
 
   // ------------------------------------------------ encadré explicatif

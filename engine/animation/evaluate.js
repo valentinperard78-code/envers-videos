@@ -97,7 +97,8 @@ export function evaluate(tl, t, world) {
     const ap = actorPos(a, b, t, set);
     let sc = (a.scale ?? 1) * (ch.def.scale ?? 1);
     if (a.shrink) { sc *= 1 - smooth(clamp((t - b.t0 - a.shrink.at) / a.shrink.dur)); if (sc < 0.02) continue; }
-    infos[id] = { id, pos: ap.p, ap, a, ch, sc, headTop: ch.headTop * sc, faceY: (ch.def.faceY ?? ch.height * 0.7) * sc, faceSize: (ch.face?.cfg?.eyeR ?? 0.08) * 4 * sc, radius: ch.radius * sc };
+    const kh = ch.def.keyhole ? new THREE.Vector3(ap.p.x + ch.def.keyhole[0] * sc, ch.def.keyhole[1] * sc, ap.p.z + ch.def.keyhole[2] * sc) : null;
+    infos[id] = { id, pos: ap.p, ap, a, ch, sc, keyhole: kh, headTop: ch.headTop * sc, faceY: (ch.def.faceY ?? ch.height * 0.7) * sc, faceSize: (ch.face?.cfg?.eyeR ?? 0.08) * 4 * sc, radius: ch.radius * sc };
   }
   // 2) caméra
   const shot = b.shot || { type: 'wide' };
@@ -160,6 +161,9 @@ export function evaluate(tl, t, world) {
     const stepLen = 0.32 * I.sc;
     const doorOpen = a.door !== undefined ? (typeof a.door === 'number' ? a.door : lerp(a.door.from, a.door.to, smooth(clamp((local - (a.door.at || 0)) / (a.door.dur || 0.8))))) : 0;
     const sweat = a.sweat ?? 0;
+    // clé dans la serrure (0 = absente, 0→1 elle entre, 1→2 elle tourne) ; clé tenue en main cachée une fois donnée
+    const lockKey = a.lockKey === undefined ? 0 : typeof a.lockKey === 'number' ? a.lockKey : (local < a.lockKey.at ? 0 : 0.001 + clamp((local - a.lockKey.at) / a.lockKey.dur) * 2);
+    const handKey = a.giveKeyAt !== undefined && local >= a.giveKeyAt ? 0 : 1;
     // --- réactions « dessin animé » (déterministes dans le temps du plan)
     let hop = 0, squash = a.squash || 0, lean = a.lean || 0, eyeWide = 0, browBoost = 0, blink = 0, yawOff = 0, tilt = a.tilt || 0;
     if (a.hop) {
@@ -183,7 +187,7 @@ export function evaluate(tl, t, world) {
     actors[id] = {
       visible: true, x: I.pos.x, y: (a.y ?? 0) + (a.float ? Math.sin(t * 1.6 + I.pos.x) * 0.04 + 0.05 : 0), z: I.pos.z, yaw: yaw + yawOff, scale: I.sc / (ch.def.scale ?? 1),
       emotions, poses, mouth: m || { open: 0 }, talk: m ? m.talk : 0,
-      walk: I.ap.walk, walkPhase: (I.ap.dist / stepLen) * Math.PI, look, sweat, doorOpen, hop,
+      walk: I.ap.walk, walkPhase: (I.ap.dist / stepLen) * Math.PI, look, sweat, doorOpen, lockKey, handKey, hop,
       lean, tilt, squash, gestureAmt: a.gesture ?? 1, eyeWide, browBoost, blink,
     };
   }

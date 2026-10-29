@@ -27,7 +27,7 @@
     "cellia": {
       "id": "cellia",
       "nom": "Cellia",
-      "role": "une cellule",
+      "role": "une cellule du corps",
       "description": "une cellule. La reine de la villa, difficile d'accès.",
       "couleur": "#9b4dff",
       "genre": "f",
@@ -50,7 +50,7 @@
     "insuline": {
       "id": "insuline",
       "nom": "Insuline",
-      "role": "celle qui a les clés",
+      "role": "l'hormone insuline",
       "description": "celle qui a les clés. Cash, elle n'a pas sa langue dans sa poche.",
       "couleur": "#e8a317",
       "genre": "f",

@@ -59,6 +59,18 @@ export function computeShot(shot, u, dur, subs, all, tAbs, obstacles = []) {
       pos = target.clone().addScaledVector(dirFrom(a * 0.5), d); pos.y = hh * 0.62;
       break;
     }
+    case 'keyhole': {
+      // plan d'insert sur la serrure (la clé entre et tourne), puis recul pour révéler la porte qui s'ouvre
+      const kh = S.keyhole || V(S.pos.x, S.headTop * 0.3, S.pos.z + S.radius);
+      const k = smooth(clamp((u - (shot.pullAt ?? dur * 0.6)) / 1.3));
+      const O = subs[1] || S;
+      const wideT = V(lerp(S.pos.x, O.pos.x, 0.35), Math.max(S.headTop, O.headTop) * 0.45, lerp(S.pos.z, O.pos.z, 0.35) + 0.2);
+      target = kh.clone().lerp(wideT, k);
+      const d = lerp(0.8, fit(Math.max(S.headTop, O.headTop) * 1.45), k);
+      pos = target.clone().addScaledVector(dirFrom(lerp(0.3, 0.75, k) + 0.05 * Math.sin(u * 0.7)), d); pos.y = target.y + lerp(0.06, 0.35, k);
+      fov = lerp(26, 30, k);
+      break;
+    }
     case 'door': {
       // plan de dos/3/4 sur le personnage devant une porte (la porte au centre)
       const O = subs[1] || S;
@@ -95,7 +107,7 @@ export function computeShot(shot, u, dur, subs, all, tAbs, obstacles = []) {
   // évitement des obstacles : si un autre personnage masque le sujet, on tourne autour de la cible
   if (subs.length && type !== 'establish') {
     const ids = new Set(subs.map((x) => x.id));
-    const blockers = all.filter((x) => !ids.has(x.id));
+    const blockers = type === 'keyhole' ? [] : all.filter((x) => !ids.has(x.id));
     const obst = obstacles.map((o) => ({ pos: V(o.x, 0, o.z), headTop: 9, radius: o.r, fixed: true }));
     const blocked = (P) => obst.some((o) => Math.hypot(P.x - o.pos.x, P.z - o.pos.z) < o.radius + 0.35) || [...blockers, ...obst].some((o) => {
       const c = V(o.pos.x, Math.min(o.headTop * 0.6, P.y), o.pos.z);

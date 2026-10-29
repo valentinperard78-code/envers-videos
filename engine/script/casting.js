@@ -24,7 +24,7 @@ export const VOICES = {
 
 // Préréglages de l'épisode 1 (l'apparence détaillée est dans engine/characters/cast.js).
 export const PRESET_META = {
-  insuline: { color: '#e8a317', gender: 'f', role: 'celle qui a les clés', voice: VOICES.f[0], keywords: ['insuline'] },
+  insuline: { color: '#e8a317', gender: 'f', role: "l'hormone insuline", voice: VOICES.f[0], keywords: ['insuline'] },
   cellia: { color: '#9b4dff', gender: 'f', role: 'la cellule, reine de la villa', voice: VOICES.f[1], keywords: ['cellule'], big: true, home: 'cellia' },
   sucrette: { color: '#ff6fb0', gender: 'f', role: 'le glucose', voice: { voice: 'fr-BE-CharlineNeural', rate: '+10%', pitch: '+18Hz' }, keywords: ['glucose', 'sucre'] },
   pancho: { color: '#ef6a56', gender: 'm', role: 'le pancréas', voice: VOICES.m[0], keywords: ['pancréas', 'pancreas'] },
@@ -99,7 +99,7 @@ export function buildCasting(doc, bible = null) {
     // 1) personnage déjà connu de la série -> identique (apparence + voix)
     const B = findInBible(bible, name, `${name} ${desc}`);
     if (B) {
-      const entry = { id: B.id, name: B.nom, def: B.def, color: B.couleur, role: B.role, gender: B.genre, voice: B.voix, description: desc || B.description, fromBible: true };
+      const entry = { id: B.id, name: B.nom, def: B.def, color: B.couleur, role: B.role, gender: B.genre, voice: B.voix, description: desc || B.description, fromBible: true, big: B.def === 'cellia' || B.def?.shape === 'cell', home: B.def === 'cellia' ? 'cellia' : undefined };
       if (B.id !== id) { aliases[id] = B.id; entry.alias = name; }
       if (!entries.has(B.id)) entries.set(B.id, entry);
       return entries.get(B.id);
