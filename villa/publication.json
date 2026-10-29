@@ -115,8 +115,17 @@
       "heure": "19:01",
       "mode": "buffer-immediat",
       "buffer": "6ae389eb313060a14e21076b",
-      "statut": "en-file",
+      "statut": "retire",
       "prevu": "2026-10-29T18:04:13.845Z"
+    },
+    {
+      "episode": "ep01-diabete-type-2",
+      "date": "2026-10-29",
+      "heure": "19:59",
+      "mode": "buffer-immediat",
+      "buffer": "6ae3978c4ae687d9696c2b67",
+      "statut": "en-file",
+      "prevu": "2026-10-29T19:02:22.309Z"
     }
   ],
   "valides": [
