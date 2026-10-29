@@ -443,7 +443,7 @@ export function buildMascot(def, tex) {
     // coronaires : fins vaisseaux posés sur la surface (sous le visage)
     const corM = M.organ('#b5142e', { smooth: true, bump: 0.1 });
     for (const side of [-1, 1]) {
-      const pts = []; for (let i = 0; i <= 10; i++) { const u = i / 10; const yy = y - 0.08 - u * ctx.H * 0.55; const xx = side * (W * 0.32 - u * W * 0.22) + side * Math.sin(u * 5) * 0.015; const h = ctx.S.front(xx, yy); if (h) pts.push(h.point.clone().addScaledVector(h.face.normal, 0.006)); }
+      const pts = []; for (let i = 0; i <= 10; i++) { const u = i / 10; const yy = y - 0.08 - u * ctx.H * 0.55; const xx = side * (W * 0.43 - u * W * 0.12) + side * Math.sin(u * 5) * 0.012; /* sur les côtés, jamais sur le visage */ const h = ctx.S.front(xx, yy); if (h) pts.push(h.point.clone().addScaledVector(h.face.normal, 0.006)); }
       if (pts.length > 3) { const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.011, 8, false), corM); tube.castShadow = true; ch.bodyPivot.add(tube); }
     }
   }

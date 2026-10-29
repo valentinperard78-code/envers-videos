@@ -59,16 +59,18 @@
       "numero": 4,
       "slug": "infarctus",
       "pathologie": "Infarctus du myocarde",
-      "titre": "Le cœur qui lâche",
-      "pitch": "Une artère du cœur se bouche : Cardio manque d'oxygène. Les signes d'alerte et le réflexe 15.",
+      "titre": "Code rouge",
+      "pitch": "Une plaque craque, Caillo le caillot bouche une artère du cœur : Ventri manque d'oxygène. Les signes d'alerte et le réflexe 15.",
       "personnagesPrevus": [
-        "Cardio (cœur)",
+        "Ventri (le cœur)",
+        "Caillo (le caillot)",
+        "Choco",
         "Artie",
-        "Choco"
+        "Josh"
       ],
       "teaserSuivant": "Accident vasculaire cérébral (AVC)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "vidéo prête",
+      "script": "scripts/ep04-infarctus.md",
       "publication": null
     },
     {
