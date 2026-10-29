@@ -127,6 +127,14 @@
       "statut": "retire",
       "prevu": "2026-10-29T19:02:22.309Z",
       "note": "supprimé de TikTok par Valentin (voix) — à republier"
+    },
+    {
+      "episode": "ep01-diabete-type-2",
+      "date": "2026-10-29",
+      "heure": "21:19",
+      "mode": "buffer",
+      "buffer": "6ae3aa5e594ba0e4c89352e2",
+      "statut": "en-file"
     }
   ],
   "valides": [
