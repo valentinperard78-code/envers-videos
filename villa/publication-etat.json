@@ -1,9 +1,9 @@
 {
-  "quand": "2026-10-29T17:14:45.267Z",
+  "quand": "2026-10-29T18:01:15.484Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "🗑  ep02-hypertension retiré de la file Buffer.",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 0 vidéo(s) déjà en file (max 10)."
+    "⚠ retrait de la file impossible : Buffer : Unknown argument \"id\" on field \"Mutation.deletePost\". ; Argument \"Mutation.deletePost(input:)\" of type \"DeletePostInput!\" is required, but it was not provided.",
+    "🚀 ep01-diabete-type-2 programmé sur TikTok pour 2026-10-29T18:04:13.845Z (dans 3 min)."
   ]
 }
