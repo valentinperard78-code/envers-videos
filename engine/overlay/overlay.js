@@ -83,7 +83,8 @@ export class Overlay {
     c.font = `${118 * u}px ${FONT_TITLE}`; const nw = c.measureText(o.name.toUpperCase()).width;
     c.font = `700 ${34 * u}px ${FONT_TEXT}`; const rw = c.measureText(o.role || '').width;
     const w = Math.max(nw, rw) + 70 * u, h = 190 * u;
-    const g = c.createLinearGradient(x, y, x + w, y + h); g.addColorStop(0, o.color || '#ff3da8'); g.addColorStop(1, shade(o.color || '#ff3da8', -0.35));
+    const col = tagColor(o.color || '#ff3da8');
+    const g = c.createLinearGradient(x, y, x + w, y + h); g.addColorStop(0, col); g.addColorStop(1, shade(col, -0.35));
     c.shadowColor = 'rgba(0,0,0,0.45)'; c.shadowBlur = 24 * u; c.shadowOffsetY = 8 * u;
     c.fillStyle = g; rr(c, x, y, w, h, 28 * u); c.fill(); c.shadowBlur = 0; c.shadowOffsetY = 0;
     c.fillStyle = '#fff'; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
@@ -124,7 +125,7 @@ export class Overlay {
       const w = Math.max(nw, rw) + 90 * u; const x = W / 2 - w / 2 + (1 - s) * -W;
       c.save(); c.translate(W / 2, y + h / 2); c.rotate(-0.025); c.translate(-W / 2, -(y + h / 2));
       c.shadowColor = 'rgba(0,0,0,0.45)'; c.shadowBlur = 24 * u; c.shadowOffsetY = 8 * u;
-      c.fillStyle = o.color || '#ff2f8f'; rr(c, x, y, w, h * 0.62, [26 * u, 26 * u, 0, 0]); c.fill();
+      c.fillStyle = tagColor(o.color || '#ff2f8f'); rr(c, x, y, w, h * 0.62, [26 * u, 26 * u, 0, 0]); c.fill();
       c.fillStyle = '#ffffff'; rr(c, x, y + h * 0.62, w, h * 0.42, [0, 0, 26 * u, 26 * u]); c.fill();
       c.shadowBlur = 0; c.shadowOffsetY = 0;
       c.textAlign = 'center'; c.textBaseline = 'middle';
@@ -138,7 +139,7 @@ export class Overlay {
       c.font = `800 ${30 * u}px ${FONT_TEXT}`; const rw = c.measureText(role).width;
       const w = Math.max(nw, rw) + 56 * u;
       c.shadowColor = 'rgba(0,0,0,0.35)'; c.shadowBlur = 14 * u;
-      c.fillStyle = o.color || '#ff2f8f'; rr(c, x, y, w, h, 20 * u); c.fill(); c.shadowBlur = 0;
+      c.fillStyle = tagColor(o.color || '#ff2f8f'); rr(c, x, y, w, h, 20 * u); c.fill(); c.shadowBlur = 0;
       c.textAlign = 'left'; c.textBaseline = 'alphabetic';
       c.font = `${54 * u}px ${FONT_TITLE}`; c.fillStyle = '#fff'; c.fillText(name, x + 28 * u, y + 52 * u);
       c.font = `800 ${30 * u}px ${FONT_TEXT}`; c.fillStyle = 'rgba(255,255,255,0.92)'; c.fillText(role, x + 28 * u, y + 82 * u);
@@ -275,7 +276,7 @@ export class Overlay {
     });
     c.restore();
     // sticker « ?! » près du visage
-    c.save(); c.translate(W * 0.8, H * 0.36); c.rotate(0.18);
+    c.save(); c.translate(W * 0.86, H * 0.3); c.rotate(0.18); c.scale(0.85, 0.85);
     c.fillStyle = '#ffe44d'; c.strokeStyle = '#000'; c.lineWidth = 8 * u; c.beginPath();
     const n = 12; for (let i = 0; i <= n * 2; i++) { const a = (i / (n * 2)) * Math.PI * 2; const r = (i % 2 ? 62 : 100) * u; const px = Math.cos(a) * r * 1.15, py = Math.sin(a) * r; if (i) c.lineTo(px, py); else c.moveTo(px, py); }
     c.closePath(); c.fill(); c.stroke();
@@ -404,6 +405,8 @@ function fakeWords(text, t0, t1) {
   const ws = String(text || '').split(/\s+/).filter(Boolean); const tot = ws.reduce((a, w) => a + w.length + 2, 0) || 1;
   let t = t0; return ws.map((w) => { const d = ((w.length + 2) / tot) * (t1 - t0); const o = { w, t, d }; t += d; return o; });
 }
+// couleur d'étiquette lisible : une couleur trop claire (personnage blanc) est assombrie pour garder le texte blanc lisible
+function tagColor(col = '#ff3da8') { const h = String(col).replace('#', ''); if (h.length < 6) return col; const r = parseInt(h.slice(0, 2), 16) / 255, g = parseInt(h.slice(2, 4), 16) / 255, b = parseInt(h.slice(4, 6), 16) / 255; const L = 0.2126 * r + 0.7152 * g + 0.0722 * b; return L > 0.62 ? shade(col, -0.55) : col; }
 function shade(hex, k) { const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255; const f = (v) => Math.round(clamp(v + v * k, 0, 255)); return `rgb(${f(r)},${f(g)},${f(b)})`; }
 function heart(c, x, y, s, col) {
   c.save(); c.translate(x, y); c.scale(s / 30, s / 30); c.fillStyle = col; c.beginPath();

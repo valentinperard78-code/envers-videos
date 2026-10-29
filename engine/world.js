@@ -81,7 +81,7 @@ export class World {
       const ch = this.chars[star]; ch.updateMatrixWorld(true);
       const face = ch.localToWorld(new THREE.Vector3(0, (ch.def.faceY ?? ch.height * 0.7) * 0.97, 0));
       const top = ch.localToWorld(new THREE.Vector3(0, ch.headTop, 0));
-      const h = Math.max(0.5, (top.y - face.y) * 2.6 + 0.35);
+      const h = Math.max(0.75, (top.y - face.y) * 2.6 + 0.45) * 1.25; // toute la tête dans le cadre, avec de l'air autour
       const dir = this.camera.position.clone().sub(face); dir.y = 0; if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1); dir.normalize();
       const fov = 34; this.camera.fov = fov; this.camera.updateProjectionMatrix();
       const d = h / (2 * Math.tan(THREE.MathUtils.degToRad(fov) / 2)) * 1.05;
