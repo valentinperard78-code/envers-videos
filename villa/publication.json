@@ -59,6 +59,46 @@
       "mode": "buffer",
       "buffer": "6ae371630471a99f44a97359",
       "statut": "retire"
+    },
+    {
+      "episode": "ep01-diabete-type-2",
+      "date": "2026-10-29",
+      "heure": "17:51",
+      "mode": "buffer",
+      "buffer": "6ae37991e21785fad7690fce",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep02-hypertension",
+      "date": "2026-10-29",
+      "heure": "17:51",
+      "mode": "buffer",
+      "buffer": "6ae37992e21785fad7691002",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep03-cholesterol",
+      "date": "2026-10-29",
+      "heure": "17:51",
+      "mode": "buffer",
+      "buffer": "6ae3799403ff312c0925e2b5",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep04-infarctus",
+      "date": "2026-10-29",
+      "heure": "17:51",
+      "mode": "buffer",
+      "buffer": "6ae379954128a171891634ff",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep05-avc",
+      "date": "2026-10-29",
+      "heure": "17:51",
+      "mode": "buffer",
+      "buffer": "6ae37997e21785fad7691209",
+      "statut": "en-file"
     }
   ]
 }

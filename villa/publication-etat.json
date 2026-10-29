@@ -1,10 +1,13 @@
 {
-  "quand": "2026-10-29T16:35:32.054Z",
+  "quand": "2026-10-29T16:51:35.599Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "🗑  ep01-diabete-type-2 retiré de la file Buffer.",
     "📚 Buffer : chaîne « la.villa.des.pathologies » — 0 vidéo(s) déjà en file (max 10).",
-    "⏭  ep01-diabete-type-2 : pas encore de fichier unique, il sera prêt au prochain passage."
+    "✅ ep01-diabete-type-2 ajouté à la file Buffer.",
+    "✅ ep02-hypertension ajouté à la file Buffer.",
+    "✅ ep03-cholesterol ajouté à la file Buffer.",
+    "✅ ep04-infarctus ajouté à la file Buffer.",
+    "✅ ep05-avc ajouté à la file Buffer."
   ]
 }
