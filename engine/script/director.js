@@ -429,7 +429,7 @@ export function buildTimeline(src, opts = {}) {
       if (teaser && shot.type !== 'establish') { shot.crash = shot.crash ?? (beats.length % 2 === 0); }
 
       const b = { t0, dur, set, speaker: id || null, kind: vo ? 'vo' : 'line', shot, actors, line: it.line, flash: teaser && ii > 0, isRecap: recap };
-      if (set === 'blood') b.setState = { crowd };
+      if (set === 'blood') b.setState = { crowd, plaque: /(cholest|athero|infarctus|avc|arteriopathie|arterite)/.test(norm(doc.pathology || '')) || /(plaque|depot|athero|se colle|squatte)/.test(norm(it.text)) ? 1 : 0 };
       b.speech = { t0: t0 + lead, t1: t0 + lead + sp.dur, words: sp.words.map((w) => ({ t: t0 + lead + w.t, d: w.d, w: w.w })), env: sp.env || null, rate: sp.rate || 50 };
       shot.punches = b.speech.words.filter((w) => /[!]/.test(w.w) || KEYWORD_RE.test(norm(w.w))).map((w) => w.t).filter((x, i, arr) => i === 0 || x - arr[i - 1] > 0.9).slice(0, 4);
       // découpage des longues répliques en plusieurs plans (rythme TikTok : un plan toutes les ~3,5 s)

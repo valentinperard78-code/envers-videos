@@ -2,7 +2,7 @@
 // Chaque décor fournit : group, lights, environnement (reflets), réglages d'image, repères de mise en scène.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { roundedBox, rng, sculpt, TAU, clamp, varTube } from '../core/geo.js';
+import { roundedBox, rng, sculpt, TAU, clamp, varTube, fbm3 } from '../core/geo.js';
 import * as M from '../core/materials.js';
 import { woodTextures, tileTexture, waterNormal, grassTexture, nightSky, vesselTextures, skinNormal, makeCanvas } from '../core/textures.js';
 import { palmTree, stringLights, sofa, lounger, plantPot, lantern, neonText, neonHeart, redCellGeometry, crowdSugar } from './props.js';
@@ -207,6 +207,21 @@ export function bloodSet(quality) {
     s.position.set(x, 0, z); s.rotation.y = -x * 0.2; s.scale.setScalar(0.85 + (i % 5) * 0.08);
     s.userData = { x, z, ph: i * 0.7 }; crowd.push(s); g.add(s);
   }
+  // plaques d'athérome (cholestérol) collées à la paroi : jaunâtres, grasses, bosselées — visibles selon st.plaque
+  const plaqueMat = new THREE.MeshPhysicalMaterial({ color: '#f1cf72', roughness: 0.42, clearcoat: 0.8, clearcoatRoughness: 0.25, sheen: 0.7, sheenColor: '#fff2b0', emissive: '#6a4600', emissiveIntensity: 0.55 });
+  const plaques = []; const pr = rng(303);
+  for (let i = 0; i < 22; i++) {
+    const seed = i * 1.7;
+    const geo = sculpt((n) => { const k = 1 + 0.28 * fbm3(n.x * 2.2 + seed, n.y * 2.2, n.z * 2.2, 3); return new THREE.Vector3(n.x * k, Math.max(-0.15, n.y) * 0.45 * k, n.z * k * 0.8); }, 40, 24);
+    const m = new THREE.Mesh(geo, plaqueMat); m.castShadow = true; m.receiveShadow = true;
+    // angle autour de l'axe (on évite le « sol » où marchent les personnages), profondeur le long du vaisseau
+    const side = i % 2 ? 1 : -1; const ang = -Math.PI / 2 + (i < 6 ? side * (0.05 + pr() * 0.3) : side * (0.55 + pr() * 1.2)); const z = i < 6 ? -2.2 - pr() * 4 : -0.3 - pr() * 7;
+    const rad = R * 1.0;
+    const x = Math.cos(ang) * rad, y = R - 0.25 + Math.sin(ang) * rad;
+    m.position.set(x, y, z); m.lookAt(0, R - 0.25, z); m.rotateX(Math.PI / 2);
+    const sc = 0.6 + pr() * 0.8; m.userData.sc = sc; m.scale.setScalar(0.001); m.visible = false;
+    plaques.push(m); g.add(m);
+  }
   const lights = new THREE.Group();
   const key = shadowLight(new THREE.SpotLight('#ffe2dc', 60, 25, 0.6, 0.9, 1.5), 0, quality.shadow, 0.5, 25); key.userData.mainShadow = true; key.position.set(-2, 4.5, 6); key.target.position.set(0, 0.7, 0); lights.add(key, key.target);
   const red1 = new THREE.PointLight('#ff2a3a', 12, 14, 1.4); red1.position.set(2, 3, -5); lights.add(red1);
@@ -221,6 +236,8 @@ export function bloodSet(quality) {
     marks: { center: new THREE.Vector3(0, 0, 0.6), left: new THREE.Vector3(-0.9, 0, 0.7), right: new THREE.Vector3(0.9, 0, 0.7) },
     update: (t, st = {}) => {
       upd.forEach((f) => f(t));
+      const pl = st.plaque ?? 0;
+      plaques.forEach((m, i) => { const v = clamp(pl * 1.25 - (i / plaques.length) * 0.25); m.visible = v > 0.01; if (m.visible) m.scale.setScalar(m.userData.sc * (0.35 + 0.65 * v) * (1 + Math.sin(t * 1.3 + i) * 0.02)); });
       const n = Math.round((st.crowd ?? 0) * crowd.length);
       crowd.forEach((c, i) => { c.visible = i < n; const u = c.userData; c.position.set(u.x + Math.sin(t * 1.5 + u.ph) * 0.05, Math.abs(Math.sin(t * 3 + u.ph)) * 0.05, u.z); c.rotation.z = Math.sin(t * 2 + u.ph) * 0.08; });
     },
