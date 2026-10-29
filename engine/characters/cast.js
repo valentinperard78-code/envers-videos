@@ -28,6 +28,15 @@ const SHAPES = {
     const ry = n.y < 0 ? Math.max(r, 0.26 * Math.sqrt(Math.max(0, 1 - Math.pow(Math.max(0, -x - 0.2) / 0.8, 2)))) : r * 1.05; // ventre plat pour poser les jambes
     return new THREE.Vector3(x * 0.7 * o.w, (yc + n.y * ry) * o.h * lob, n.z * r * 0.9 * o.d * lob);
   }),
+  // foie : gros lobe droit bombé, lobe gauche effilé, dessus en dôme, dessous plus plat
+  liver: (o) => sculpt((n) => {
+    const x = n.x, k = (x + 1) / 2; // -1 = lobe gauche (fin), +1 = lobe droit (gros)
+    const th = 0.16 + 0.24 * smooth(clamp((k - 0.1) / 0.8));
+    const y = n.y > 0 ? n.y * th * 1.15 : n.y * th * 0.55;
+    return new THREE.Vector3(x * 0.68 * o.w, (y + 0.06 * Math.max(0, x)) * o.h, n.z * (0.2 + 0.12 * k) * o.d);
+  }),
+  // poumon : lobe en cloche (sommet arrondi, base large et creusée)
+  lung: (o) => sculpt((n) => { const t = 1 - (n.y + 1) / 2; const w = 0.18 + 0.2 * Math.sin(Math.min(1, t * 1.15) * Math.PI * 0.62); return new THREE.Vector3(n.x * w * o.w, n.y * 0.62 * o.h, n.z * w * 0.8 * o.d); }),
   crystal: (o) => roundedBox(0.58 * o.w, 0.6 * o.h, 0.56 * o.d, 0.035, 4),
   heart: (o) => sculpt((n) => {
     // cœur (organe stylisé) : deux lobes en haut, pointe arrondie en bas

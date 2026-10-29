@@ -24,7 +24,9 @@ S.add(key);
 const rim = new THREE.DirectionalLight('#b48cff', 2.0); rim.position.set(4, 3, -4); S.add(rim);
 const fill = new THREE.HemisphereLight('#cfe0ff', '#3a2a40', 0.6); S.add(fill);
 const which = (qs.get('who') || 'insuline,cellia,sucrette,pancho,josh').split(',');
-const chars = which.map((k) => createCharacter(PRESETS[k], TX));
+// ?def={...} : tester un personnage décrit en JSON (formes d'organes, accessoires…)
+const defs = qs.get('def') ? [JSON.parse(qs.get('def'))] : which.map((k) => PRESETS[k]);
+const chars = defs.map((d) => createCharacter(d, TX));
 let x = -(chars.length - 1) * 0.55;
 for (const c of chars) { c.position.x = x; x += 1.1; S.add(c); }
 window.chars = chars; window.THREE = THREE;

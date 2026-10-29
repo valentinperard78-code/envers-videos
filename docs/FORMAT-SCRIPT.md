@@ -51,6 +51,9 @@ Un script est un simple fichier texte (`.md`) dans le dossier `scripts/`. Le log
 | `- Encadré à l'écran : MOT = explication` | Carte explicative animée pendant la réplique suivante |
 | `- Carton : « texte »` | Plein écran façon télé (ellipse temporelle : la porte se referme, les émotions repartent à zéro) |
 | `- À l'écran : la jauge de X passe au rouge` | Jauge animée (vert → rouge) ; dans le sang, la foule de sucres apparaît |
+| `- Accroche : texte court` | Texte choc des 2 premières secondes et de la miniature (40 caractères max.) |
+| `- Question : …` | Question affichée à la fin pour faire réagir en commentaires |
+| `[lieu : …]` dans un titre de scène | Force le décor (vaisseau, cabinet médical, cœur, cerveau…) |
 | `- → GÉNÉRIQUE` | Générique animé « LA VILLA DES PATHOLOGIES » |
 | `« Abonne-toi ! » (teaser : X)` | Bouton « ABONNE-TOI ! » + « Prochain épisode : X » |
 
@@ -62,6 +65,7 @@ Un script est un simple fichier texte (`.md`) dans le dossier `scripts/`. Le log
 | `(épuisé)`, `(en sueur)`, « cramé », « à bout », « nuits blanches » | Fatigué, gouttes de sueur, épaules basses |
 | `(entrée stylée)`, « Coucou » | Entrée en marchant depuis le bord du plateau, coucou de la main |
 | `(à la porte de Cellia)`, « Toc toc » | Va jusqu'à la porte de la cellule et frappe |
+| `(ouvre la porte avec sa clé)` | Plan serré sur la serrure : la clé entre, tourne (clic), la porte s'ouvre, puis la caméra recule |
 | `(la clé ne tourne pas)` | Secoue la clé, colère, bruit de serrure, coup de zoom |
 | `(bloquée dans le sang…)` | Décor : intérieur d'un vaisseau sanguin |
 | « Entre », « viens, y a de la place » (dit par la cellule) | La porte s'ouvre, l'invité s'approche |
@@ -88,6 +92,6 @@ Exemple : `- **Choco** : le cholestérol. Un gros dur jaune avec des lunettes de
 
 ## Conseils pour TikTok
 
-- Viser **1 min 15 à 1 min 45** : environ 14 caractères de texte par seconde de vidéo. Le logiciel affiche la durée estimée.
+- Viser **environ 2 min** (1 min 45 à 2 min 15) : environ 14 caractères de texte par seconde de vidéo. Le logiciel affiche la durée estimée.
 - Une réplique courte et percutante vaut mieux qu'une longue ; les répliques longues sont automatiquement découpées en plusieurs plans (réaction, gros plan…).
 - Mettre l'encadré juste après la réplique qu'il explique.
