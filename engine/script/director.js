@@ -169,6 +169,7 @@ export function buildTimeline(src, opts = {}) {
   const speech = opts.speech || {};
   const fps = opts.fps || 30;
   const beats = [], overlays = [], sfx = [], music = [], voices = [];
+  let cutaways = 0; // plans de coupe hors villa consécutifs
   let lastSpan = null; // dernière réplique (pour y accrocher l'encadré qui l'explique)
   let t = 0;
   const villa = { present: new Set(), pos: {}, door: 0, hidden: new Set(), keyIn: false, keyHolder: null };
@@ -294,6 +295,14 @@ export function buildTimeline(src, opts = {}) {
       else if (secLoc) set = secLoc;
       else if ((secBlood && !vo) || (vo && secBlood)) set = 'blood';
       else if (vo && mentions.includes('josh')) set = 'kitchen';
+      // LA VILLA EST LE DÉCOR DE LA SÉRIE : les personnages parlent dans la villa (ou au confessionnal).
+      // Les autres décors (intérieur du corps, cuisine de Josh, cabinet) ne sont que de courts plans de coupe
+      // pendant la voix off — jamais deux d'affilée — sauf didascalie explicite (« bloquée dans le sang »).
+      if (!teaser && set !== 'villa' && set !== 'confessional') {
+        if (!vo && dirLoc !== set) set = 'villa';
+        else if (vo && cutaways >= 1) set = 'villa';
+      }
+      cutaways = set !== 'villa' && set !== 'confessional' ? cutaways + 1 : 0;
 
       const lead = 0.08, tail = teaser ? 0.12 : 0.17;
       let dur = Math.max(1.2, sp.dur + lead + tail);
