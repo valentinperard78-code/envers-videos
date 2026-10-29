@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Logo — La Villa des Pathologies</title>
+<style>
+@font-face { font-family: Anton; src: url(/assets/fonts/Anton-Regular.ttf); }
+@font-face { font-family: Baloo2; src: url(/assets/fonts/Baloo2.ttf); font-weight: 400 800; }
+html,body { margin:0; background:#111; } canvas { display:block; }
+</style></head>
+<body><canvas id="c"></canvas>
+<script>
+// Logo de la série : villa néon (toit doré, murs roses, fenêtres cyan, porte cœur) + « LA VILLA DES PATHOLOGIES ».
+// ?w=1080&h=1080&fond=1 (fond violet) ou fond=0 (transparent)
+const qs = new URLSearchParams(location.search);
+const W = +(qs.get('w') || 1080), H = +(qs.get('h') || 1080), bg = qs.get('fond') !== '0';
+const cv = document.getElementById('c'); cv.width = W; cv.height = H; const c = cv.getContext('2d');
+function heart(x, y, s, col) { c.save(); c.translate(x, y); c.scale(s / 30, s / 30); c.fillStyle = col; c.beginPath(); c.moveTo(0, 8); c.bezierCurveTo(0, 0, -15, -4, -15, 8); c.bezierCurveTo(-15, 18, 0, 24, 0, 32); c.bezierCurveTo(0, 24, 15, 18, 15, 8); c.bezierCurveTo(15, -4, 0, 0, 0, 8); c.fill(); c.restore(); }
+async function draw() {
+  await document.fonts.load('100px Anton'); await document.fonts.load('800 60px Baloo2');
+  const u = Math.min(W, H) / 1080;
+  if (bg) {
+    const g = c.createRadialGradient(W / 2, H * 0.45, 50 * u, W / 2, H / 2, Math.max(W, H) * 0.75); g.addColorStop(0, '#4a0b4f'); g.addColorStop(0.6, '#24062f'); g.addColorStop(1, '#0d0214');
+    c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.save(); c.translate(W / 2, H * 0.45);
+    for (let i = 0; i < 16; i++) { c.rotate(Math.PI / 8); c.fillStyle = i % 2 ? 'rgba(255,61,168,0.10)' : 'rgba(255,200,80,0.07)'; c.beginPath(); c.moveTo(0, 0); c.lineTo(-90 * u, -H); c.lineTo(90 * u, -H); c.fill(); }
+    c.restore();
+    for (let i = 0; i < 14; i++) { const x = ((i * 137) % 1000) / 1000 * W, y = ((i * 211) % 1000) / 1000 * H; c.globalAlpha = 0.45; heart(x, y, (18 + (i % 4) * 9) * u, i % 2 ? '#ff3da8' : '#ffd166'); }
+    c.globalAlpha = 1;
+  }
+  c.save(); c.translate(W / 2, H * 0.5 + 25 * u); c.scale(0.86, 0.86); c.rotate(-0.04); // tient dans le rond de la photo de profil TikTok
+  // la villa néon
+  c.save(); c.translate(0, -300 * u); c.lineJoin = 'round'; c.lineCap = 'round';
+  c.strokeStyle = '#ffd166'; c.shadowColor = '#ffd166'; c.shadowBlur = 34 * u; c.lineWidth = 15 * u;
+  c.beginPath(); c.moveTo(-200 * u, -20 * u); c.lineTo(0, -175 * u); c.lineTo(200 * u, -20 * u); c.stroke();
+  c.strokeStyle = '#ff3da8'; c.shadowColor = '#ff3da8';
+  c.beginPath(); c.rect(-155 * u, -35 * u, 310 * u, 180 * u); c.stroke();
+  c.strokeStyle = '#2fe0ff'; c.shadowColor = '#2fe0ff'; c.lineWidth = 10 * u;
+  c.strokeRect(-125 * u, 0, 66 * u, 54 * u); c.strokeRect(59 * u, 0, 66 * u, 54 * u);
+  c.shadowColor = '#ff3da8'; c.shadowBlur = 30 * u; heart(0, 62 * u, 76 * u, '#ff3da8');
+  c.restore();
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+  const neon = (txt, size, y, col) => { c.font = `${size}px Anton`; c.shadowColor = col; c.shadowBlur = 44 * u; c.fillStyle = col; c.fillText(txt, 0, y); c.shadowBlur = 0; c.lineWidth = size * 0.05; c.strokeStyle = 'rgba(0,0,0,0.25)'; c.strokeText(txt, 0, y); c.fillStyle = '#fff'; c.fillText(txt, 0, y); };
+  c.shadowBlur = 0; c.font = `800 ${60 * u}px Baloo2`; c.fillStyle = '#ffd166'; c.fillText('LA', 0, -110 * u);
+  neon('VILLA', 260 * u, 50 * u, '#ff3da8');
+  c.font = `800 ${64 * u}px Baloo2`; c.fillStyle = '#ffd166'; c.fillText('DES', 0, 195 * u);
+  neon('PATHOLOGIES', 158 * u, 305 * u, '#2fe0ff');
+  c.restore();
+  window.ready = true;
+}
+draw();
+</script></body></html>
