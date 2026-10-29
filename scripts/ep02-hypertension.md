@@ -38,14 +38,16 @@ Script ton télé-réalité. Faits médicaux vérifiés (HAS, Assurance Maladie,
 ## Scène 4 : le twist
 - VOIX OFF : « Et le pire ? Josh ne sent rien. En France, près d'un adulte sur trois est hypertendu… et un sur deux ne le sait pas. »
 - VOIX OFF : « Pendant ce temps, le cœur force et les artères s'abîment : AVC, infarctus, reins, yeux. »
-- ARTIE : « Attends… c'est elle le red flag depuis le début ?! »
 
 ## Scène 5 : le verdict [lieu : cabinet médical]
 - VOIX OFF : « Chez le médecin : 14/9 ou plus, plusieurs fois… c'est l'hypertension. On la vérifie aussi à la maison. »
 
-## Scène 6 : la riposte
+## Scène 6 : le traitement
 - SEL : « Quoi ? Josh me met dehors ? Sérieux ?! »
-- VOIX OFF : « Moins de sel, bouger, moins d'alcool, stop tabac… et un traitement si le médecin le prescrit. »
+- VOIX OFF : « D'abord : moins de sel, bouger, moins d'alcool, stop tabac. Ça aide déjà Tensia à redescendre. »
+- VOIX OFF : « Si ça ne suffit pas, le médecin prescrit un médicament contre la tension. »
+- TENSIA (confessionnal) : « Il fait sortir le sel, ou il détend les murs d'Artie… et je redescends. »
+- VOIX OFF : « Il se prend au long cours, même quand on ne sent rien. Sinon, Tensia remonte. »
 
 ## Récap et appel à l'abonnement
 - VOIX OFF : « À retenir : l'hypertension ne se sent pas, elle se mesure. Fais prendre ta tension. »
@@ -54,6 +56,7 @@ Script ton télé-réalité. Faits médicaux vérifiés (HAS, Assurance Maladie,
 ## Sources
 - HAS — Hypertension artérielle de l'adulte : dépister tôt, traiter mieux : https://www.has-sante.fr/jcms/c_2680281/fr/hypertension-arterielle-de-l-adulte-depister-tot-traiter-mieux
 - Assurance Maladie — Définition et causes de l'hypertension artérielle : https://www.ameli.fr/assure/sante/themes/hypertension-arterielle-hta/definition-facteurs-favorisants
+- HAS — Hypertension artérielle : des outils pour une prise en charge optimale : https://www.has-sante.fr/jcms/pprd_2974311/fr/hypertension-arterielle-des-outils-pour-une-prise-en-charge-optimale
 - OMS — Hypertension artérielle : https://www.who.int/fr/news-room/fact-sheets/detail/hypertension
 - Vidal — Les causes et les complications de l'HTA : https://www.vidal.fr/maladies/coeur-circulation-veines/hypertension-arterielle/symptomes-causes.html
 

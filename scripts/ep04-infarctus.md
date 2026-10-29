@@ -40,10 +40,12 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Inse
 - VOIX OFF : « Josh a une douleur dans la poitrine qui serre comme un étau. Elle peut aller vers la mâchoire, le bras gauche ou le dos… et elle ne passe pas au repos. »
 - VOIX OFF : « Parfois, il n'y a pas de douleur : malaise, essoufflement, fatigue bizarre. Surtout chez les femmes, les seniors et les diabétiques. »
 
-## Scène 5 : le bon réflexe
+## Scène 5 : le bon réflexe et le traitement
 - VOIX OFF : « Le réflexe qui sauve : appeler le 15, ou le 112. Tout de suite, même en cas de doute. »
 - ARTIE : « Attends… chaque minute compte ?! »
-- VOIX OFF : « Oui. À l'hôpital, on débouche l'artère le plus vite possible. »
+- VOIX OFF : « Oui. À l'hôpital, on gonfle un petit ballon dans Artie pour la rouvrir, et on pose un ressort, le stent, pour qu'elle reste ouverte. »
+- CAILLO (confessionnal) : « Et si le service est trop loin, ils m'envoient un médicament qui me dissout ! »
+- VOIX OFF : « Ensuite : des médicaments au long cours contre les caillots et le cholestérol, et une réadaptation pour remuscler Ventri. »
 
 ## Scène 6 : le verdict [lieu : cabinet médical]
 - VOIX OFF : « En France, environ 80 000 infarctus par an. Tabac, cholestérol, diabète, hypertension, sédentarité : les mêmes candidats reviennent toujours. »

@@ -43,9 +43,12 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Vida
 ## Scène 5 : le verdict [lieu : cabinet médical]
 - VOIX OFF : « Seule une prise de sang le voit : le bilan lipidique mesure le LDL, le HDL et les triglycérides. »
 
-## Scène 6 : la riposte
+## Scène 6 : le traitement
 - CHOCO : « Quoi ? Josh mange plus de légumes et il va courir ? Sérieux ?! »
-- VOIX OFF : « Mieux manger, bouger, garder un poids de forme… et un médicament si le médecin le prescrit. »
+- VOIX OFF : « Mieux manger, bouger, garder un poids de forme : Choco perd déjà du terrain. »
+- VOIX OFF : « Si le LDL reste trop haut, ou si le risque du cœur est élevé, le médecin prescrit le plus souvent une statine. »
+- CHOCO (confessionnal) : « Elle dit au foie d'en fabriquer moins… on est de moins en moins nombreux ! »
+- VOIX OFF : « Moins de Choco dans le sang, ce sont des plaques qui grossissent moins. »
 
 ## Récap et appel à l'abonnement
 - VOIX OFF : « À retenir : le cholestérol en trop se colle aux artères sans faire de bruit. Seule une prise de sang le voit. »

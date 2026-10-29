@@ -42,9 +42,14 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Inse
 - TENSIA (confessionnal) : « Et si les signes disparaissent au bout de quelques minutes ? »
 - VOIX OFF : « Même urgence : on appelle quand même le 15. »
 
-## Scène 6 : le verdict [lieu : cabinet médical]
+## Scène 6 : le traitement [lieu : cabinet médical]
+- VOIX OFF : « À l'hôpital, en unité neurovasculaire, une imagerie montre si c'est un caillot ou un saignement. »
+- VOIX OFF : « Si c'est Caillo : un médicament pour le dissoudre, dans les 4 heures et demie, ou on va le retirer en passant par l'artère. »
+- CAILLO (confessionnal) : « Ils sont venus me chercher par l'artère… et ils m'ont sorti de là ! »
+- CERVO : « Ensuite, la rééducation : je réapprends ce que j'ai perdu. »
+
+## Scène 7 : le verdict
 - VOIX OFF : « En France, environ 140 000 AVC par an : un toutes les quatre minutes. Tension, cholestérol, diabète, tabac… les mêmes candidats reviennent toujours. »
-- TENSIA : « Attends… je suis encore dans le coup ?! »
 
 ## Récap et appel à l'abonnement
 - VOIX OFF : « À retenir : visage, bras, parole… au moindre signe, on appelle le 15. Chaque minute compte. »
