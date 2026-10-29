@@ -128,7 +128,8 @@ export function preparer(conf, videos, n = conf.buffer?.tampon ?? 10) {
          '-map', '[vo]', '-map', '[ao]', ...enc]
       : ['-y', '-v', 'error', '-i', src, ...enc];
     log(`🎞  ${ep} : fichier TikTok${fs.existsSync(cover) ? ' + miniature' : ''} (${kbps} kb/s)…`);
-    const r = spawnSync('ffmpeg', args, { stdio: 'inherit' });
+    const r = spawnSync('ffmpeg', args, { encoding: 'utf8' });
+    if (r.stderr) log(r.stderr.slice(-400));
     if (r.status !== 0 || !fs.existsSync(tmp)) { log(`❌ préparation impossible pour ${ep}`); continue; }
     const out = +spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', tmp], { encoding: 'utf8' }).stdout || total;
     for (const f of fs.readdirSync(d)) if (f.startsWith(`${ep}.mp4.part`)) fs.rmSync(path.join(d, f));
@@ -186,7 +187,11 @@ async function main() {
   const conf = JSON.parse(fs.readFileSync(CONF, 'utf8'));
   const videos = get('--videos', path.join(ROOT, '..', 'villa-videos'));
   const now = parisNow();
-  if (has('--preparer')) { const c = preparer(conf, videos); log(c.length ? `${c.length} vidéo(s) préparée(s) pour Buffer.` : 'Rien à préparer.'); return; }
+  if (has('--preparer')) {
+    try { const c = preparer(conf, videos); log(c.length ? `${c.length} vidéo(s) préparée(s) pour Buffer.` : 'Rien à préparer.'); etat({ ok: true, etape: 'preparation' }); }
+    catch (e) { log(`❌ préparation : ${e.stack || e.message}`); etat({ ok: false, etape: 'preparation', erreur: e.message }); process.exitCode = 1; }
+    return;
+  }
   if (conf.mode === 'buffer') {
     if (!conf.actif && !has('--maintenant')) { log('Publication automatique désactivée (« actif »: false).'); return; }
     try { await remplirBuffer(conf, videos, now); etat({ ok: process.exitCode ? false : true, essai: has('--essai') }); }
