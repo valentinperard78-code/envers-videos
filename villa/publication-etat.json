@@ -1,9 +1,9 @@
 {
-  "quand": "2026-10-29T16:06:22.180Z",
-  "ok": false,
-  "erreur": "Cannot convert argument to a ByteString because the character at index 7 has a value of 8226 which is greater than 255.",
+  "quand": "2026-10-29T16:10:04.750Z",
+  "ok": true,
   "essai": true,
   "journal": [
-    "❌ Cannot convert argument to a ByteString because the character at index 7 has a value of 8226 which is greater than 255."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 0 vidéo(s) déjà en file (max 10).",
+    "⏭  ep01-diabete-type-2 : pas encore de fichier unique, il sera prêt au prochain passage."
   ]
 }
