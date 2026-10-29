@@ -51,6 +51,8 @@ export function heightToNormal(field, size, strength = 2) {
   ctx.putImageData(img, 0, 0);
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.NoColorSpace;
+  // filtrage de qualité : jamais d'effet « pixelisé » / quadrillé de près comme de loin
+  t.anisotropy = 8; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
   return t;
 }
 
@@ -75,18 +77,21 @@ export const skinNormal = (strength = 1.2, period = 8) => memo(`skinN${strength}
 });
 
 /** Relief lobulé (pancréas, tissus) : cellules arrondies. */
-export const lobuleNormal = () => memo('lobN', () => {
-  const s = 256, f = new Float32Array(s * s), r = rng(5);
-  const pts = Array.from({ length: 160 }, () => [r() * s, r() * s]);
+export const lobuleNormal = () => memo('lobN2', () => {
+  // lobules doux (pas d'arêtes vives) en haute résolution, puis lissage : aspect organique, jamais pixelisé
+  const s = 512, f = new Float32Array(s * s), r = rng(5);
+  const pts = Array.from({ length: 220 }, () => [r() * s, r() * s]);
   for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) {
     let d1 = 1e9, d2 = 1e9;
     for (const [px, py] of pts) {
       let dx = Math.abs(x - px), dy = Math.abs(y - py); dx = Math.min(dx, s - dx); dy = Math.min(dy, s - dy);
       const d = Math.hypot(dx, dy); if (d < d1) { d2 = d1; d1 = d; } else if (d < d2) d2 = d;
     }
-    f[y * s + x] = Math.sqrt(clamp((d2 - d1) / 9));
+    const e = clamp((d2 - d1) / 22); f[y * s + x] = e * e * (3 - 2 * e);
   }
-  return heightToNormal(f, s, 2.2);
+  // flou 2 passes (rayon 2) pour arrondir les lobules
+  for (let pass = 0; pass < 2; pass++) { const g = new Float32Array(s * s); for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) { let a = 0; for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) a += f[((y + dy + s) % s) * s + ((x + dx + s) % s)]; g[y * s + x] = a / 25; } f.set(g); }
+  return heightToNormal(f, s, 3.0);
 });
 
 /** Facettes cristallines (sucre). */
@@ -102,7 +107,7 @@ export const crystalNormal = () => memo('crysN', () => {
     ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillRect(-w / 2, -w / 2, w, w * (0.5 + r()));
     ctx.restore();
   }
-  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.NoColorSpace; t.repeat.set(3, 3);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.NoColorSpace; t.repeat.set(3, 3); t.anisotropy = 8;
   return t;
 });
 

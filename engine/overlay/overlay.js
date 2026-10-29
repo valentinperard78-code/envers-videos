@@ -53,7 +53,7 @@ export class Overlay {
     const pop = ease((t - t0) / 0.16);
     const size = 74 * u;
     c.font = `900 ${size}px ${FONT_TEXT}`; c.textAlign = 'center'; c.textBaseline = 'middle';
-    const y = H * 0.665;
+    const y = o.low ? H * 0.82 : H * 0.665;
     const text = chunk.map((w) => w.w.toUpperCase());
     const widths = text.map((s) => c.measureText(s).width * 1.06), space = size * 0.3;
     let lines = [[]], lw = [0];
@@ -195,33 +195,60 @@ export class Overlay {
 
   // ------------------------------------------------ générique
   title(c, o, t) {
+    // GÉNÉRIQUE : logo néon de la villa + promesse de la série + épisode
     const u = this.u, W = this.W, H = this.H, local = t - o.t0;
     const k = fadeIO(t, o.t0, o.t1, 0.15, 0.3);
     c.globalAlpha = k;
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1a0630'); g.addColorStop(0.55, '#4a0b4f'); g.addColorStop(1, '#0a0214');
     c.fillStyle = g; c.fillRect(0, 0, W, H);
+    const cy = o.generic ? H * 0.37 : H * 0.42;
     // rayons lumineux
-    c.save(); c.translate(W / 2, H * 0.42); c.rotate(local * 0.15);
+    c.save(); c.translate(W / 2, cy); c.rotate(local * 0.15);
     for (let i = 0; i < 16; i++) { c.rotate(Math.PI / 8); c.fillStyle = i % 2 ? 'rgba(255,61,168,0.10)' : 'rgba(255,200,80,0.07)'; c.beginPath(); c.moveTo(0, 0); c.lineTo(-90 * u, -H); c.lineTo(90 * u, -H); c.fill(); }
     c.restore();
     // cœurs flottants
     for (let i = 0; i < 18; i++) { const x = ((i * 137) % 1000) / 1000 * W, y = H - ((local * (80 + i * 9) + i * 211) % (H + 200)); c.globalAlpha = k * 0.6; heart(c, x, y, (20 + (i % 4) * 10) * u, i % 2 ? '#ff3da8' : '#ffd166'); }
     c.globalAlpha = k;
     const s = ease(local / 0.5);
-    c.translate(W / 2, H * 0.42); c.scale(s, s); c.rotate(-0.05);
+    c.save(); c.translate(W / 2, cy); c.scale(s, s); c.rotate(-0.05);
     c.textAlign = 'center'; c.textBaseline = 'middle';
-    const neon = (txt, size, y, col) => { c.font = `${size}px ${FONT_TITLE}`; c.shadowColor = col; c.shadowBlur = 40 * u; c.fillStyle = col; c.fillText(txt, 0, y); c.shadowBlur = 0; c.fillStyle = '#fff'; c.fillText(txt, 0, y); };
+    // logo : la villa en néon (toit, murs, fenêtres, porte en forme de cœur), qui « s'allume »
+    const on = clamp(local / 0.6); const flick = local < 0.6 ? (Math.sin(local * 60) > 0 ? 1 : 0.35) : 1;
+    c.save(); c.translate(0, -455 * u); c.scale(0.85, 0.85); c.lineJoin = 'round'; c.lineCap = 'round';
+    c.strokeStyle = '#ffd166'; c.shadowColor = '#ffd166'; c.shadowBlur = 30 * u * flick; c.lineWidth = 12 * u; c.globalAlpha = k * (0.35 + 0.65 * on * flick);
+    c.beginPath(); c.moveTo(-170 * u, -20 * u); c.lineTo(0, -150 * u); c.lineTo(170 * u, -20 * u); c.stroke();
+    c.strokeStyle = '#ff3da8'; c.shadowColor = '#ff3da8';
+    c.beginPath(); c.rect(-130 * u, -30 * u, 260 * u, 150 * u); c.stroke();
+    c.strokeStyle = '#2fe0ff'; c.shadowColor = '#2fe0ff'; c.lineWidth = 8 * u;
+    c.strokeRect(-105 * u, 0, 55 * u, 45 * u); c.strokeRect(50 * u, 0, 55 * u, 45 * u);
+    c.shadowBlur = 0; c.globalAlpha = k; heart(c, 0, 55 * u, 62 * u, '#ff3da8');
+    c.restore();
     c.font = `800 ${56 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('LA', 0, -305 * u);
+    const neon = (txt, size, y, col) => { c.font = `${size}px ${FONT_TITLE}`; c.shadowColor = col; c.shadowBlur = 40 * u; c.fillStyle = col; c.fillText(txt, 0, y); c.shadowBlur = 0; c.fillStyle = '#fff'; c.fillText(txt, 0, y); };
     neon('VILLA', 250 * u, -90 * u, '#ff3da8');
     c.font = `800 ${62 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('DES', 0, 50 * u);
     neon('PATHOLOGIES', 150 * u, 160 * u, '#2fe0ff');
-    c.rotate(0.05);
+    c.restore();
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    // promesse de la série : 3 pastilles qui arrivent l'une après l'autre
+    if (o.generic) {
+      const items = [['1 MALADIE PAR ÉPISODE', '#ff3da8'], ['LES ORGANES PRENNENT LA PAROLE', '#2fe0ff'], ['SOURCES MÉDICALES OFFICIELLES', '#ffd166']];
+      items.forEach(([txt, col], i) => {
+        const a = clamp((local - 0.7 - i * 0.55) / 0.3); if (a <= 0) return;
+        c.save(); c.globalAlpha = k * a; c.translate(W / 2 + (1 - ease(a)) * (i % 2 ? 1 : -1) * W * 0.6, H * 0.585 + i * 108 * u); c.rotate(i % 2 ? 0.02 : -0.02);
+        c.font = `${58 * u}px ${FONT_TITLE}`; const w = c.measureText(txt).width + 80 * u;
+        c.fillStyle = 'rgba(10,2,20,0.75)'; rr(c, -w / 2, -45 * u, w, 90 * u, 45 * u); c.fill();
+        c.strokeStyle = col; c.lineWidth = 5 * u; c.shadowColor = col; c.shadowBlur = 18 * u; rr(c, -w / 2, -45 * u, w, 90 * u, 45 * u); c.stroke(); c.shadowBlur = 0;
+        c.fillStyle = '#fff'; c.fillText(txt, 0, 3 * u); c.restore();
+      });
+    }
     if (o.subtitle) {
-      const sk = clamp((local - 0.5) / 0.4);
+      const sk = clamp((local - (o.generic ? 2.4 : 0.5)) / 0.4);
       c.globalAlpha = k * sk;
       c.font = `800 ${46 * u}px ${FONT_TEXT}`; const w = c.measureText(o.subtitle.toUpperCase()).width + 80 * u;
-      c.fillStyle = '#ffffff'; rr(c, -w / 2, 290 * u, w, 90 * u, 45 * u); c.fill();
-      c.fillStyle = '#4a0b4f'; c.fillText(o.subtitle.toUpperCase(), 0, 337 * u);
+      const y = o.generic ? H * 0.9 : H * 0.42 + 290 * u;
+      c.fillStyle = '#ffffff'; rr(c, W / 2 - w / 2, y, w, 90 * u, 45 * u); c.fill();
+      c.fillStyle = '#4a0b4f'; c.fillText(o.subtitle.toUpperCase(), W / 2, y + 47 * u);
     }
   }
 

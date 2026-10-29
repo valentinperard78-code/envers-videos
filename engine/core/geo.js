@@ -41,7 +41,7 @@ export function rng(seed = 1) {
  * Sphère sculptée : chaque sommet (direction unitaire d) est déplacé par fn(d) -> Vector3.
  * Donne des corps lisses (poire, haricot, cœur…) sans facettes.
  */
-export function sculpt(fn, wSeg = 128, hSeg = 96) {
+export function sculpt(fn, wSeg = 192, hSeg = 144) { // maillage fin : silhouettes lisses, pas de facettes
   const g = new THREE.SphereGeometry(1, wSeg, hSeg);
   const p = g.attributes.position;
   const d = new THREE.Vector3();

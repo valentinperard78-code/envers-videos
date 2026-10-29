@@ -102,6 +102,7 @@ export function collectLines(doc, casting) {
   // (casting construit avec la même bible que la timeline)
   const out = [];
   for (const s of doc.sections) for (const it of s.items) {
+    if (it.type === 'title' && it.vo) { const v = voiceFor(casting.narrator.voice, 'excited', { vo: true, mood: 'happy' }); out.push({ key: `L${it.line}`, text: ttsText(it.vo), voice: v.voice, rate: v.rate, pitch: v.pitch, speaker: 'narrator', gender: 'm', emotion: 'excited' }); continue; }
     if (it.type !== 'line') continue;
     const who = it.voiceOver ? casting.narrator : casting.byName[it.speaker.toUpperCase()] || casting.byName[slug(it.speaker)];
     const base = who?.voice || casting.narrator.voice;
@@ -233,8 +234,16 @@ export function buildTimeline(src, opts = {}) {
 
     items.forEach((it, ii) => {
       if (it.type === 'title') {
-        const b = pushBeat({ t0: t, dur: 2.5, set: 'stage', shot: { type: 'wide' }, actors: {}, kind: 'title', noWhoosh: true });
-        overlays.push({ type: 'title', t0: b.t0, t1: b.t1, subtitle: doc.episodeName ? `Épisode ${doc.episode ?? 1} · ${doc.episodeName}` : '' });
+        // générique : logo + promesse de la série, avec la voix off (≈ 5 s)
+        const gsp = it.vo ? speechFor({ line: it.line, text: it.vo }) : null;
+        const gdur = gsp ? Math.max(3.6, gsp.dur + 0.9) : 2.5;
+        const b = pushBeat({ t0: t, dur: gdur, set: 'stage', shot: { type: 'wide' }, actors: {}, kind: 'title', noWhoosh: true });
+        overlays.push({ type: 'title', t0: b.t0, t1: b.t1, subtitle: doc.episodeName ? `Épisode ${doc.episode ?? 1} · ${doc.episodeName}` : '', generic: !!gsp });
+        if (gsp) {
+          voices.push({ key: `L${it.line}`, t: b.t0 + 0.45, speaker: 'narrator', dur: gsp.dur });
+          const words = (gsp.words || []).map((w) => ({ t: b.t0 + 0.45 + w.t, d: w.d, w: w.w }));
+          overlays.push({ type: 'subtitle', t0: b.t0 + 0.45, t1: b.t0 + 0.45 + gsp.dur + 0.1, text: it.vo, words, color: '#ffe44d', low: true });
+        }
         sfx.push({ type: 'title', t: b.t0 }); music.push({ t0: b.t0, mood: 'theme' }); music.push({ t0: b.t1, mood: 'chill' });
         return;
       }

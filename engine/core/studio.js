@@ -12,7 +12,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 // Profils : « brouillon » (rapide), « standard » (sans carte graphique), « max » (carte graphique)
 export const QUALITY = {
   brouillon: { width: 540, shadow: 1024, ao: false, dof: false, smaa: false, bloom: true, fps: 24, transmission: false, iridescence: false, extraLights: false, hdr: false },
-  standard: { width: 720, shadow: 2048, ao: false, dof: true, smaa: true, bloom: true, fps: 30, transmission: false, iridescence: false, extraLights: false, hdr: true },
+  standard: { width: 864, shadow: 2048, ao: false, dof: true, smaa: true, bloom: true, fps: 30, transmission: false, iridescence: false, extraLights: false, hdr: true },
   haute: { width: 720, shadow: 2048, ao: false, dof: true, smaa: true, bloom: true, fps: 25, transmission: true, iridescence: true, extraLights: true, hdr: true },
   max: { width: 1080, shadow: 4096, ao: true, dof: true, smaa: true, bloom: true, fps: 30, transmission: true, iridescence: true, extraLights: true, hdr: true },
 };

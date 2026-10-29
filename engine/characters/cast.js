@@ -24,7 +24,7 @@ const SHAPES = {
     const k = (x + 1) / 2;
     const r = 0.15 + 0.17 * smooth(clamp((k - 0.15) / 0.75)) + 0.05 * Math.exp(-Math.pow((k - 0.86) * 6, 2));
     const yc = 0.2 * Math.pow(Math.max(0, -x - 0.15), 2); // la queue remonte, crochet de la tête vers le bas
-    const lob = 1 + 0.06 * fbm3(n.x * 5.5, n.y * 5.5, n.z * 5.5, 3) + 0.025 * fbm3(n.x * 14, n.y * 14, n.z * 14, 2);
+    const lob = 1 + 0.055 * fbm3(n.x * 4.5, n.y * 4.5, n.z * 4.5, 3); // bosses douces (les petits lobules sont dans la texture)
     const ry = n.y < 0 ? Math.max(r, 0.26 * Math.sqrt(Math.max(0, 1 - Math.pow(Math.max(0, -x - 0.2) / 0.8, 2)))) : r * 1.05; // ventre plat pour poser les jambes
     return new THREE.Vector3(x * 0.7 * o.w, (yc + n.y * ry) * o.h * lob, n.z * r * 0.9 * o.d * lob);
   }),

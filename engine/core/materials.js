@@ -62,12 +62,14 @@ export function salt(color = '#e6eef7') {
 
 /** Organe humide (pancréas, cœur…) : rosé, lobules, brillance mouillée. */
 export function organ(color = '#f08a7a', opts = {}) {
-  return new THREE.MeshPhysicalMaterial({
+  const m = new THREE.MeshPhysicalMaterial({
     color: C(color), roughness: 0.38, clearcoat: 0.9, clearcoatRoughness: 0.12,
     sheen: 0.7, sheenColor: C(opts.sheenColor ?? '#ffd0c8'), sheenRoughness: 0.4,
     normalMap: opts.lobules ? lobuleNormal() : skinNormal(opts.smooth ? 0.8 : 1.5, opts.smooth ? 6 : 9), normalScale: new THREE.Vector2(opts.bump ?? (opts.smooth ? 0.2 : 0.3), opts.bump ?? (opts.smooth ? 0.2 : 0.3)),
     emissive: C(color).multiplyScalar(0.25), emissiveIntensity: 0.25, envMapIntensity: 1,
   });
+  if (opts.lobules) { m.normalMap = m.normalMap.clone(); m.normalMap.repeat.set(2, 2); m.normalMap.needsUpdate = true; m.normalScale.set(0.4, 0.4); }
+  return m;
 }
 
 export function glossy(color, roughness = 0.2, metalness = 0) {
