@@ -1,6 +1,6 @@
 # La Villa des Pathologies — Épisode 1 : « La clé de la discorde » (diabète de type 2)
 
-Script ton télé-réalité. Faits médicaux vérifiés (Inserm, Assurance Maladie, Vidal, HAS) : insuline = clé qui fait entrer le glucose dans les cellules ; résistance à l'insuline ; hyperglycémie ; épuisement du pancréas ; maladie silencieuse ; complications yeux / reins / cœur / nerfs des pieds ; diagnostic ≥ 1,26 g/L à jeun sur 2 contrôles ; facteurs : surpoids, sédentarité, hérédité.
+Script ton télé-réalité. Faits médicaux vérifiés (Inserm, Assurance Maladie, Vidal, HAS) : insuline = clé qui fait entrer le glucose dans les cellules ; résistance à l'insuline ; hyperglycémie ; épuisement du pancréas ; traitement : hygiène de vie, metformine en 1re intention, insuline quand le pancréas s'épuise (Inserm, HAS 2024) ; maladie silencieuse ; complications yeux / reins / cœur / nerfs des pieds ; diagnostic ≥ 1,26 g/L à jeun sur 2 contrôles ; facteurs : surpoids, sédentarité, hérédité.
 
 ## Casting
 - **Sucrette** : le glucose. La nouvelle candidate, pétillante, un peu naïve.
@@ -48,14 +48,16 @@ Script ton télé-réalité. Faits médicaux vérifiés (Inserm, Assurance Malad
 ## Scène 6 : le twist
 - PANCHO (confessionnal, en sueur) : « J'envoie encore plus d'Insuline… mais à force, frère, je suis cramé. »
 - VOIX OFF : « Et le pire ? Josh ne sent rien. Pendant des années, le sucre en trop abîme les yeux, les reins, le cœur et les nerfs des pieds. »
-- SUCRETTE : « Attends… c'est moi le red flag de l'histoire ?! »
 
 ## Scène 7 : le verdict
 - VOIX OFF : « À la prise de sang, à jeun : 1,26 gramme par litre ou plus, deux fois… c'est le diabète. »
 
-## Scène 8 : la riposte
-- CELLIA : « Depuis que Josh bouge, je suis plus ouverte d'esprit… et de serrure. »
-- VOIX OFF : « Bouger, manger équilibré, et un traitement si le médecin le juge utile. »
+## Scène 8 : le traitement
+- CELLIA : « Josh bouge et mange équilibré ? Ma serrure se décoince ! »
+- VOIX OFF : « Si ça ne suffit pas : des comprimés, souvent la metformine en premier. »
+- PANCHO (confessionnal) : « Mais si je suis vraiment cramé, je ne fabrique plus assez d'Insuline. »
+- VOIX OFF : « Alors on injecte de l'insuline : elle remplace celle que Pancho ne produit plus. »
+- INSULINE : « Renfort en piqûre ! Personne ne reste dehors. »
 
 ## Récap et appel à l'abonnement
 - VOIX OFF : « À retenir : l'insuline, c'est la clé. Dans le type 2, les serrures résistent, et le sucre reste dans le sang. »
