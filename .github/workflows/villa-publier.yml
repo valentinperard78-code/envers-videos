@@ -78,7 +78,7 @@ jobs:
         working-directory: studio
         run: |
           git config user.name "Villa Publisher" && git config user.email "villa-studio@users.noreply.github.com"
-          git add villa/publication.json villa/publication-etat.json villa/tiktok-jeton.chiffre 2>/dev/null || true
+          for f in villa/publication.json villa/publication-etat.json villa/tiktok-jeton.chiffre; do [ -f "$f" ] && git add "$f"; done
           if ! git diff --cached --quiet; then
             git commit -qm "Publication TikTok : historique mis à jour [skip ci]"
             git pull -q --rebase origin villa-studio && git push -q origin HEAD:villa-studio
