@@ -573,13 +573,16 @@ export function buildTimeline(src, opts = {}) {
     newCharacters: cast.filter((c) => casting.list.find((e) => e.id === c.id)?.isNew).map((c) => c.name),
     castEntries: casting.list.filter((e) => usedIds.has(e.id)),
     meta: { title: doc.title, episode: doc.episode, episodeName: doc.episodeName, pathology: doc.pathology, fps, duration: t },
-    cast, beats, overlays: overlays.filter((o) => o.t1 > o.t0), audio: { voices, sfx: sfx.filter((s) => s.t >= 0).sort((a, b) => a.t - b.t), music },
+    cast, beats, overlays: [...overlays, { type: 'progress', t0: 0, t1: t }].filter((o) => o.t1 > o.t0), audio: { voices, sfx: sfx.filter((s) => s.t >= 0).sort((a, b) => a.t - b.t), music },
     narratorVoice: casting.narrator.voice,
   };
 }
 
 function lighten(hex) {
   const n = parseInt(hex.slice(1), 16); const r = n >> 16, g = (n >> 8) & 255, b = n & 255;
-  const f = (v) => Math.round(v + (255 - v) * 0.35);
+  // couleur de sous-titre toujours lisible sur fond sombre : les couleurs foncées (caillot noir…) sont fortement éclaircies
+  const L = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  const k = L < 0.25 ? 0.72 : L < 0.45 ? 0.5 : 0.35;
+  const f = (v) => Math.round(v + (255 - v) * k);
   return `#${[f(r), f(g), f(b)].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 }

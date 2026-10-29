@@ -29,7 +29,7 @@ export class Overlay {
     if (active.some((o) => o.type === 'hook')) for (let i = active.length - 1; i >= 0; i--) if (active[i].type === 'sticker' || active[i].type === 'name') active.splice(i, 1);
     this._nameOn = active.some((o) => o.type === 'name' || (o.type === 'tag' && !o.big && t >= o.t0 + (o.after || 0)));
     // ordre : fonds plein écran d'abord, texte ensuite
-    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, tag: 3, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
+    const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, tag: 3, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6, progress: 7 };
     active.sort((a, b) => (order[a.type] ?? 3) - (order[b.type] ?? 3));
     for (const o of active) { c.save(); try { (this[o.type] || (() => {})).call(this, c, o, t, ev); } finally { c.restore(); } }
   }
@@ -110,6 +110,15 @@ export class Overlay {
     // point rouge « REC »
     if (Math.floor(t * 2) % 2 === 0) { c.fillStyle = '#ff2a2a'; c.beginPath(); c.arc(W - 70 * u, y + h / 2, 12 * u, 0, Math.PI * 2); c.fill(); }
     c.font = `800 ${28 * u}px ${FONT_TEXT}`; c.fillStyle = '#fff'; c.textAlign = 'right'; c.fillText('REC', W - 92 * u, y + h / 2 + 2 * u);
+  }
+
+  // ------------------------------------------------ barre de progression (retient le spectateur jusqu'au bout)
+  progress(c, o, t) {
+    const u = this.u, W = this.W, H = this.H; const p = clamp((t - o.t0) / (o.t1 - o.t0));
+    const h = 9 * u, y = H - h;
+    c.globalAlpha = 0.85; c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(0, y, W, h);
+    const g = c.createLinearGradient(0, 0, W, 0); g.addColorStop(0, '#ff3da8'); g.addColorStop(1, '#ffd166');
+    c.fillStyle = g; c.fillRect(0, y, W * p, h);
   }
 
   // ------------------------------------------------ qui parle (nom + organe), affiché toute la réplique

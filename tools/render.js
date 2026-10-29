@@ -51,6 +51,7 @@ export async function prepare(scriptPath, opts = {}) {
   }
   fs.writeFileSync(path.join(work, 'timeline.json'), JSON.stringify(tl));
   fs.writeFileSync(outFile.replace(/\.mp4$/, '.timeline.json'), JSON.stringify(tl));
+  if (tl.meta.duration > 140) log(`⚠ Épisode de ${Math.round(tl.meta.duration)} s : au-delà de ~2 min 15, pense à raccourcir le script (objectif TikTok ≈ 2 min).`);
   log(`🎬 Timeline : ${tl.beats.length} plans, ${tl.meta.duration.toFixed(1)} s (${mode === 'tts' ? 'voix réelles' : mode === 'partial' ? 'voix réelles, quelques répliques sans voix' : 'sans voix'}).`);
   mixEpisode(tl, speech, path.join(work, 'audio.wav'));
   log('🎵 Musique, bruitages et voix mixés.');

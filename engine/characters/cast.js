@@ -37,6 +37,17 @@ const SHAPES = {
   }),
   // poumon : lobe en cloche (sommet arrondi, base large et creusée)
   lung: (o) => sculpt((n) => { const t = 1 - (n.y + 1) / 2; const w = 0.18 + 0.2 * Math.sin(Math.min(1, t * 1.15) * Math.PI * 0.62); return new THREE.Vector3(n.x * w * o.w, n.y * 0.62 * o.h, n.z * w * 0.8 * o.d); }),
+  // cerveau : deux hémisphères (scissure au milieu du dessus) et circonvolutions en relief doux
+  brain: (o) => sculpt((n) => {
+    const top = Math.max(0, n.y);
+    const fissure = 1 - 0.14 * Math.exp(-Math.pow(n.x / 0.07, 2)) * top;
+    // circonvolutions : bruit « en crêtes » (sillons sinueux comme un vrai cortex)
+    const f1 = fbm3(n.x * 2.4 + 7, n.y * 2.4, n.z * 2.4, 3), f2 = fbm3(n.x * 4.8, n.y * 4.8 + 2, n.z * 4.8, 2);
+    const ridge = 1 - Math.abs(f1 * 1.6 + f2 * 0.5);
+    const gyri = 1 + 0.075 * Math.pow(Math.max(0, ridge), 2.0) * (0.35 + 0.65 * smooth(clamp((n.y + 0.6) / 0.6)));
+    const flatBottom = 1 - 0.12 * smooth(clamp((-n.y - 0.45) / 0.4));
+    return new THREE.Vector3(n.x * 0.62 * o.w * fissure * gyri, n.y * 0.5 * o.h * gyri * flatBottom, n.z * 0.58 * o.d * fissure * gyri);
+  }),
   crystal: (o) => roundedBox(0.58 * o.w, 0.6 * o.h, 0.56 * o.d, 0.035, 4),
   heart: (o) => sculpt((n) => {
     // cœur (organe stylisé) : deux lobes en haut, pointe arrondie en bas

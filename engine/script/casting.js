@@ -46,7 +46,7 @@ const ARCHETYPES = [
   { k: ['rein', 'renal', 'rénal'], def: { shape: 'bean', material: 'organ', color: '#b0463e' } },
   { k: ['foie', 'hepat', 'hépat'], def: { shape: 'liver', material: 'organ', color: '#9a3b2c', w: 1.1, h: 1.5, shoulderX: 0.22, hipX: 0.12, face: { eyeX: 0.085, eyeY: 0.56, eyeR: 0.085, mouthY: 0.36, mouthW: 0.2 } } },
   { k: ['poumon', 'pulmon', 'bronche'], def: { shape: 'lung', material: 'organ-lobules', color: '#f39ab0' } },
-  { k: ['cerveau', 'cerebr', 'cérébr'], def: { shape: 'blob', material: 'organ', color: '#f0a5b8', lumps: 0.05 } },
+  { k: ['cerveau', 'cerebr', 'cérébr'], def: { shape: 'brain', material: 'organ-smooth', color: '#f0a5b8', w: 1.1, face: { eyeY: 0.5, eyeX: 0.17, mouthY: 0.27, mouthW: 0.3 } } },
   { k: ['estomac', 'intestin'], def: { shape: 'bean', material: 'organ-smooth', color: '#f08d7e' } },
   { k: ['pancreas', 'pancréas'], def: { shape: 'tall', material: 'organ', color: '#ef8a76' } },
   { k: ['os', 'squelette', 'calcium'], def: { shape: 'capsule', material: 'skin', color: '#f4efe2' } },
@@ -86,6 +86,9 @@ export function buildCasting(doc, bible = null) {
   // voix déjà attribuées dans la série : un nouveau personnage en reçoit une autre
   const takenVoices = new Set(Object.values(bible?.personnages || {}).map((p) => p.voix?.voice));
   for (const P of Object.values(PRESET_META)) if (P.voice) takenVoices.add(P.voice.voice);
+  // timbres exacts déjà utilisés (voix + hauteur) : deux personnages ne sonnent jamais pareil
+  const takenTimbre = new Set(Object.values(bible?.personnages || {}).map((p) => `${p.voix?.voice}@${parseFloat(p.voix?.pitch) || 0}`));
+  for (const P of Object.values(PRESET_META)) if (P.voice) takenTimbre.add(`${P.voice.voice}@${parseFloat(P.voice.pitch) || 0}`);
   const pickVoice = (gender) => {
     const pool = VOICES[gender];
     for (let i = 0; i < pool.length; i++) {
@@ -96,7 +99,8 @@ export function buildCasting(doc, bible = null) {
     for (let k = 1; k < 6; k++) for (const v of pool) {
       const sh = (k % 2 ? 1 : -1) * (6 + 5 * Math.ceil(k / 2));
       const key = `${v.voice}|${sh}`;
-      if (!takenVoices.has(key)) { takenVoices.add(key); const p0 = parseFloat(v.pitch) || 0, r0 = parseFloat(v.rate) || 0; return { voice: v.voice, rate: `${r0 + (sh > 0 ? 4 : -4) >= 0 ? '+' : ''}${r0 + (sh > 0 ? 4 : -4)}%`, pitch: `${p0 + sh >= 0 ? '+' : ''}${p0 + sh}Hz` }; }
+      const p0 = parseFloat(v.pitch) || 0, r0 = parseFloat(v.rate) || 0;
+      if (!takenVoices.has(key) && !takenTimbre.has(`${v.voice}@${p0 + sh}`)) { takenVoices.add(key); takenTimbre.add(`${v.voice}@${p0 + sh}`); return { voice: v.voice, rate: `${r0 + (sh > 0 ? 4 : -4) >= 0 ? '+' : ''}${r0 + (sh > 0 ? 4 : -4)}%`, pitch: `${p0 + sh >= 0 ? '+' : ''}${p0 + sh}Hz` }; }
     }
     return pool[0];
   };
