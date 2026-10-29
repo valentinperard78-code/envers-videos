@@ -13,11 +13,14 @@ import * as B from '../publisher/buffer.js';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CONF = path.join(ROOT, 'villa', 'publication.json');
 const VAULT = path.join(ROOT, 'villa', 'tiktok-jeton.chiffre');
+const ETAT = path.join(ROOT, 'villa', 'publication-etat.json'); // dernier passage du robot (lisible depuis le studio)
+const journal = [];
+function etat(extra) { try { fs.writeFileSync(ETAT, JSON.stringify({ quand: new Date().toISOString(), ...extra, journal: journal.slice(-40) }, null, 2) + '\n'); } catch {} }
 const REPO = process.env.GITHUB_REPOSITORY || 'valentinperard78-code/envers-videos';
 const argv = process.argv.slice(2);
 const get = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? argv[i + 1] : d; };
 const has = (k) => argv.includes(k);
-const log = (m) => console.log(m);
+const log = (m) => { console.log(m); journal.push(String(m)); };
 
 // ---------------------------------------------------------------- heure de Paris
 const JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
@@ -161,7 +164,8 @@ async function main() {
   if (has('--preparer')) { const c = preparer(conf, videos); log(c.length ? `${c.length} vidéo(s) préparée(s) pour Buffer.` : 'Rien à préparer.'); return; }
   if (conf.mode === 'buffer') {
     if (!conf.actif && !has('--maintenant')) { log('Publication automatique désactivée (« actif »: false).'); return; }
-    await remplirBuffer(conf, videos, now);
+    try { await remplirBuffer(conf, videos, now); etat({ ok: process.exitCode ? false : true, essai: has('--essai') }); }
+    catch (e) { log(`❌ ${e.message}`); etat({ ok: false, erreur: e.message, essai: has('--essai') }); process.exitCode = 1; }
     if (!has('--essai')) fs.writeFileSync(CONF, JSON.stringify(conf, null, 2) + '\n');
     return;
   }
