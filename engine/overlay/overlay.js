@@ -25,6 +25,8 @@ export class Overlay {
 
   draw(c, t, ev) {
     const active = this.items.filter((o) => t >= o.t0 && t <= o.t1);
+    // l'accroche des premières secondes reste seule en haut de l'écran (pas de sticker par-dessus)
+    if (active.some((o) => o.type === 'hook')) for (let i = active.length - 1; i >= 0; i--) if (active[i].type === 'sticker' || active[i].type === 'name') active.splice(i, 1);
     this._nameOn = active.some((o) => o.type === 'name' || (o.type === 'tag' && !o.big && t >= o.t0 + (o.after || 0)));
     // ordre : fonds plein écran d'abord, texte ensuite
     const order = { card: 0, title: 0, gauge: 1, badge: 1, banner: 2, sources: 2, sticker: 3, hook: 4, question: 5, confession: 2, tag: 3, name: 3, box: 4, recap: 4, cta: 5, subtitle: 6 };
