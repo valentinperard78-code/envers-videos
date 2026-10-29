@@ -114,7 +114,8 @@
         1,
         2,
         3,
-        4
+        4,
+        5
       ],
       "alias": []
     },
@@ -151,7 +152,8 @@
       "premierEpisode": 2,
       "apparitions": [
         2,
-        3
+        3,
+        5
       ],
       "alias": []
     },
@@ -375,7 +377,49 @@
       },
       "premierEpisode": 4,
       "apparitions": [
-        4
+        4,
+        5
+      ],
+      "alias": []
+    },
+    "cervo": {
+      "id": "cervo",
+      "nom": "Cervo",
+      "role": "le cerveau",
+      "description": "le cerveau. Il est rose, intelligent, un peu ronchon, avec des lunettes.",
+      "couleur": "#ff6fb0",
+      "genre": "m",
+      "notions": [
+        "cerveau"
+      ],
+      "def": {
+        "shape": "brain",
+        "material": "organ-smooth",
+        "color": "#ff6fb0",
+        "w": 1.1,
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a",
+          "eyeY": 0.5,
+          "eyeX": 0.17,
+          "mouthY": 0.27,
+          "mouthW": 0.3
+        },
+        "accessories": [
+          "glasses"
+        ],
+        "name": "Cervo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+6%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 5,
+      "apparitions": [
+        5
       ],
       "alias": []
     }
