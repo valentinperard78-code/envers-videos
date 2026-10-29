@@ -59,3 +59,4 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Inse
 - Assurance Maladie — AVC : que faire ? : https://www.ameli.fr/assure/sante/urgence/pathologies/avc
 - Inserm — Accident vasculaire cérébral (AVC) : https://www.inserm.fr/dossier/accident-vasculaire-cerebral-avc/
 - HAS — Accident vasculaire cérébral, des signes d'alerte à votre retour à domicile : https://www.has-sante.fr/jcms/p_3701212/fr/accident-vasculaire-cerebral-des-signes-d-alerte-a-votre-retour-a-domicile
+
