@@ -107,7 +107,7 @@ export class World {
       for (const id in this.chars) { const st = ev.actors[id]; const ch = this.chars[id]; if (!st) { ch.visible = false; continue; } ch.applyState(st, t, {}); ch.updateMatrixWorld(true); }
       ev.applyCamera(this.camera); this.camera.updateMatrixWorld(true);
       const subj = b.shot?.subject && this.chars[b.shot.subject]?.visible ? this.chars[b.shot.subject] : null;
-      if (!subj) continue;
+      if (!subj || b.shot.type === 'keyhole') continue; // plan d'insert sur la serrure : pas de visage à cadrer
       const head = subj.localToWorld(v.set(0, subj.def.faceY ?? subj.height * 0.7, 0)).clone().project(this.camera);
       const top = subj.localToWorld(new THREE.Vector3(0, subj.headTop, 0)).project(this.camera);
       const where = `${b.t0.toFixed(1)} s (${b.set}, ${b.shot.type}, ${b.shot.subject})`;
