@@ -67,7 +67,16 @@ ol.steps li { margin:6px 0; }
   </section>
 
   <section class="wide">
-    <h2>🧭 Mise en route (10 min, une seule fois)</h2>
+    <h2>🟦 Mode Buffer (actuel)</h2>
+    <ol class="steps">
+      <li>Dans <a style="color:var(--cyan)" href="https://publish.buffer.com" target="_blank">Buffer</a>, ta chaîne TikTok → <b>Posting schedule</b> : 12:30 et 19:00 tous les jours, fuseau Europe/Paris.</li>
+      <li>Crée une clé sur <a style="color:var(--cyan)" href="https://publish.buffer.com/settings/api" target="_blank">publish.buffer.com/settings/api</a> et colle-la dans <a style="color:var(--cyan)" href="https://github.com/valentinperard78-code/envers-videos/settings/secrets/actions" target="_blank">GitHub → Secrets</a> sous le nom <b>BUFFER_API_KEY</b>.</li>
+      <li>C'est tout : toutes les 6 h, le robot GitHub ajoute les épisodes suivants dans la file Buffer (10 max, offre gratuite) et Buffer les publie tout seul.</li>
+    </ol>
+  </section>
+
+  <section class="wide">
+    <h2>🧭 Autre option : appli TikTok maison (brouillons)</h2>
     <ol class="steps">
       <li>Va sur <a style="color:var(--cyan)" href="https://developers.tiktok.com" target="_blank">developers.tiktok.com</a>, connecte-toi avec ton compte TikTok, puis <b>Manage apps → Connect an app</b>. Nom : « Villa Publisher ».</li>
       <li>Dans l'application, ajoute les produits <b>Login Kit</b> et <b>Content Posting API</b> (active « Direct Post » si tu veux le mode direct).</li>
@@ -91,14 +100,14 @@ async function load() {
   const next = (c.file || []).find((e) => !done.has(e));
   $('state').innerHTML = `
     <p>Publication automatique : <span class="pill ${c.actif ? 'ok' : 'warn'}">${c.actif ? 'ACTIVE' : 'EN PAUSE'}</span></p>
-    <p>Mode : <span class="pill">${c.mode === 'direct' ? 'publication directe (' + esc(c.confidentialiteDirect) + ')' : 'brouillons TikTok + notification'}</span></p>
+    <p>Mode : <span class="pill">${c.mode === 'buffer' ? 'Buffer (publie seul sur TikTok) — file gardée à ' + (c.buffer?.tampon ?? 10) + ' vidéos' : c.mode === 'direct' ? 'publication directe (' + esc(c.confidentialiteDirect) + ')' : 'brouillons TikTok + notification'}</span></p>
     <p>Maximum par jour : <b>${c.maxParJour}</b> · Prochain épisode : <b>${esc(next || '—')}</b></p>
     <p class="muted">Calendrier lu depuis ${r.source === 'github' ? 'GitHub (celui qu\'utilise l\'automatisme)' : 'la copie locale'}.</p>`;
   const days = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
   $('cal').innerHTML = days.map((d) => `<div class="day"><b>${d}</b>${(c.horaires[d] || []).map((s) => `<span class="slot">${esc(s)}</span>`).join('') || '<span class="muted">—</span>'}</div>`).join('');
   $('calnote').innerHTML = `Pour changer les heures ou la file : <a style="color:var(--cyan)" target="_blank" href="https://github.com/valentinperard78-code/envers-videos/edit/villa-studio/villa/publication.json">modifier sur GitHub</a>, ou demande-le simplement à Claude.`;
   $('queue').innerHTML = (c.file || []).map((e) => `<li>${done.has(e) ? '✅' : e === next ? '⏭️' : '⏳'} ${esc(e)}</li>`).join('');
-  $('hist').innerHTML = h.slice().reverse().slice(0, 30).map((x) => `<tr><td>${esc(x.date)} ${esc(x.creneau || '')}</td><td>${esc(x.episode)}</td><td>${esc(x.mode)}</td><td class="${x.statut === 'ok' ? 'ok' : 'bad'}">${x.statut === 'ok' ? '✔ ' + esc(x.tiktok || '') : '✘ ' + esc(x.raison || '')}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">Aucune publication pour l\'instant.</td></tr>';
+  $('hist').innerHTML = h.slice().reverse().slice(0, 30).map((x) => `<tr><td>${esc(x.date)} ${esc(x.creneau || '')}</td><td>${esc(x.episode)}</td><td>${esc(x.mode)}</td><td class="${x.statut === 'echec' ? 'bad' : 'ok'}">${x.statut === 'en-file' ? '✔ en file Buffer' : x.statut === 'ok' ? '✔ ' + esc(x.tiktok || '') : '✘ ' + esc(x.raison || '')}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">Aucune publication pour l\'instant.</td></tr>';
 }
 $('connect').onclick = async () => {
   $('connect').disabled = true; $('result').innerHTML = '<p class="muted">Une fenêtre TikTok va s\'ouvrir : connecte-toi et accepte…</p>';

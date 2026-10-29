@@ -1,17 +1,43 @@
 {
   "_aide": "Calendrier de publication TikTok. Modifiable à la main ou depuis l'onglet Publication du studio. Heures en heure de Paris.",
-  "actif": false,
-  "mode": "brouillon",
-  "_modes": "brouillon = la vidéo arrive dans tes brouillons TikTok + notification avec le texte (fonctionne sans audit TikTok) ; direct = publication directe (en privé tant que l'appli n'est pas auditée)",
+  "actif": true,
+  "mode": "buffer",
+  "_modes": "buffer = Buffer (gratuit) publie tout seul sur TikTok aux heures réglées dans Buffer ; le robot GitHub garde sa file remplie. brouillon = brouillons TikTok + notification ; direct = publication directe (privée sans audit TikTok)",
+  "buffer": {
+    "tampon": 10,
+    "chaine": "la.villa.des.pathologies",
+    "_aide": "tampon = nombre de vidéos gardées en file dans Buffer (10 max sur l'offre gratuite). Les heures réelles de publication se règlent dans Buffer → Posting schedule (mêmes heures que ci-dessus)."
+  },
   "confidentialiteDirect": "SELF_ONLY",
   "horaires": {
-    "lundi": ["18:30"],
-    "mardi": ["18:30"],
-    "mercredi": ["13:00", "18:30"],
-    "jeudi": ["18:30"],
-    "vendredi": ["18:30"],
-    "samedi": ["11:30", "19:00"],
-    "dimanche": ["19:00"]
+    "lundi": [
+      "12:30",
+      "19:00"
+    ],
+    "mardi": [
+      "12:30",
+      "19:00"
+    ],
+    "mercredi": [
+      "12:30",
+      "19:00"
+    ],
+    "jeudi": [
+      "12:30",
+      "19:00"
+    ],
+    "vendredi": [
+      "12:30",
+      "19:00"
+    ],
+    "samedi": [
+      "12:30",
+      "19:00"
+    ],
+    "dimanche": [
+      "12:30",
+      "19:00"
+    ]
   },
   "maxParJour": 2,
   "notification": {

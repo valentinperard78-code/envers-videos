@@ -8,6 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import * as T from '../publisher/tiktok.js';
 import * as coffre from '../publisher/coffre.js';
+import * as B from '../publisher/buffer.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CONF = path.join(ROOT, 'villa', 'publication.json');
@@ -80,10 +81,90 @@ async function token() {
   return tok.access_token;
 }
 
+// ---------------------------------------------------------------- mode Buffer
+// Buffer (gratuit) publie lui-même sur TikTok aux heures de son « Posting schedule ».
+// Nous, on garde simplement sa file remplie (10 vidéos max sur l'offre gratuite).
+const rawUrl = (ep) => `https://raw.githubusercontent.com/${REPO}/villa-videos/${ep}/${ep}.mp4`;
+const MAX_OCTETS = 95e6; // GitHub refuse les fichiers > 100 Mo
+
+/** Prochains épisodes à envoyer à Buffer (dans l'ordre de la file, en s'arrêtant au premier pas encore rendu). */
+function aEnvoyer(conf, videos, n) {
+  const done = new Set((conf.historique || []).filter((h) => h.statut !== 'echec').map((h) => h.episode));
+  const out = [];
+  for (const ep of conf.file || []) {
+    if (done.has(ep)) continue;
+    if (out.length >= n || !fs.existsSync(path.join(videos, ep))) break;
+    out.push(ep);
+  }
+  return out;
+}
+
+/** Buffer a besoin d'UN fichier public : recolle les vidéos découpées et les réencode sous 95 Mo. Renvoie la liste des fichiers modifiés. */
+export function preparer(conf, videos, n = conf.buffer?.tampon ?? 10) {
+  const changed = [];
+  for (const ep of aEnvoyer(conf, videos, n)) {
+    const d = path.join(videos, ep), mp4 = path.join(d, `${ep}.mp4`);
+    if (fs.existsSync(mp4) && fs.statSync(mp4).size <= MAX_OCTETS) continue;
+    const src = findVideo(videos, ep);
+    if (!src) continue;
+    const dur = +spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', src], { encoding: 'utf8' }).stdout || 150;
+    const kbps = Math.min(6000, Math.floor((88e6 * 8) / dur / 1000) - 200); // vidéo + 192k audio < 90 Mo
+    const tmp = path.join(process.env.RUNNER_TEMP || '/tmp', `${ep}.tiktok.mp4`);
+    log(`🎞  ${ep} : réencodage en un seul fichier (${kbps} kb/s)…`);
+    const r = spawnSync('ffmpeg', ['-y', '-v', 'error', '-i', src, '-c:v', 'libx264', '-preset', 'medium', '-b:v', `${kbps}k`, '-maxrate', `${kbps}k`, '-bufsize', `${kbps * 2}k`, '-pix_fmt', 'yuv420p', '-c:a', 'copy', '-movflags', '+faststart', tmp], { stdio: 'inherit' });
+    if (r.status !== 0 || !fs.existsSync(tmp)) { log(`❌ réencodage impossible pour ${ep}`); continue; }
+    for (const f of fs.readdirSync(d)) if (f.startsWith(`${ep}.mp4.part`)) fs.rmSync(path.join(d, f));
+    fs.copyFileSync(tmp, mp4);
+    changed.push(mp4);
+    log(`   → ${(fs.statSync(mp4).size / 1e6).toFixed(1)} Mo`);
+  }
+  return changed;
+}
+
+async function remplirBuffer(conf, videos, now) {
+  const key = process.env.BUFFER_API_KEY;
+  if (!key) { log('⏸  Secret GitHub BUFFER_API_KEY pas encore ajouté (clé à créer sur https://publish.buffer.com/settings/api) : rien à faire.'); return; }
+  const org = await B.organizationId(key);
+  const ch = await B.tiktokChannel(key, org, conf.buffer?.chaine);
+  const deja = await B.scheduled(key, org, ch.id);
+  const tampon = conf.buffer?.tampon ?? 10;
+  log(`📚 Buffer : chaîne « ${ch.displayName || ch.name} » — ${deja.length} vidéo(s) déjà en file (max ${tampon}).${ch.isQueuePaused ? ' ⚠ file en PAUSE dans Buffer !' : ''}`);
+  const eps = aEnvoyer(conf, videos, Math.max(0, tampon - deja.length));
+  const ajout = [];
+  for (const ep of eps) {
+    const mp4 = path.join(videos, ep, `${ep}.mp4`);
+    if (!fs.existsSync(mp4)) { log(`⏭  ${ep} : pas encore de fichier unique, il sera prêt au prochain passage.`); break; }
+    const text = caption(videos, ep);
+    if (has('--essai')) { log(`(essai) ${ep} → ${rawUrl(ep)}`); continue; }
+    const entry = { episode: ep, date: now.date, heure: now.hhmm, mode: 'buffer' };
+    try {
+      entry.buffer = await B.queueVideo(key, { channelId: ch.id, text, url: rawUrl(ep) });
+      entry.statut = 'en-file'; ajout.push(ep);
+      log(`✅ ${ep} ajouté à la file Buffer.`);
+    } catch (e) {
+      entry.statut = 'echec'; entry.raison = e.message; log(`❌ ${ep} : ${e.message}`);
+      await notify(conf, { title: `❌ Buffer a refusé ${ep}`, message: e.message, ep, tags: 'warning' });
+      process.exitCode = 1;
+    }
+    conf.historique = [...(conf.historique || []), entry].slice(-500);
+    if (entry.statut === 'echec') break;
+  }
+  if (ajout.length) await notify(conf, { title: `🎬 ${ajout.length} épisode(s) programmé(s) dans Buffer`, message: `${ajout.join(', ')}\nBuffer les publiera tout seul sur TikTok aux heures prévues.`, ep: ajout[0] });
+  const reste = aEnvoyer(conf, videos, 99).length;
+  if (!has('--essai') && deja.length + ajout.length <= 2 && !reste) await notify(conf, { title: 'Villa : bientôt plus d\'épisodes', message: `Il ne reste que ${deja.length + ajout.length} vidéo(s) en file dans Buffer. Lance la production des prochains épisodes.`, ep: 'none', tags: 'warning' });
+}
+
 async function main() {
   const conf = JSON.parse(fs.readFileSync(CONF, 'utf8'));
   const videos = get('--videos', path.join(ROOT, '..', 'villa-videos'));
   const now = parisNow();
+  if (has('--preparer')) { const c = preparer(conf, videos); log(c.length ? `${c.length} vidéo(s) préparée(s) pour Buffer.` : 'Rien à préparer.'); return; }
+  if (conf.mode === 'buffer') {
+    if (!conf.actif && !has('--maintenant')) { log('Publication automatique désactivée (« actif »: false).'); return; }
+    await remplirBuffer(conf, videos, now);
+    if (!has('--essai')) fs.writeFileSync(CONF, JSON.stringify(conf, null, 2) + '\n');
+    return;
+  }
   const forced = has('--maintenant') || has('--episode');
   if (!conf.actif && !forced) { log('Publication automatique désactivée (« actif »: false dans villa/publication.json).'); return; }
   const slot = forced ? now.hhmm : dueSlot(conf, now);
