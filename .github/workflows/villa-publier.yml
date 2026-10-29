@@ -1,0 +1,72 @@
+# Villa Publisher — publication automatique des épisodes de « La Villa des Pathologies » sur TikTok.
+# Le calendrier et la file d'attente sont dans villa/publication.json (branche villa-studio).
+# GitHub lance ce workflow toutes les heures ; le script ne publie que si un créneau est arrivé.
+# Bouton manuel : onglet Actions → « Villa — publication TikTok » → Run workflow.
+name: Villa — publication TikTok
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "Épisode à publier tout de suite (ex. ep02-hypertension). Vide = le suivant de la file."
+        required: false
+        default: ''
+      essai:
+        description: "Essai à blanc (n'envoie rien à TikTok)"
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: villa-publier
+  cancel-in-progress: false
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: villa-studio, path: studio }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Créneau à publier ?
+        id: due
+        working-directory: studio
+        run: |
+          if [ -n "${{ github.event.inputs.episode }}" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "go=1" >> $GITHUB_OUTPUT; exit 0; fi
+          node -e "
+            import('./tools/publier.js').then(m=>{const c=JSON.parse(require('fs').readFileSync('villa/publication.json','utf8'));
+            const go=c.actif && m.dueSlot(c) && m.nextEpisode(c); console.log(go?'créneau : '+m.dueSlot(c)+' → '+m.nextEpisode(c):'rien à publier'); require('fs').appendFileSync(process.env.GITHUB_OUTPUT,'go='+(go?1:0)+'\n');})"
+      - name: Vidéos (branche villa-videos)
+        if: steps.due.outputs.go == '1'
+        uses: actions/checkout@v4
+        with: { ref: villa-videos, path: videos }
+      - name: Publication
+        if: steps.due.outputs.go == '1'
+        working-directory: studio
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_CLE: ${{ secrets.TIKTOK_CLE }}
+          TIKTOK_JETON: ${{ secrets.TIKTOK_JETON }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          # premier passage : le jeton chiffré vient du secret TIKTOK_JETON (il est ensuite tenu à jour ici)
+          if [ ! -f villa/tiktok-jeton.chiffre ] && [ -n "$TIKTOK_JETON" ]; then printf '%s\n' "$TIKTOK_JETON" > villa/tiktok-jeton.chiffre; fi
+          ARGS="--videos $GITHUB_WORKSPACE/videos"
+          [ -n "${{ github.event.inputs.episode }}" ] && ARGS="$ARGS --episode ${{ github.event.inputs.episode }}"
+          [ "${{ github.event_name }}" = "workflow_dispatch" ] && ARGS="$ARGS --maintenant"
+          [ "${{ github.event.inputs.essai }}" = "true" ] && ARGS="$ARGS --essai"
+          node tools/publier.js $ARGS
+      - name: Mise à jour du calendrier et du jeton
+        if: always() && steps.due.outputs.go == '1'
+        working-directory: studio
+        run: |
+          git config user.name "Villa Publisher" && git config user.email "villa-studio@users.noreply.github.com"
+          git add villa/publication.json villa/tiktok-jeton.chiffre 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -qm "Publication TikTok : historique mis à jour [skip ci]"
+            git pull -q --rebase origin villa-studio && git push -q origin HEAD:villa-studio
+          fi
