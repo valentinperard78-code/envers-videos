@@ -66,7 +66,7 @@
       "heure": "17:51",
       "mode": "buffer",
       "buffer": "6ae37991e21785fad7690fce",
-      "statut": "en-file"
+      "statut": "retire"
     },
     {
       "episode": "ep02-hypertension",
@@ -82,7 +82,7 @@
       "heure": "17:51",
       "mode": "buffer",
       "buffer": "6ae3799403ff312c0925e2b5",
-      "statut": "en-file"
+      "statut": "retire"
     },
     {
       "episode": "ep04-infarctus",
@@ -90,7 +90,7 @@
       "heure": "17:51",
       "mode": "buffer",
       "buffer": "6ae379954128a171891634ff",
-      "statut": "en-file"
+      "statut": "retire"
     },
     {
       "episode": "ep05-avc",
@@ -98,7 +98,16 @@
       "heure": "17:51",
       "mode": "buffer",
       "buffer": "6ae37997e21785fad7691209",
-      "statut": "en-file"
+      "statut": "retire"
+    },
+    {
+      "episode": "ep01-diabete-type-2",
+      "date": "2026-10-29",
+      "heure": "17:53",
+      "mode": "buffer-immediat",
+      "buffer": "6ae379f53361c982e45c6512",
+      "statut": "en-file",
+      "prevu": "2026-10-29T16:56:09.463Z"
     }
   ],
   "valides": [

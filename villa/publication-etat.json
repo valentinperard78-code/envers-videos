@@ -1,13 +1,12 @@
 {
-  "quand": "2026-10-29T16:51:35.599Z",
+  "quand": "2026-10-29T16:53:09.905Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 0 vidéo(s) déjà en file (max 10).",
-    "✅ ep01-diabete-type-2 ajouté à la file Buffer.",
-    "✅ ep02-hypertension ajouté à la file Buffer.",
-    "✅ ep03-cholesterol ajouté à la file Buffer.",
-    "✅ ep04-infarctus ajouté à la file Buffer.",
-    "✅ ep05-avc ajouté à la file Buffer."
+    "🗑  ep03-cholesterol retiré de la file Buffer.",
+    "🗑  ep04-infarctus retiré de la file Buffer.",
+    "🗑  ep05-avc retiré de la file Buffer.",
+    "🗑  ep01-diabete-type-2 retiré de la file (il part maintenant).",
+    "🚀 ep01-diabete-type-2 programmé sur TikTok pour 2026-10-29T16:56:09.463Z (dans 3 min)."
   ]
 }
