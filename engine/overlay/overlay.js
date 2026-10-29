@@ -169,7 +169,7 @@ export class Overlay {
     c.translate(W / 2, y + h / 2); c.scale(lerp(0.6, 1, s), lerp(0.6, 1, s)); c.rotate((1 - s) * -0.08); c.translate(-W / 2, -(y + h / 2));
     c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 30 * u; c.shadowOffsetY = 10 * u;
     c.fillStyle = '#ffffff'; rr(c, x, y, w, h, 34 * u); c.fill(); c.shadowBlur = 0; c.shadowOffsetY = 0;
-    c.fillStyle = o.color || '#7b2cff'; rr(c, x, y, w, 92 * u, [34 * u, 34 * u, 0, 0]); c.fill();
+    c.fillStyle = tagColor(o.color || '#7b2cff'); rr(c, x, y, w, 92 * u, [34 * u, 34 * u, 0, 0]); c.fill(); // couleur trop claire (Sel) assombrie : titre lisible
     c.fillStyle = '#fff'; c.font = `${58 * u}px ${FONT_TITLE}`; c.textAlign = 'left'; c.textBaseline = 'middle';
     c.fillText((o.title || 'À SAVOIR').toUpperCase(), x + 40 * u, y + 48 * u);
     bulb(c, x + w - 70 * u, y + 46 * u, 30 * u);

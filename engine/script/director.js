@@ -259,7 +259,7 @@ export function buildTimeline(src, opts = {}) {
       }
       if (it.type === 'box') {
         // l'encadré explique la réplique qu'il suit : il s'affiche sur cette réplique (et déborde un peu sur la suivante)
-        if (lastSpan) { overlays.push({ type: 'box', t0: lastSpan.t0 + 0.5, t1: Math.max(lastSpan.t1 + 1.0, lastSpan.t0 + 4.2), title: it.title, text: it.text, color: lastSpan.color || '#7b2cff' }); sfx.push({ type: 'ding', t: lastSpan.t0 + 0.5 }); }
+        if (lastSpan) { overlays.push({ type: 'box', t0: lastSpan.t0 + 0.5, t1: Math.max(lastSpan.t1 + 0.2, lastSpan.t0 + 2.6), title: it.title, text: it.text, color: lastSpan.color || '#7b2cff' }); sfx.push({ type: 'ding', t: lastSpan.t0 + 0.5 }); }
         else pendingBox = it;
         return;
       }
