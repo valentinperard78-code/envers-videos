@@ -40,13 +40,13 @@ export async function scheduled(key, orgId, channelId) {
 }
 
 /** Ajoute une vidéo à la file Buffer (publiée au prochain créneau libre). */
-export async function queueVideo(key, { channelId, text, url, thumbMs = 1000 }) {
+export async function queueVideo(key, { channelId, text, url, thumbMs = 1000, dueAt = null }) {
   const query = `mutation($input: CreatePostInput!) { createPost(input: $input) { ... on PostActionSuccess { post { id } } ... on MutationError { message } } }`;
-  const input = { text, channelId, schedulingType: 'automatic', mode: 'addToQueue', assets: [{ video: { url, metadata: { thumbnailOffset: thumbMs } } }] };
+  const input = { text, channelId, schedulingType: 'automatic', mode: dueAt ? 'customScheduled' : 'addToQueue', ...(dueAt ? { dueAt } : {}), assets: [{ video: { url, metadata: { thumbnailOffset: thumbMs } } }] };
   let d;
   try { d = await gql(key, query, { input }); } catch (e) {
     if (!/type|variable/i.test(e.message)) throw e; // nom du type d'entrée différent : on écrit l'entrée en clair
-    const lit = `{ text: ${JSON.stringify(text)}, channelId: ${JSON.stringify(channelId)}, schedulingType: automatic, mode: addToQueue, assets: [{ video: { url: ${JSON.stringify(url)}, metadata: { thumbnailOffset: ${thumbMs} } } }] }`;
+    const lit = `{ text: ${JSON.stringify(text)}, channelId: ${JSON.stringify(channelId)}, schedulingType: automatic, mode: ${dueAt ? 'customScheduled, dueAt: ' + JSON.stringify(dueAt) : 'addToQueue'}, assets: [{ video: { url: ${JSON.stringify(url)}, metadata: { thumbnailOffset: ${thumbMs} } } }] }`;
     d = await gql(key, `mutation { createPost(input: ${lit}) { ... on PostActionSuccess { post { id } } ... on MutationError { message } } }`);
   }
   const res = d.createPost || {};

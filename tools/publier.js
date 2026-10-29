@@ -155,6 +155,21 @@ async function remplirBuffer(conf, videos, now) {
       catch (e) { log(`⚠ ${ep} : impossible de le retirer automatiquement (${e.message}). Supprime-le à la main dans Buffer.`); h.statut = 'retire'; h.aSupprimerALaMain = true; }
     }
   }
+  // --maintenant --episode ep01 : publication immédiate (dans 3 min) d'un épisode, hors calendrier
+  if (has('--maintenant') && get('--episode')) {
+    const ep = get('--episode'), info = infoTiktok(videos, ep);
+    if (!info) throw new Error(`${ep} n'est pas encore prêt (fichier TikTok + miniature) : relance dans quelques minutes.`);
+    for (const h of (conf.historique || []).filter((h) => h.episode === ep && h.statut === 'en-file')) {
+      try { await B.deletePost(key, h.buffer); log(`🗑  ${ep} retiré de la file (il part maintenant).`); } catch (e) { log(`⚠ retrait de la file impossible : ${e.message}`); }
+      h.statut = 'retire';
+    }
+    const dueAt = new Date(Date.now() + 3 * 60000).toISOString();
+    const id = await B.queueVideo(key, { channelId: ch.id, text: caption(videos, ep), url: rawUrl(ep), thumbMs: info.miniatureMs, dueAt });
+    conf.historique = [...(conf.historique || []), { episode: ep, date: now.date, heure: now.hhmm, mode: 'buffer-immediat', buffer: id, statut: 'en-file', prevu: dueAt }];
+    log(`🚀 ${ep} programmé sur TikTok pour ${dueAt} (dans 3 min).`);
+    await notify(conf, { title: `🚀 ${ep} part sur TikTok`, message: 'Publication dans environ 3 minutes.', ep });
+    return;
+  }
   const deja = await B.scheduled(key, org, ch.id);
   const tampon = conf.buffer?.tampon ?? 10;
   log(`📚 Buffer : chaîne « ${ch.displayName || ch.name} » — ${deja.length} vidéo(s) déjà en file (max ${tampon}).${ch.isQueuePaused ? ' ⚠ file en PAUSE dans Buffer !' : ''}`);
