@@ -80,7 +80,7 @@ export class Overlay {
   // ------------------------------------------------ étiquette de nom (entrée en scène)
   name(c, o, t) {
     const u = this.u; const k = fadeIO(t, o.t0, o.t1, 0.25, 0.25); const s = ease((t - o.t0) / 0.35);
-    const x = 46 * u - (1 - s) * 500 * u, y = this.H * 0.135;
+    const x = 46 * u - (1 - s) * 500 * u, y = this.H * 0.135 + 72 * u;
     c.globalAlpha = k;
     c.font = `${118 * u}px ${FONT_TITLE}`; const nw = c.measureText(o.name.toUpperCase()).width;
     c.font = `700 ${34 * u}px ${FONT_TEXT}`; const rw = c.measureText(o.role || '').width;
@@ -100,7 +100,7 @@ export class Overlay {
   confession(c, o, t) {
     const u = this.u, W = this.W; const k = fadeIO(t, o.t0, o.t1, 0.2, 0.2);
     c.globalAlpha = k;
-    const y = this.H * 0.085, h = 74 * u;
+    const y = this.H * 0.085 + 84 * u, h = 74 * u;
     c.font = `${52 * u}px ${FONT_TITLE}`; const label = 'CONFESSIONNAL'; const lw = c.measureText(label).width;
     const w = lw + 130 * u, x = W / 2 - w / 2;
     c.fillStyle = 'rgba(15,5,12,0.75)'; rr(c, x, y, w, h, h / 2); c.fill();
@@ -145,7 +145,7 @@ export class Overlay {
       c.restore();
     } else {
       // pastille discrète en haut à gauche
-      const x = 40 * u + (1 - s) * -300 * u, y = H * 0.135, h = 92 * u;
+      const x = 40 * u + (1 - s) * -300 * u, y = H * 0.135 + 72 * u, h = 92 * u;
       c.font = `${54 * u}px ${FONT_TITLE}`; const nw = c.measureText(name).width;
       c.font = `800 ${30 * u}px ${FONT_TEXT}`; const rw = c.measureText(role).width;
       const w = Math.max(nw, rw) + 56 * u;
@@ -162,7 +162,7 @@ export class Overlay {
     const u = this.u, W = this.W; const s = ease((t - o.t0) / 0.4); const k = fadeIO(t, o.t0, o.t1, 0.2, 0.25);
     c.globalAlpha = k;
     // sous l'étiquette du nom si elle est affichée (jamais l'une sur l'autre)
-    const x = W * 0.07, w = W * 0.86, y = this._nameOn ? this.H * 0.135 + 210 * u : this.H * 0.2;
+    const x = W * 0.07, w = W * 0.86, y = this._nameOn ? this.H * 0.135 + 282 * u : this.H * 0.2 + 30 * u;
     c.font = `800 ${46 * u}px ${FONT_TEXT}`;
     const lines = wrap(c, o.text, w - 80 * u);
     const h = 130 * u + lines.length * 58 * u;
@@ -293,11 +293,11 @@ export class Overlay {
     // pastille série + épisode
     const top = `LA VILLA DES PATHOLOGIES${o.episode ? '  ·  ÉP. ' + o.episode : ''}`;
     c.font = `800 ${38 * u}px ${FONT_ROUND}`; const tw = c.measureText(top).width + 60 * u;
-    c.fillStyle = '#ff3da8'; rr(c, W / 2 - tw / 2, H * 0.035, tw, 66 * u, 33 * u); c.fill();
-    c.fillStyle = '#fff'; c.fillText(top, W / 2, H * 0.035 + 35 * u);
+    c.fillStyle = '#ff3da8'; rr(c, W / 2 - tw / 2, H * 0.13, tw, 66 * u, 33 * u); c.fill();
+    c.fillStyle = '#fff'; c.fillText(top, W / 2, H * 0.13 + 35 * u);
     // titre (pathologie), penché, 1 ou 2 lignes équilibrées
     const words = String(o.title).toUpperCase().split(/\s+/);
-    let size = 170 * u, lines = [words.join(' ')];
+    let size = 150 * u, lines = [words.join(' ')];
     const fits = (ls, sz) => { c.font = `${sz}px ${FONT_TITLE}`; return ls.every((l) => c.measureText(l).width <= W * 0.88); };
     if (!fits(lines, size)) {
       let best = null;
@@ -305,7 +305,7 @@ export class Overlay {
       lines = best ? best.ls : lines;
       while (!fits(lines, size) && size > 70 * u) size -= 6 * u;
     }
-    c.save(); c.translate(W / 2, H * 0.105 + size * (lines.length > 1 ? 1.0 : 0.55)); c.rotate(-0.045);
+    c.save(); c.translate(W / 2, H * 0.215 + size * (lines.length > 1 ? 1.0 : 0.55)); c.rotate(-0.045);
     c.font = `${size}px ${FONT_TITLE}`;
     lines.forEach((l, i) => {
       const y = (i - (lines.length - 1) / 2) * size * 1.0;
@@ -314,7 +314,7 @@ export class Overlay {
     });
     c.restore();
     // sticker « ?! » près du visage
-    c.save(); c.translate(W * 0.86, H * 0.3); c.rotate(0.18); c.scale(0.85, 0.85);
+    c.save(); c.translate(W * 0.86, H * 0.4); c.rotate(0.18); c.scale(0.85, 0.85);
     c.fillStyle = '#ffe44d'; c.strokeStyle = '#000'; c.lineWidth = 8 * u; c.beginPath();
     const n = 12; for (let i = 0; i <= n * 2; i++) { const a = (i / (n * 2)) * Math.PI * 2; const r = (i % 2 ? 62 : 100) * u; const px = Math.cos(a) * r * 1.15, py = Math.sin(a) * r; if (i) c.lineTo(px, py); else c.moveTo(px, py); }
     c.closePath(); c.fill(); c.stroke();
@@ -324,7 +324,7 @@ export class Overlay {
     if (o.hook) {
       const txt = o.hook.toUpperCase().replace(/[.…]+$/, '').replace(/ ([?!:;»])/g, '\u00a0$1');
       c.font = `${96 * u}px ${FONT_TITLE}`; const hl = wrap(c, txt, W * 0.8);
-      const lh = 104 * u, bh = hl.length * lh + 50 * u, by = H * 0.79 - bh / 2;
+      const lh = 104 * u, bh = hl.length * lh + 50 * u, by = H * 0.745 - bh / 2;
       c.save(); c.translate(W / 2, by + bh / 2); c.rotate(-0.035); c.translate(-W / 2, -(by + bh / 2));
       c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 30 * u; c.shadowOffsetY = 12 * u;
       c.fillStyle = '#e8102a'; rr(c, W * 0.05, by, W * 0.9, bh, 28 * u); c.fill(); c.shadowBlur = 0; c.shadowOffsetY = 0;
@@ -398,7 +398,7 @@ export class Overlay {
     const u = this.u; const k = fadeIO(t, o.t0, o.t1, 0.4, 0.4); c.globalAlpha = k * 0.92;
     c.font = `700 ${26 * u}px ${FONT_TEXT}`; const lines = wrap(c, o.text, this.W * 0.6);
     const w = Math.max(...lines.map((l) => c.measureText(l).width)) + 36 * u, h = lines.length * 34 * u + 20 * u;
-    const x = 36 * u, y = this.H * 0.085;
+    const x = 36 * u, y = this.H * 0.085 + 84 * u;
     c.fillStyle = 'rgba(0,0,0,0.5)'; rr(c, x, y, w, h, 14 * u); c.fill();
     c.fillStyle = '#fff'; c.textAlign = 'left'; c.textBaseline = 'top';
     lines.forEach((l, i) => c.fillText(l, x + 18 * u, y + 12 * u + i * 34 * u));
@@ -406,7 +406,7 @@ export class Overlay {
 
   banner(c, o, t) {
     const u = this.u, W = this.W; const k = fadeIO(t, o.t0, o.t1, 0.25, 0.25); c.globalAlpha = k;
-    c.font = `${50 * u}px ${FONT_TITLE}`; const w = c.measureText(o.text).width + 80 * u, h = 76 * u, x = W / 2 - w / 2, y = this.H * 0.085;
+    c.font = `${50 * u}px ${FONT_TITLE}`; const w = c.measureText(o.text).width + 80 * u, h = 76 * u, x = W / 2 - w / 2, y = this.H * 0.085 + 84 * u;
     c.fillStyle = 'rgba(255,209,102,0.95)'; rr(c, x, y, w, h, 12 * u); c.fill();
     c.fillStyle = '#2a0f3a'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.text, W / 2, y + h / 2 + 2 * u);
     // effet « magnétoscope »
@@ -414,11 +414,21 @@ export class Overlay {
   }
 
   badge(c, o, t) {
-    const u = this.u; const k = fadeIO(t, o.t0, o.t1, 0.3, 0.3); c.globalAlpha = k * 0.95;
-    c.font = `800 ${30 * u}px ${FONT_TEXT}`; const w = c.measureText(o.text).width + 50 * u;
-    const x = this.W - w - 36 * u, y = this.H * 0.03;
-    c.fillStyle = 'rgba(0,0,0,0.45)'; rr(c, x, y, w, 56 * u, 28 * u); c.fill();
-    c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.text, x + w / 2, y + 29 * u);
+    // pathologie de l'épisode, toujours visible, centrée sous la barre du haut de TikTok (zone sûre)
+    const u = this.u, W = this.W; const k = fadeIO(t, o.t0, o.t1, 0.3, 0.3); c.globalAlpha = k;
+    const [ep, ...rest] = String(o.text).split(' · '); const name = rest.join(' · ') || ep;
+    const h = 70 * u, y = this.H * 0.085;
+    c.font = `${38 * u}px ${FONT_TITLE}`; const we = rest.length ? c.measureText(ep).width + 44 * u : 0;
+    let fs = 50; c.font = `${fs * u}px ${FONT_TITLE}`;
+    while (c.measureText(name).width + we + 80 * u > W * 0.92 && fs > 28) { fs -= 2; c.font = `${fs * u}px ${FONT_TITLE}`; }
+    const wn = c.measureText(name).width + 56 * u, w = we + wn, x = W / 2 - w / 2;
+    c.save(); c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 18 * u;
+    c.fillStyle = '#ffffff'; rr(c, x, y, w, h, h / 2); c.fill(); c.shadowBlur = 0;
+    if (we) { rr(c, x, y, w, h, h / 2); c.clip(); c.fillStyle = '#ff3da8'; c.fillRect(x, y, we, h); }
+    c.restore();
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    if (we) { c.font = `${38 * u}px ${FONT_TITLE}`; c.fillStyle = '#fff'; c.fillText(ep, x + we / 2 + 3 * u, y + h / 2 + 2 * u); }
+    c.font = `${fs * u}px ${FONT_TITLE}`; c.fillStyle = '#2a0f3a'; c.fillText(name, x + we + wn / 2, y + h / 2 + 2 * u);
   }
 
   cta(c, o, t) {
