@@ -80,7 +80,7 @@ export function parseScript(src) {
 
 /**
  * Générique de la série, présent dans chaque épisode :
- * accroche/teaser → « Précédemment » → GÉNÉRIQUE (logo + à quoi sert la série, avec voix off) → épisode.
+ * accroche/teaser → GÉNÉRIQUE (logo + à quoi sert la série, avec voix off) → « Précédemment » → épisode.
  * Le « → GÉNÉRIQUE » écrit dans le script est déplacé à cette place ; s'il manque, il est ajouté.
  */
 export const GENERIC_VO = 'La Villa des Pathologies : une maladie par épisode, pour comprendre ton corps… façon télé-réalité !';
@@ -92,7 +92,7 @@ function placeGeneric(doc) {
   const prev = doc.sections.filter((s) => s.kind === 'previously');
   const rest = doc.sections.filter((s) => s.kind !== 'teaser' && s.kind !== 'previously');
   const gen = { kind: 'generic', title: 'Générique', name: 'Générique', location: '', number: null, items: [{ type: 'title', line, vo: GENERIC_VO }] };
-  doc.sections = [...teaser, ...prev, gen, ...rest];
+  doc.sections = [...teaser, gen, ...prev, ...rest]; // accroche (2-3 s) → générique → « Précédemment » → épisode
 }
 
 export function parseItem(body, lineNo = 0) {
