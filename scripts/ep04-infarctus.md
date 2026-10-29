@@ -57,3 +57,4 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Inse
 - Inserm — Infarctus du myocarde : https://www.inserm.fr/dossier/infarctus-myocarde/
 - Vidal — Infarctus du myocarde : https://www.vidal.fr/maladies/coeur-circulation-veines/apres-infarctus-myocarde.html
 - HAS — Lutte contre l'infarctus : nous sommes tous concernés : https://www.has-sante.fr/upload/docs/application/pdf/infarctus_myocarde_patient.pdf
+
