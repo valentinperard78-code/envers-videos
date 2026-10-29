@@ -37,6 +37,18 @@ Un script est un simple fichier texte (`.md`) dans le dossier `scripts/`. Le log
 - **Teaser du lendemain** : la dernière réplique « … Abonne-toi ! » (teaser : X) affiche « Demain dans la villa : X ». Sans teaser écrit, le logiciel prend l'épisode suivant du planning.
 - **Sources** : section `## Sources` en fin de script (une ligne par source : `- Nom — titre : URL`). Elles s'affichent pendant le récap. Règles : `docs/SOURCES.md`.
 
+## Règles obligatoires de chaque épisode (consignes de Valentin)
+
+1. **La villa est le décor principal** : les personnages parlent dans la villa ou au confessionnal ; corps, cuisine, cabinet seulement en courts plans de coupe.
+2. **Nouveaux personnages pour chaque nouvelle pathologie**, mêmes personnages (look et voix) quand un organe revient (bible).
+3. **≈ 2 minutes** (1 min 45 à 2 min 25 au rendu final).
+4. **Accroche + Question** dans le teaser, **générique** juste après, puis **« Précédemment »** (sauf épisode 1).
+5. **Scène « le traitement » obligatoire** : en 2 à 4 répliques, le traitement principal ET pourquoi il marche, raconté avec les personnages
+   (ex. ép. 1 : « Pancho est cramé, il ne fabrique plus assez d'Insuline → on injecte de l'insuline pour la remplacer »).
+   Ordre habituel : hygiène de vie → médicament de 1re intention (nommé si la source le nomme) → traitement de recours ; pour une urgence : le 15, puis ce que fait l'hôpital.
+6. **Sources officielles uniquement** (`docs/SOURCES.md`), y compris pour le traitement.
+7. **« À retenir »** + **teaser du lendemain** = pathologie suivante du planning (`villa/serie.json`).
+
 ## Éléments reconnus
 
 | Ligne | Effet |
