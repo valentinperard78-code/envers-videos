@@ -42,7 +42,7 @@ export function dueSlot(conf, now = parisNow()) {
   return null;
 }
 export function nextEpisode(conf) {
-  const done = new Set((conf.historique || []).filter((h) => h.statut !== 'echec').map((h) => h.episode));
+  const done = new Set((conf.historique || []).filter((h) => h.statut !== 'echec' && h.statut !== 'retire').map((h) => h.episode));
   return (conf.file || []).find((e) => !done.has(e)) || null;
 }
 
@@ -92,7 +92,7 @@ const MAX_OCTETS = 95e6; // GitHub refuse les fichiers > 100 Mo
 
 /** Prochains épisodes à envoyer à Buffer (dans l'ordre de la file, en s'arrêtant au premier pas encore rendu). */
 function aEnvoyer(conf, videos, n) {
-  const done = new Set((conf.historique || []).filter((h) => h.statut !== 'echec').map((h) => h.episode));
+  const done = new Set((conf.historique || []).filter((h) => h.statut !== 'echec' && h.statut !== 'retire').map((h) => h.episode));
   const out = [];
   for (const ep of conf.file || []) {
     if (done.has(ep)) continue;
@@ -102,24 +102,41 @@ function aEnvoyer(conf, videos, n) {
   return out;
 }
 
-/** Buffer a besoin d'UN fichier public : recolle les vidéos découpées et les réencode sous 95 Mo. Renvoie la liste des fichiers modifiés. */
+/** Buffer a besoin d'UN fichier public < 95 Mo. On en profite pour coller la MINIATURE (la couverture de l'épisode)
+ *  sur les 0,2 dernières secondes : l'API TikTok ne permet de choisir la miniature qu'en donnant un instant de la vidéo,
+ *  donc on vise cet instant. Renvoie la liste des fichiers modifiés. */
+const COVER_S = 0.2;
+const sidecar = (videos, ep) => path.join(videos, ep, `${ep}.tiktok.json`);
+export function infoTiktok(videos, ep) { try { return JSON.parse(fs.readFileSync(sidecar(videos, ep), 'utf8')); } catch { return null; } }
 export function preparer(conf, videos, n = conf.buffer?.tampon ?? 10) {
   const changed = [];
   for (const ep of aEnvoyer(conf, videos, n)) {
-    const d = path.join(videos, ep), mp4 = path.join(d, `${ep}.mp4`);
-    if (fs.existsSync(mp4) && fs.statSync(mp4).size <= MAX_OCTETS) continue;
+    const d = path.join(videos, ep), mp4 = path.join(d, `${ep}.mp4`), cover = path.join(d, `${ep}.couverture.jpg`);
+    if (infoTiktok(videos, ep)) continue; // déjà prêt
     const src = findVideo(videos, ep);
     if (!src) continue;
-    const dur = +spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', src], { encoding: 'utf8' }).stdout || 150;
-    const kbps = Math.min(6000, Math.floor((88e6 * 8) / dur / 1000) - 200); // vidéo + 192k audio < 90 Mo
+    const probe = (k) => spawnSync('ffprobe', ['-v', 'error', ...k, '-of', 'csv=p=0', src], { encoding: 'utf8' }).stdout.trim();
+    const dur = +probe(['-show_entries', 'format=duration']) || 150;
+    const fps = eval(probe(['-select_streams', 'v', '-show_entries', 'stream=r_frame_rate']).split(',')[0]) || 25;
+    const total = dur + (fs.existsSync(cover) ? COVER_S : 0);
+    const kbps = Math.min(6000, Math.floor((88e6 * 8) / total / 1000) - 200); // vidéo + 192k audio < 90 Mo
     const tmp = path.join(process.env.RUNNER_TEMP || '/tmp', `${ep}.tiktok.mp4`);
-    log(`🎞  ${ep} : réencodage en un seul fichier (${kbps} kb/s)…`);
-    const r = spawnSync('ffmpeg', ['-y', '-v', 'error', '-i', src, '-c:v', 'libx264', '-preset', 'medium', '-b:v', `${kbps}k`, '-maxrate', `${kbps}k`, '-bufsize', `${kbps * 2}k`, '-pix_fmt', 'yuv420p', '-c:a', 'copy', '-movflags', '+faststart', tmp], { stdio: 'inherit' });
-    if (r.status !== 0 || !fs.existsSync(tmp)) { log(`❌ réencodage impossible pour ${ep}`); continue; }
+    const enc = ['-c:v', 'libx264', '-preset', 'medium', '-b:v', `${kbps}k`, '-maxrate', `${kbps}k`, '-bufsize', `${kbps * 2}k`, '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', tmp];
+    const args = fs.existsSync(cover)
+      ? ['-y', '-v', 'error', '-i', src, '-loop', '1', '-framerate', String(fps), '-t', String(COVER_S), '-i', cover,
+         '-filter_complex', `[0:v]scale=1080:1920,setsar=1,fps=${fps},format=yuv420p[v];[1:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,fps=${fps},format=yuv420p[c];[v][c]concat=n=2:v=1:a=0[vo];[0:a]apad=pad_dur=${COVER_S}[ao]`,
+         '-map', '[vo]', '-map', '[ao]', ...enc]
+      : ['-y', '-v', 'error', '-i', src, ...enc];
+    log(`🎞  ${ep} : fichier TikTok${fs.existsSync(cover) ? ' + miniature' : ''} (${kbps} kb/s)…`);
+    const r = spawnSync('ffmpeg', args, { stdio: 'inherit' });
+    if (r.status !== 0 || !fs.existsSync(tmp)) { log(`❌ préparation impossible pour ${ep}`); continue; }
+    const out = +spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', tmp], { encoding: 'utf8' }).stdout || total;
     for (const f of fs.readdirSync(d)) if (f.startsWith(`${ep}.mp4.part`)) fs.rmSync(path.join(d, f));
     fs.copyFileSync(tmp, mp4);
+    const info = { miniatureMs: fs.existsSync(cover) ? Math.max(0, Math.round((out - COVER_S / 2) * 1000)) : 1000, duree: out };
+    fs.writeFileSync(sidecar(videos, ep), JSON.stringify(info) + '\n');
     changed.push(mp4);
-    log(`   → ${(fs.statSync(mp4).size / 1e6).toFixed(1)} Mo`);
+    log(`   → ${(fs.statSync(mp4).size / 1e6).toFixed(1)} Mo, miniature à ${info.miniatureMs} ms`);
   }
   return changed;
 }
@@ -129,19 +146,27 @@ async function remplirBuffer(conf, videos, now) {
   if (!key) { log('⏸  Secret GitHub BUFFER_API_KEY pas encore ajouté (clé à créer sur https://publish.buffer.com/settings/api) : rien à faire.'); return; }
   const org = await B.organizationId(key);
   const ch = await B.tiktokChannel(key, org, conf.buffer?.chaine);
+  // --refaire ep01,ep02 : retire ces épisodes de la file Buffer pour les renvoyer (ex. nouvelle miniature)
+  for (const ep of (get('--refaire') || '').split(',').filter(Boolean)) {
+    const hs = (conf.historique || []).filter((h) => h.episode === ep && h.statut === 'en-file');
+    for (const h of hs) {
+      try { await B.deletePost(key, h.buffer); log(`🗑  ${ep} retiré de la file Buffer.`); h.statut = 'retire'; }
+      catch (e) { log(`⚠ ${ep} : impossible de le retirer automatiquement (${e.message}). Supprime-le à la main dans Buffer.`); h.statut = 'retire'; h.aSupprimerALaMain = true; }
+    }
+  }
   const deja = await B.scheduled(key, org, ch.id);
   const tampon = conf.buffer?.tampon ?? 10;
   log(`📚 Buffer : chaîne « ${ch.displayName || ch.name} » — ${deja.length} vidéo(s) déjà en file (max ${tampon}).${ch.isQueuePaused ? ' ⚠ file en PAUSE dans Buffer !' : ''}`);
   const eps = aEnvoyer(conf, videos, Math.max(0, tampon - deja.length));
   const ajout = [];
   for (const ep of eps) {
-    const mp4 = path.join(videos, ep, `${ep}.mp4`);
-    if (!fs.existsSync(mp4)) { log(`⏭  ${ep} : pas encore de fichier unique, il sera prêt au prochain passage.`); break; }
+    const info = infoTiktok(videos, ep);
+    if (!info) { log(`⏭  ${ep} : pas encore de fichier unique, il sera prêt au prochain passage.`); break; }
     const text = caption(videos, ep);
     if (has('--essai')) { log(`(essai) ${ep} → ${rawUrl(ep)}`); continue; }
     const entry = { episode: ep, date: now.date, heure: now.hhmm, mode: 'buffer' };
     try {
-      entry.buffer = await B.queueVideo(key, { channelId: ch.id, text, url: rawUrl(ep) });
+      entry.buffer = await B.queueVideo(key, { channelId: ch.id, text, url: rawUrl(ep), thumbMs: info.miniatureMs });
       entry.statut = 'en-file'; ajout.push(ep);
       log(`✅ ${ep} ajouté à la file Buffer.`);
     } catch (e) {

@@ -53,3 +53,17 @@ export async function queueVideo(key, { channelId, text, url, thumbMs = 1000 }) 
   if (!res.post?.id) throw new Error('Buffer a refusé la vidéo : ' + (res.message || JSON.stringify(res).slice(0, 200)));
   return res.post.id;
 }
+
+/** Retire un post de la file Buffer (essaie les deux formes connues de la mutation). */
+export async function deletePost(key, id) {
+  const tries = [
+    `mutation { deletePost(input: { id: ${JSON.stringify(id)} }) { __typename ... on MutationError { message } } }`,
+    `mutation { deletePost(input: { postId: ${JSON.stringify(id)} }) { __typename ... on MutationError { message } } }`,
+    `mutation { deletePost(id: ${JSON.stringify(id)}) { __typename } }`,
+  ];
+  let last;
+  for (const q of tries) {
+    try { const d = await gql(key, q); if (d?.deletePost?.message) throw new Error(d.deletePost.message); return true; } catch (e) { last = e; }
+  }
+  throw last;
+}
