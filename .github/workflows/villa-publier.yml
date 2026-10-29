@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v4
         with: { ref: villa-videos, path: videos }
       - name: Vidéos en un seul fichier public (pour Buffer)
-        if: steps.due.outputs.go == '1'
+        if: steps.due.outputs.go == '1' && github.event.inputs.essai != 'true'
         working-directory: studio
         run: |
           ls "$GITHUB_WORKSPACE/videos"/*/*.part* >/dev/null 2>&1 && { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null; }
