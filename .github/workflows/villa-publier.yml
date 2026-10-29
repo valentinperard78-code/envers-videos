@@ -1,4 +1,5 @@
 # Villa Publisher — publication automatique des épisodes de « La Villa des Pathologies » sur TikTok.
+# Mode « buffer » (par défaut) : toutes les 6 h, le robot remplit la file Buffer (gratuit) ; Buffer publie seul sur TikTok.
 # Le calendrier et la file d'attente sont dans villa/publication.json (branche villa-studio).
 # GitHub lance ce workflow toutes les heures ; le script ne publie que si un créneau est arrivé.
 # Bouton manuel : onglet Actions → « Villa — publication TikTok » → Run workflow.
@@ -38,11 +39,22 @@ jobs:
           if [ -n "${{ github.event.inputs.episode }}" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "go=1" >> $GITHUB_OUTPUT; exit 0; fi
           node -e "
             import('./tools/publier.js').then(m=>{const c=JSON.parse(require('fs').readFileSync('villa/publication.json','utf8'));
-            const go=c.actif && m.dueSlot(c) && m.nextEpisode(c); console.log(go?'créneau : '+m.dueSlot(c)+' → '+m.nextEpisode(c):'rien à publier'); require('fs').appendFileSync(process.env.GITHUB_OUTPUT,'go='+(go?1:0)+'\n');})"
+            const h=+new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',hour12:false}).format(new Date());
+            const go=c.actif && (c.mode==='buffer' ? h%6===0 && m.nextEpisode(c) : m.dueSlot(c) && m.nextEpisode(c)); console.log(go?'créneau : '+m.dueSlot(c)+' → '+m.nextEpisode(c):'rien à publier'); require('fs').appendFileSync(process.env.GITHUB_OUTPUT,'go='+(go?1:0)+'\n');})"
       - name: Vidéos (branche villa-videos)
         if: steps.due.outputs.go == '1'
         uses: actions/checkout@v4
         with: { ref: villa-videos, path: videos }
+      - name: Vidéos en un seul fichier public (pour Buffer)
+        if: steps.due.outputs.go == '1'
+        working-directory: studio
+        run: |
+          ls "$GITHUB_WORKSPACE/videos"/*/*.part* >/dev/null 2>&1 && { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null; }
+          node tools/publier.js --preparer --videos $GITHUB_WORKSPACE/videos
+          cd $GITHUB_WORKSPACE/videos
+          git config user.name "Villa Publisher" && git config user.email "villa-studio@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then git commit -qm "Vidéos prêtes pour Buffer (fichier unique) [skip ci]" && git push -q origin HEAD:villa-videos && sleep 20; fi
       - name: Publication
         if: steps.due.outputs.go == '1'
         working-directory: studio
@@ -52,6 +64,7 @@ jobs:
           TIKTOK_CLE: ${{ secrets.TIKTOK_CLE }}
           TIKTOK_JETON: ${{ secrets.TIKTOK_JETON }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
         run: |
           # premier passage : le jeton chiffré vient du secret TIKTOK_JETON (il est ensuite tenu à jour ici)
           if [ ! -f villa/tiktok-jeton.chiffre ] && [ -n "$TIKTOK_JETON" ]; then printf '%s\n' "$TIKTOK_JETON" > villa/tiktok-jeton.chiffre; fi
