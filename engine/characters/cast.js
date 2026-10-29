@@ -474,8 +474,8 @@ export function buildHuman(def, tex) {
   ch.facePivot = head;
   const S = sampler(headGeo);
   const H = hb.max.y;
-  ch.buildFace(headGeo, { eyeY: H * 0.53, eyeX: 0.043, eyeR: 0.026, iris: def.iris || '#5a7fb0', lidMat: skinMat, browColor: def.hairColor || '#3b2414', browY: 0.026 * 1.55, browThick: 0.0075, browW: 0.052,
-    mouthY: H * 0.24, mouthW: 0.085, mouthStyle: 'line', lineColor: '#8c3a32', cheeks: { x: 0.062, y: H * 0.36, size: 0.022, color: 'rgba(235,105,95,0.32)' }, eyeSink: 0.5 });
+  ch.buildFace(headGeo, { eyeY: H * 0.53, eyeX: 0.043, eyeR: 0.026, iris: def.iris || '#5a7fb0', lidMat: skinMat, browColor: def.hairColor || '#3b2414', browY: 0.026 * 1.55, browThick: 0.011, browW: 0.056,
+    mouthY: H * 0.24, mouthW: 0.09, mouthStyle: 'full', lipColor: '#c0645c', lineColor: '#7a2c26', cheeks: { x: 0.062, y: H * 0.36, size: 0.022, color: 'rgba(235,105,95,0.32)' }, eyeSink: 0.5 });
   // nez modelé (arête + bout + narines)
   const nz = S.front(0, H * 0.38);
   const nose = new THREE.Group(); nose.position.set(0, H * 0.4, (nz ? nz.point.z : 0.1) - 0.012); head.add(nose);
@@ -514,14 +514,14 @@ export function buildHuman(def, tex) {
   }
   ch.headPivot = head;
   // ---- bras (manches) + jambes (jean) + baskets
-  ch.buildArms({ shoulderX: 0.15, shoulderY: tb.max.y - 0.055, length: 0.36, r0: 0.04, r1: 0.031, handSize: 0.03, material: shirt, handMaterial: skinMat });
+  ch.buildArms({ shoulderX: 0.15, shoulderY: tb.max.y - 0.055, length: 0.36, r0: 0.04, r1: 0.031, handSize: 0.04, material: shirt, handMaterial: skinMat });
   const jean = M.fabric(def.pants || '#2c4566', 0.5); jean.normalScale.set(0.6, 0.6);
   ch.buildLegs({ hipX: 0.065, length: legLen, r: 0.048, material: jean, footSize: 0.095, footColor: '#f5f5f5' });
   for (const L of Object.values(ch.legs)) {
     const sole = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.08, 0.02, 32), M.skin('#e04b4b', { roughness: 0.6 })); sole.scale.set(0.75, 1, 1.25); sole.position.set(0, -0.035, 0.03); L.shoe.add(sole);
   }
   // hanches (raccord jean / sweat)
-  const hips = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), jean); hips.rotation.x = Math.PI; hips.scale.set(1.12, 0.6, 0.88); hips.position.y = legLen + 0.06; ch.mover.add(hips);
+  const hips = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), jean); hips.rotation.x = Math.PI; hips.scale.set(0.98, 0.55, 0.8); hips.position.y = legLen + 0.06; ch.mover.add(hips);
   ch.bodyPivot.position.y = legLen;
   ch.height = legLen + tb.max.y + 0.005 + H * HS; ch.radius = 0.22;
   ch.def.faceY = legLen + tb.max.y + 0.005 + H * 0.53 * HS;
