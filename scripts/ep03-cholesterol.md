@@ -56,3 +56,4 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Vida
 - Vidal — Dyslipidémie (excès de cholestérol) : https://www.vidal.fr/maladies/coeur-circulation-veines/cholesterol.html
 - Vidal — Le HDL n'est pas un « bon cholestérol » (2026) : https://www.vidal.fr/actualites/37267-le-hdl-n-est-pas-un-bon-cholesterol.html
 - OMS — Dyslipidémie : https://www.who.int/fr/news-room/fact-sheets/detail/dyslipidaemia
+
