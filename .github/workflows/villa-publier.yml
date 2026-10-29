@@ -58,7 +58,18 @@ jobs:
           cd $GITHUB_WORKSPACE/videos
           git config user.name "Villa Publisher" && git config user.email "villa-studio@users.noreply.github.com"
           git add -A
-          if ! git diff --cached --quiet; then git commit -qm "Vidéos prêtes pour Buffer (fichier unique) [skip ci]" && git push -q origin HEAD:villa-videos && sleep 20; fi
+          if ! git diff --cached --quiet; then
+            # les rendus publient aussi sur villa-videos : on réessaie par-dessus la dernière version si quelqu'un est passé avant
+            CH=$(git diff --cached --name-only --diff-filter=AM); mkdir -p "$RUNNER_TEMP/prep"
+            for f in $CH; do mkdir -p "$RUNNER_TEMP/prep/$(dirname $f)"; cp "$f" "$RUNNER_TEMP/prep/$f"; done
+            DEL=$(git diff --cached --name-only --diff-filter=D)
+            for i in 1 2 3 4 5; do
+              git commit -qm "Vidéos prêtes pour Buffer (fichier unique + miniature) [skip ci]" && git push -q origin HEAD:villa-videos && break
+              sleep 10; git fetch -q --depth=1 origin villa-videos && git reset -q --hard FETCH_HEAD
+              cp -r "$RUNNER_TEMP/prep/." . ; for f in $DEL; do git rm -q --ignore-unmatch "$f"; done; git add -A
+            done
+            sleep 20
+          fi
       - name: Publication
         if: steps.due.outputs.go == '1'
         working-directory: studio
