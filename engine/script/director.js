@@ -339,13 +339,14 @@ export function buildTimeline(src, opts = {}) {
             if (acting.unlock) {
               // la clé entre dans la serrure, tourne (clic), puis la porte s'ouvre — plan d'insert puis recul
               const tIn = 1.0, tTurn = 2.0, tOpen = 2.75;
-              a.pos = [c.x + ds.x * 0.62, c.z + ds.dz * 0.9]; villa.pos[id] = { x: c.x + ds.x * 0.62, z: c.z + ds.dz * 0.9 };
+              // côté serrure (à droite de la porte), loin du battant qui s'ouvre vers la gauche
+              const dsR = doorSpot(1); a.pos = [c.x + dsR.x * 0.95, c.z + dsR.dz * 1.12]; villa.pos[id] = { x: c.x + dsR.x * 0.95, z: c.z + dsR.dz * 1.12 }; a.walkDur = 1.0;
               a.giveKeyAt = tIn; a.pose = 'holdKey';
               if (!actors[cellia.id]) actors[cellia.id] = { pos: 'cellia', emotion: 'proud', pose: 'cross', face: 0 };
               actors[cellia.id] = { ...actors[cellia.id], lockKey: { at: tIn, dur: (tTurn + 0.6 - tIn) }, door: { from: 0, to: 1, at: tOpen, dur: 1.0 }, emotion: 'happy' };
               villa.door = 1; villa.keyIn = true; villa.keyHolder = id;
               sfx.push({ type: 'unlock', t: t0 + tIn }, { type: 'door', t: t0 + tOpen });
-              shot = { type: 'keyhole', subject: cellia.id, other: id, pullAt: tOpen - 0.2, seed: beats.length, shake: 0.25 };
+              shot = { type: 'keyhole', subject: cellia.id, other: id, pullAt: tOpen - 0.2, seed: beats.length, shake: 0.25, side: -1 };
               dur = Math.max(dur, tOpen + 1.6); shot.noSplit = true;
             }
           }
@@ -360,7 +361,7 @@ export function buildTimeline(src, opts = {}) {
             // celle qui a ouvert avec la clé s'écarte pour laisser passer
             if (villa.keyHolder && actors[villa.keyHolder] && villa.keyHolder !== id) {
               const c = cpos(); const kh = villa.keyHolder; const cur = villa.pos[kh];
-              const to = { x: c.x - 1.35, z: c.z + 1.25 };
+              const to = { x: c.x + 1.5, z: c.z + 1.3 };
               actors[kh] = { ...actors[kh], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [to.x, to.z], walkDur: 0.9, walkDelay: 0.1, face: cellia.id, emotion: 'happy' };
               villa.pos[kh] = to;
             }
@@ -368,8 +369,10 @@ export function buildTimeline(src, opts = {}) {
             for (const m of mentions) if (actors[m] && m !== cellia.id) {
               const c = cpos(), ds = doorSpot(1);
               const cur = villa.pos[m];
-              actors[m] = { ...actors[m], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [c.x + ds.x, c.z + ds.dz + 0.15], walkDelay: 0.6, walkDur: 1.2, emotion: 'excited', pose: 'idle' };
-              villa.pos[m] = { x: c.x + ds.x, z: c.z + ds.dz + 0.15 };
+              // l'invité vient se placer face à la porte (un peu à droite), prêt à entrer
+              const gx = villa.keyHolder ? c.x + 0.2 : c.x + ds.x, gz = villa.keyHolder ? c.z + 1.4 : c.z + ds.dz + 0.15;
+              actors[m] = { ...actors[m], from: typeof cur === 'string' ? cur : [cur.x, cur.z], pos: [gx, gz], walkDelay: 0.6, walkDur: 1.2, emotion: 'excited', pose: 'idle' };
+              villa.pos[m] = { x: gx, z: gz };
             }
             shot = { type: 'two', subject: id, other: mentions[0] || id, angle: -0.5, seed: beats.length };
           }
@@ -476,8 +479,17 @@ export function buildTimeline(src, opts = {}) {
       voices.push({ key: `L${it.line}`, t: b.speech.t0, speaker: id || 'narrator', dur: sp.dur });
       if (set === 'confessional') overlays.push({ type: 'confession', t0, t1: t });
       // qui parle ? nom + organe affichés pendant toute la réplique (grand bandeau au confessionnal, pastille ailleurs)
-      if (id && who && !teaser) overlays.push({ type: 'tag', t0: t0 + 0.1, t1: t, name: who.name, role: who.role, color: who.color, big: set === 'confessional', after: introduced.has(id) ? 0 : 2.9 });
-      else if (id && who && teaser && set === 'confessional') overlays.push({ type: 'tag', t0: t0 + 0.1, t1: t, name: who.name, role: who.role, color: who.color, big: true, after: 0 });
+      // l'étiquette n'apparaît que sur les plans où l'on voit vraiment celui qui parle (jamais sur un plan de réaction d'un autre personnage)
+      if (id && who && (!teaser || set === 'confessional')) {
+        const wasIntro = introduced.has(id);
+        for (const bb of beats) {
+          if (bb.line !== it.line || bb.t0 < t0 - 1e-6) continue;
+          const sh = bb.shot || {};
+          const onSpeaker = sh.subject === id || (sh.type === 'keyhole' && sh.other === id) || (sh.type === 'two' && (sh.subject === id || sh.other === id)) || sh.type === 'confession';
+          if (!onSpeaker) continue;
+          overlays.push({ type: 'tag', t0: bb.t0 + 0.08, t1: bb.t1, name: who.name, role: who.role, color: who.color, big: set === 'confessional', after: !wasIntro && !teaser && Math.abs(bb.t0 - t0) < 1e-6 ? 2.9 : 0 });
+        }
+      }
       if (id && !introduced.has(id) && !teaser && who) {
         introduced.add(id);
         overlays.push({ type: 'name', t0: t0 + 0.15, t1: Math.min(t, t0 + 2.9), name: who.name, role: who.role, color: who.color });

@@ -67,7 +67,7 @@ export function computeShot(shot, u, dur, subs, all, tAbs, obstacles = []) {
       const wideT = V(lerp(S.pos.x, O.pos.x, 0.35), Math.max(S.headTop, O.headTop) * 0.45, lerp(S.pos.z, O.pos.z, 0.35) + 0.2);
       target = kh.clone().lerp(wideT, k);
       const d = lerp(0.8, fit(Math.max(S.headTop, O.headTop) * 1.45), k);
-      pos = target.clone().addScaledVector(dirFrom(lerp(0.3, 0.75, k) + 0.05 * Math.sin(u * 0.7)), d); pos.y = target.y + lerp(0.06, 0.35, k);
+      pos = target.clone().addScaledVector(dirFrom((shot.side ?? 1) * lerp(0.3, 0.6, k) + 0.05 * Math.sin(u * 0.7)), d); pos.y = target.y + lerp(0.06, 0.35, k);
       fov = lerp(26, 30, k);
       break;
     }

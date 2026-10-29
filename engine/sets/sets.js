@@ -269,7 +269,7 @@ export function kitchenSet(quality) {
   const fork = new THREE.Mesh(roundedBox(0.02, 0.006, 0.22, 0.003, 2), M.metal('#d8d8d8', 0.2)); fork.position.set(0.38, 0.785, 0.15); table.add(fork);
   table.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
   // table à côté de Josh (à l'échelle de Josh), jamais entre lui et la caméra
-  table.scale.setScalar(0.62); table.position.set(0.66, 0, 0.42); table.rotation.y = -0.35; g.add(table);
+  table.scale.setScalar(0.62); table.position.set(0.98, 0, 0.32); table.rotation.y = -0.3; g.add(table);
   const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.22, 32, 16, 0, TAU, 0, Math.PI / 2), M.skin('#2f6d5a', { roughness: 0.4, clearcoat: 1 })); lamp.material.side = THREE.DoubleSide; lamp.position.set(0, 2.5, 0.6); g.add(lamp);
   const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 12), new THREE.MeshStandardMaterial({ color: '#000', emissive: '#ffd08a', emissiveIntensity: 8 })); bulb.position.set(0, 2.42, 0.6); g.add(bulb);
   const lights = new THREE.Group();
@@ -283,7 +283,7 @@ export function kitchenSet(quality) {
     id: 'kitchen', group: g, env, envIntensity: 0.9, background: new THREE.Color('#14100c'), fog: null,
     look: { exposure: 1.05, bloom: 0.35, bloomRadius: 0.5, bloomThreshold: 0.9, vignette: 0.4, warm: 0.06, sat: 1.08 },
     marks: { center: new THREE.Vector3(0, 0, 0.1) },
-    obstacles: [{ x: 0.66, z: 0.42, r: 0.5 }],
+    obstacles: [{ x: 0.98, z: 0.32, r: 0.5 }],
     update: () => {},
   };
 }
