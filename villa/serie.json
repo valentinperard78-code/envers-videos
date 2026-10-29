@@ -77,16 +77,17 @@
       "numero": 5,
       "slug": "avc",
       "pathologie": "Accident vasculaire cérébral (AVC)",
-      "titre": "Black-out au cerveau",
-      "pitch": "Neura, le cerveau, est privé de sang : les signes VITE et l'urgence du 15.",
+      "titre": "Panne de courant",
+      "pitch": "Caillo bouche une artère du cerveau : Cervo perd le contrôle. La règle VITE et l'urgence du 15.",
       "personnagesPrevus": [
-        "Neura (cerveau)",
+        "Cervo (le cerveau)",
+        "Caillo",
         "Tensia",
-        "Artie"
+        "Josh"
       ],
       "teaserSuivant": "Asthme",
-      "statut": "prévu",
-      "script": null,
+      "statut": "vidéo prête",
+      "script": "scripts/ep05-avc.md",
       "publication": null
     },
     {
