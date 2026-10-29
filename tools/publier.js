@@ -111,7 +111,8 @@ const sidecar = (videos, ep) => path.join(videos, ep, `${ep}.tiktok.json`);
 export function infoTiktok(videos, ep) { try { return JSON.parse(fs.readFileSync(sidecar(videos, ep), 'utf8')); } catch { return null; } }
 export function preparer(conf, videos, n = conf.buffer?.tampon ?? 10) {
   const changed = [];
-  for (const ep of aEnvoyer(conf, videos, n)) {
+  const liste = [...new Set([...(get('--episode') ? [get('--episode')] : []), ...aEnvoyer(conf, videos, n)])];
+  for (const ep of liste) {
     const d = path.join(videos, ep), mp4 = path.join(d, `${ep}.mp4`), cover = path.join(d, `${ep}.couverture.jpg`);
     if (infoTiktok(videos, ep)) continue; // déjà prêt
     const src = findVideo(videos, ep);

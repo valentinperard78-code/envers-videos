@@ -110,6 +110,8 @@
       "prevu": "2026-10-29T16:56:09.463Z"
     }
   ],
-  "valides": [],
+  "valides": [
+    "ep01-diabete-type-2"
+  ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
