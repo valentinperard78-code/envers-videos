@@ -356,7 +356,7 @@ function addCellDoor(ch, ctx) {
   ch.anchors.doorFront = new THREE.Vector3(0, 0, zFront + 0.32);
   ch.extras.push((t, st) => {
     const v = st.lockKey || 0; lk.visible = v > 0;
-    if (v > 0) { const ins = clamp(v), turn = clamp(v - 1); lk.position.z = 0.06 + (1 - smooth(ins)) * 0.2; lkInner.rotation.set(Math.PI / 2, turn * Math.PI / 2, 0); }
+    if (v > 0) { const ins = clamp(v), turn = clamp(v - 1); lk.position.z = 0.1 + (1 - smooth(ins)) * 0.2; lkInner.rotation.set(-Math.PI / 2, (1 - turn) * Math.PI / 2, 0); } // pointe DANS la serrure, anneau dehors : entre à la verticale puis tourne d un quart de tour
   });
   ch.extras.push((t, st) => { hinge.rotation.y = -(st.doorOpen || 0) * 1.9; inside.material.emissiveIntensity = 0.4 + (st.doorOpen || 0) * 2.2; });
 }
