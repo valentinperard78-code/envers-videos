@@ -129,6 +129,8 @@
       "note": "supprimé de TikTok par Valentin (voix) — à republier"
     }
   ],
-  "valides": [],
+  "valides": [
+    "ep01-diabete-type-2"
+  ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
