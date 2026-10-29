@@ -96,7 +96,8 @@ function aEnvoyer(conf, videos, n) {
   const out = [];
   for (const ep of conf.file || []) {
     if (done.has(ep)) continue;
-    if (out.length >= n || !fs.existsSync(path.join(videos, ep))) break;
+    // « valides » : épisodes dont le rendu final a été contrôlé ; on n'envoie jamais une version pas encore vérifiée
+    if (out.length >= n || !fs.existsSync(path.join(videos, ep)) || (conf.valides && !conf.valides.includes(ep))) break;
     out.push(ep);
   }
   return out;

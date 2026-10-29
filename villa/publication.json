@@ -100,5 +100,10 @@
       "buffer": "6ae37997e21785fad7691209",
       "statut": "en-file"
     }
-  ]
+  ],
+  "valides": [
+    "ep01-diabete-type-2",
+    "ep02-hypertension"
+  ],
+  "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
