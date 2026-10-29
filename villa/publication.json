@@ -148,7 +148,8 @@
   "valides": [
     "ep01-diabete-type-2",
     "ep02-hypertension",
-    "ep03-cholesterol"
+    "ep03-cholesterol",
+    "ep04-infarctus"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
