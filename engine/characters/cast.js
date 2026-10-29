@@ -429,6 +429,24 @@ export function buildMascot(def, tex) {
     ch.buildLegs({ hipX: W * (def.hipX ?? 0.2), length: def.legLen ?? 0.17, r: 0.04 * (def.limbScale ?? 1), material: legMat, footSize: 0.1 * (def.limbScale ?? 1), footColor: def.shoeColor || '#ffffff' });
   }
   if (def.shape === 'cell') { addOrganelles(ch, ctx); if (def.door !== false) addCellDoor(ch, ctx); }
+  // cœur anatomique : crosse de l'aorte, tronc pulmonaire et veine cave au sommet, artères coronaires en surface
+  if (def.shape === 'heart') {
+    const top = ctx.S.top(0, 0); const y = top ? top.point.y : ctx.H; const W = ctx.W;
+    const aortaM = M.organ('#d8324a', { smooth: true, bump: 0.12 }), pulmM = M.organ('#5b7fd6', { smooth: true, bump: 0.12 }), caveM = M.organ('#4a5fb8', { smooth: true, bump: 0.12 });
+    const g = new THREE.Group(); g.position.set(0, y - 0.06, -0.02);
+    const r = W * 0.075;
+    const arch = new THREE.Mesh(new THREE.TorusGeometry(W * 0.17, r, 20, 48, Math.PI * 1.15), aortaM); arch.rotation.set(0, Math.PI / 2 - 0.25, 0); arch.position.set(0.02, 0.06, -0.02); g.add(arch);
+    for (const [dx, dz] of [[-0.06, -0.02], [0.0, -0.05], [0.06, -0.05]]) { const br = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.38, r * 0.45, W * 0.16, 16), aortaM); br.position.set(dx, 0.06 + W * 0.17 + W * 0.06, dz); g.add(br); }
+    const pulm = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.85, r * 1.0, W * 0.22, 24), pulmM); pulm.position.set(W * 0.12, 0.06, 0.05); pulm.rotation.z = -0.35; g.add(pulm);
+    const cave = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.8, r * 0.8, W * 0.2, 24), caveM); cave.position.set(-W * 0.22, 0.02, -0.06); cave.rotation.z = 0.15; g.add(cave);
+    g.traverse((m) => { if (m.isMesh) m.castShadow = true; }); ch.bodyPivot.add(g);
+    // coronaires : fins vaisseaux posés sur la surface (sous le visage)
+    const corM = M.organ('#b5142e', { smooth: true, bump: 0.1 });
+    for (const side of [-1, 1]) {
+      const pts = []; for (let i = 0; i <= 10; i++) { const u = i / 10; const yy = y - 0.08 - u * ctx.H * 0.55; const xx = side * (W * 0.32 - u * W * 0.22) + side * Math.sin(u * 5) * 0.015; const h = ctx.S.front(xx, yy); if (h) pts.push(h.point.clone().addScaledVector(h.face.normal, 0.006)); }
+      if (pts.length > 3) { const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.011, 8, false), corM); tube.castShadow = true; ch.bodyPivot.add(tube); }
+    }
+  }
   // une artère montre toujours sa « lumière » (le trou du vaisseau) en haut
   if (def.shape === 'tube') {
     const top = ctx.S.top(0, 0); const y = top ? top.point.y : ctx.H; const sd = ctx.S.side(1, y - 0.03); const r = sd ? Math.abs(sd.point.x) : ctx.W * 0.4;

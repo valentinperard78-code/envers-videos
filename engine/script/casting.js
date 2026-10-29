@@ -19,6 +19,7 @@ export const VOICES = {
     { voice: 'fr-CA-AntoineNeural', rate: '+3%', pitch: '+0Hz' },
     { voice: 'fr-CH-FabriceNeural', rate: '+2%', pitch: '+0Hz' },
     { voice: 'fr-FR-HenriNeural', rate: '+6%', pitch: '+4Hz' },
+    { voice: 'fr-CA-ThierryNeural', rate: '+2%', pitch: '+0Hz' },
   ],
 };
 
@@ -37,6 +38,7 @@ const ARCHETYPES = [
   { k: ['artere', 'artère', 'vaisseau', 'veine', 'capillaire'], def: { shape: 'tube', material: 'organ-smooth', color: '#d8434f', h: 0.9 } },
   { k: ['globule rouge', 'hematie', 'hématie', 'hemoglobine', 'hémoglobine'], def: { shape: 'disc', material: 'organ-smooth', color: '#d61f2c', face: { eyeY: 0.6, eyeX: 0.2, mouthY: 0.38 } } },
   { k: ['globule blanc', 'leucocyte', 'lymphocyte', 'macrophage', 'immunit'], def: { shape: 'sphere', material: 'skin', color: '#eef0ff', accessories: ['cap'] } },
+  { k: ['caillot', 'thrombus', 'thrombose'], def: { shape: 'blob', material: 'organ', color: '#5a0c16', lumps: 0.14, w: 1.1 } },
   { k: ['plaquette'], def: { shape: 'disc', material: 'skin', color: '#f6c453', w: 0.8, h: 0.8 } },
   { k: ['virus'], def: { shape: 'virus', material: 'skin', color: '#59c96b', accessories: [['spikes', { color: '#3e9b50', tipColor: '#ff4d6d' }]] } },
   { k: ['bacterie', 'bactérie', 'microbe', 'germe'], def: { shape: 'capsule', material: 'skin', color: '#8bd450' } },
@@ -86,9 +88,15 @@ export function buildCasting(doc, bible = null) {
   for (const P of Object.values(PRESET_META)) if (P.voice) takenVoices.add(P.voice.voice);
   const pickVoice = (gender) => {
     const pool = VOICES[gender];
-    for (let i = 0; i < pool.length * 2; i++) {
+    for (let i = 0; i < pool.length; i++) {
       const v = pool[(usedVoices[gender]++) % pool.length];
-      if (!takenVoices.has(v.voice) || i >= pool.length) { takenVoices.add(v.voice); return v; }
+      if (!takenVoices.has(v.voice)) { takenVoices.add(v.voice); return v; }
+    }
+    // toutes les voix sont prises : même voix mais timbre nettement différent (hauteur + débit), jamais identique à un autre
+    for (let k = 1; k < 6; k++) for (const v of pool) {
+      const sh = (k % 2 ? 1 : -1) * (6 + 5 * Math.ceil(k / 2));
+      const key = `${v.voice}|${sh}`;
+      if (!takenVoices.has(key)) { takenVoices.add(key); const p0 = parseFloat(v.pitch) || 0, r0 = parseFloat(v.rate) || 0; return { voice: v.voice, rate: `${r0 + (sh > 0 ? 4 : -4) >= 0 ? '+' : ''}${r0 + (sh > 0 ? 4 : -4)}%`, pitch: `${p0 + sh >= 0 ? '+' : ''}${p0 + sh}Hz` }; }
     }
     return pool[0];
   };
@@ -122,7 +130,7 @@ export function buildCasting(doc, bible = null) {
       def.color = color;
       const acc = new Set((def.accessories || []).map((a) => (Array.isArray(a) ? a[0] : a)));
       const accList = def.accessories ? [...def.accessories] : [];
-      for (const [kw, a] of ACC_KW) if (low.includes(kw) && !acc.has(a) && !(a === 'glasses' && acc.has('sunglasses') && !/lunettes(?! de soleil)/.test(low.replace('lunettes de soleil', '')))) { acc.add(a); accList.push(a); }
+      for (const [kw, a] of ACC_KW) if (new RegExp(`(^|[^a-zà-ÿœ])${kw}`, 'i').test(low) && !acc.has(a) && !(a === 'glasses' && acc.has('sunglasses') && !/lunettes(?! de soleil)/.test(low.replace('lunettes de soleil', '')))) { acc.add(a); accList.push(a); }
       def.accessories = accList;
       const gender = guessGender(name, desc);
       def.face = { lashes: gender === 'f', lips: gender === 'f' ? 'full' : 'line', lipColor: '#c2185b', iris: ['#5b3a1e', '#2f7d5a', '#3b6fb0', '#7a3f12'][hashStr(id) % 4], ...(def.face || {}) };

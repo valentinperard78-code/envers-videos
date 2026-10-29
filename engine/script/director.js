@@ -428,6 +428,12 @@ export function buildTimeline(src, opts = {}) {
       if (teaser && !vo && set !== 'confessional') shot = { type: 'close', subject: id, crash: true, seed: beats.length };
       if (teaser && shot.type !== 'establish') { shot.crash = shot.crash ?? (beats.length % 2 === 0); }
 
+      // voix off sans personne à l'image : on montre Josh (c'est son corps) plutôt qu'un décor vide
+      if (vo && !Object.keys(actors).some((k) => actors[k] && actors[k].visible !== false) && casting.list.find((e) => e.id === 'josh')) {
+        set = 'kitchen';
+        actors.josh = { pos: 'center', emotion: /(douleur|serre|malaise|essouffl|fatigue)/.test(norm(it.text)) ? 'tired' : 'worried', pose: /(douleur|serre|poitrine)/.test(norm(it.text)) ? 'droop' : 'idle', look: 'camera' };
+        shot = { type: beats.length % 2 ? 'close' : 'medium', subject: 'josh', angle: beats.length % 2 ? -0.45 : 0.4, push: 0.1, seed: beats.length };
+      }
       const b = { t0, dur, set, speaker: id || null, kind: vo ? 'vo' : 'line', shot, actors, line: it.line, flash: teaser && ii > 0, isRecap: recap };
       if (set === 'blood') b.setState = { crowd, plaque: /(cholest|athero|infarctus|avc|arteriopathie|arterite)/.test(norm(doc.pathology || '')) || /(plaque|depot|athero|se colle|squatte)/.test(norm(it.text)) ? 1 : 0 };
       b.speech = { t0: t0 + lead, t1: t0 + lead + sp.dur, words: sp.words.map((w) => ({ t: t0 + lead + w.t, d: w.d, w: w.w })), env: sp.env || null, rate: sp.rate || 50 };
