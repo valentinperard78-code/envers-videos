@@ -169,6 +169,7 @@ export function buildTimeline(src, opts = {}) {
   const speech = opts.speech || {};
   const fps = opts.fps || 30;
   const beats = [], overlays = [], sfx = [], music = [], voices = [];
+  let lastSpan = null; // dernière réplique (pour y accrocher l'encadré qui l'explique)
   let t = 0;
   const villa = { present: new Set(), pos: {}, door: 0, hidden: new Set(), keyIn: false, keyHolder: null };
   const marksOrder = ['center', 'left', 'right', 'farLeft', 'farRight'];
@@ -229,7 +230,7 @@ export function buildTimeline(src, opts = {}) {
     if (secBlood && /(diabet|glyc|sucre|glucose)/.test(norm(doc.pathology || ''))) crowd = Math.max(crowd, 1);
     let firstInSection = true;
     const savedVilla = teaser ? { present: new Set(villa.present), pos: { ...villa.pos } } : null;
-    let pendingBox = null;
+    let pendingBox = null; lastSpan = null;
     const items = sec.items;
 
     items.forEach((it, ii) => {
@@ -256,7 +257,12 @@ export function buildTimeline(src, opts = {}) {
         for (const k in lastEmotion) delete lastEmotion[k]; for (const k in sweatOf) delete sweatOf[k];
         return;
       }
-      if (it.type === 'box') { pendingBox = it; return; }
+      if (it.type === 'box') {
+        // l'encadré explique la réplique qu'il suit : il s'affiche sur cette réplique (et déborde un peu sur la suivante)
+        if (lastSpan) { overlays.push({ type: 'box', t0: lastSpan.t0 + 0.5, t1: Math.max(lastSpan.t1 + 1.0, lastSpan.t0 + 4.2), title: it.title, text: it.text, color: lastSpan.color || '#7b2cff' }); sfx.push({ type: 'ding', t: lastSpan.t0 + 0.5 }); }
+        else pendingBox = it;
+        return;
+      }
       if (it.type === 'hook') { hookText = it.text; return; }
       if (it.type === 'question') { questionText = it.text; return; }
       if (it.type === 'screen') {
@@ -514,6 +520,7 @@ export function buildTimeline(src, opts = {}) {
       if (teaser && vo && /clash|trahison|danger/.test(norm(it.text))) overlays.push({ type: 'sticker', who: null, t0: t0 + 0.1, t1: t, text: 'CLASH !', color: '#ff3b3b', x: 0.72, y: 0.3 });
       if (voMood.sfx) sfx.push({ type: voMood.sfx, t: t0 + 0.05 });
       if (shot.crash) sfx.push({ type: 'zoom', t: t0 });
+      lastSpan = { t0, t1: t, color: who?.color || '#7b2cff' };
       if (pendingBox) {
         overlays.push({ type: 'box', t0: t0 + 0.25, t1: Math.max(t, t0 + 4.2), title: pendingBox.title, text: pendingBox.text, color: who?.color || '#7b2cff' });
         sfx.push({ type: 'ding', t: t0 + 0.25 }); pendingBox = null;
