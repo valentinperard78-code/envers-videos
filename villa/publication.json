@@ -143,6 +143,30 @@
       "mode": "buffer",
       "buffer": "6ae3b10b4611042f0359956c",
       "statut": "en-file"
+    },
+    {
+      "episode": "ep03-cholesterol",
+      "date": "2026-10-29",
+      "heure": "23:21",
+      "mode": "buffer",
+      "buffer": "6ae3c6d8d62dd708c6deaaf8",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep04-infarctus",
+      "date": "2026-10-29",
+      "heure": "23:21",
+      "mode": "buffer",
+      "buffer": "6ae3c6d9d62dd708c6deab5f",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep05-avc",
+      "date": "2026-10-29",
+      "heure": "23:21",
+      "mode": "buffer",
+      "buffer": "6ae3c6db397c2ef8f34af02d",
+      "statut": "en-file"
     }
   ],
   "valides": [

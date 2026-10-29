@@ -1,9 +1,11 @@
 {
-  "quand": "2026-10-29T20:48:11.191Z",
+  "quand": "2026-10-29T22:21:15.084Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 1 vidéo(s) déjà en file (max 10).",
-    "✅ ep02-hypertension ajouté à la file Buffer."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 2 vidéo(s) déjà en file (max 10).",
+    "✅ ep03-cholesterol ajouté à la file Buffer.",
+    "✅ ep04-infarctus ajouté à la file Buffer.",
+    "✅ ep05-avc ajouté à la file Buffer."
   ]
 }
