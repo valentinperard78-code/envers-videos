@@ -10,7 +10,7 @@ const FONT_ROUND = 'Baloo2, Montserrat, sans-serif';
 
 function rr(c, x, y, w, h, r) { c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, r) : c.rect(x, y, w, h); }
 function wrap(c, text, maxW) {
-  const words = String(text).split(/\s+/); const lines = []; let cur = '';
+  const words = String(text).split(/[ \t\n]+/); const lines = []; let cur = '';
   for (const w of words) { const test = cur ? cur + ' ' + w : w; if (c.measureText(test).width > maxW && cur) { lines.push(cur); cur = w; } else cur = test; }
   if (cur) lines.push(cur); return lines;
 }
@@ -243,37 +243,67 @@ export class Overlay {
 
   /** Miniature : gros titre accrocheur + logo de la série + numéro d'épisode. */
   cover(c, o) {
+    // miniature TikTok : gros titre penché, visage choc au centre, accroche dans un bandeau, sticker « ?! »
     const u = this.u, W = this.W, H = this.H;
-    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, 'rgba(10,2,20,0.85)'); g.addColorStop(0.3, 'rgba(10,2,20,0)'); g.addColorStop(0.62, 'rgba(10,2,20,0)'); g.addColorStop(1, 'rgba(10,2,20,0.9)');
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, 'rgba(10,2,20,0.88)'); g.addColorStop(0.27, 'rgba(10,2,20,0)'); g.addColorStop(0.6, 'rgba(10,2,20,0)'); g.addColorStop(1, 'rgba(10,2,20,0.92)');
     c.fillStyle = g; c.fillRect(0, 0, W, H);
+    // vignette colorée sur les bords (couleur du personnage)
+    const vg = c.createRadialGradient(W / 2, H * 0.45, W * 0.35, W / 2, H * 0.45, W * 0.95); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, (o.color || '#ff3da8') + '88');
+    c.fillStyle = vg; c.fillRect(0, 0, W, H);
     c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.font = `800 ${44 * u}px ${FONT_ROUND}`; c.fillStyle = '#ffd166'; c.fillText('LA VILLA DES PATHOLOGIES', W / 2, H * 0.06);
-    // titre principal (pathologie) en grand, sur 1 ou 2 lignes
-    // découpe équilibrée en 1 ou 2 lignes (pas de mot orphelin), taille ajustée à la largeur
+    // pastille série + épisode
+    const top = `LA VILLA DES PATHOLOGIES${o.episode ? '  ·  ÉP. ' + o.episode : ''}`;
+    c.font = `800 ${38 * u}px ${FONT_ROUND}`; const tw = c.measureText(top).width + 60 * u;
+    c.fillStyle = '#ff3da8'; rr(c, W / 2 - tw / 2, H * 0.035, tw, 66 * u, 33 * u); c.fill();
+    c.fillStyle = '#fff'; c.fillText(top, W / 2, H * 0.035 + 35 * u);
+    // titre (pathologie), penché, 1 ou 2 lignes équilibrées
     const words = String(o.title).toUpperCase().split(/\s+/);
-    let size = 160 * u, lines = [words.join(' ')];
-    const fits = (ls, sz) => { c.font = `${sz}px ${FONT_TITLE}`; return ls.every((l) => c.measureText(l).width <= W * 0.9); };
+    let size = 170 * u, lines = [words.join(' ')];
+    const fits = (ls, sz) => { c.font = `${sz}px ${FONT_TITLE}`; return ls.every((l) => c.measureText(l).width <= W * 0.88); };
     if (!fits(lines, size)) {
       let best = null;
       for (let k = 1; k < words.length; k++) { const ls = [words.slice(0, k).join(' '), words.slice(k).join(' ')]; c.font = `${size}px ${FONT_TITLE}`; const m = Math.max(...ls.map((l) => c.measureText(l).width)); if (!best || m < best.m) best = { ls, m }; }
       lines = best ? best.ls : lines;
       while (!fits(lines, size) && size > 70 * u) size -= 6 * u;
     }
+    c.save(); c.translate(W / 2, H * 0.105 + size * (lines.length > 1 ? 1.0 : 0.55)); c.rotate(-0.045);
     c.font = `${size}px ${FONT_TITLE}`;
     lines.forEach((l, i) => {
-      const y = H * 0.14 + i * size * 1.02;
-      c.lineWidth = size * 0.16; c.strokeStyle = '#000'; c.lineJoin = 'round'; c.strokeText(l, W / 2, y);
-      c.fillStyle = '#ffffff'; c.shadowColor = '#ff3da8'; c.shadowBlur = 30 * u; c.fillText(l, W / 2, y); c.shadowBlur = 0;
+      const y = (i - (lines.length - 1) / 2) * size * 1.0;
+      c.lineWidth = size * 0.2; c.strokeStyle = '#000'; c.lineJoin = 'round'; c.strokeText(l, 0, y + 6 * u);
+      c.fillStyle = '#ffffff'; c.shadowColor = o.color || '#ff3da8'; c.shadowBlur = 40 * u; c.fillText(l, 0, y); c.shadowBlur = 0;
     });
-    // accroche en bas
+    c.restore();
+    // sticker « ?! » près du visage
+    c.save(); c.translate(W * 0.8, H * 0.36); c.rotate(0.18);
+    c.fillStyle = '#ffe44d'; c.strokeStyle = '#000'; c.lineWidth = 8 * u; c.beginPath();
+    const n = 12; for (let i = 0; i <= n * 2; i++) { const a = (i / (n * 2)) * Math.PI * 2; const r = (i % 2 ? 62 : 100) * u; const px = Math.cos(a) * r * 1.15, py = Math.sin(a) * r; if (i) c.lineTo(px, py); else c.moveTo(px, py); }
+    c.closePath(); c.fill(); c.stroke();
+    c.font = `${92 * u}px ${FONT_TITLE}`; c.fillStyle = '#e8102a'; c.fillText(o.sticker || '?!', 0, 6 * u);
+    c.restore();
+    // accroche : bandeau rouge penché, dernier mot surligné en jaune
     if (o.hook) {
-      c.font = `${92 * u}px ${FONT_TITLE}`; const hl = wrap(c, o.hook.toUpperCase(), W * 0.86);
-      hl.forEach((l, i) => { const y = H * 0.8 + i * 100 * u; c.lineWidth = 16 * u; c.strokeStyle = '#000'; c.strokeText(l, W / 2, y); c.fillStyle = '#ffe44d'; c.fillText(l, W / 2, y); });
+      const txt = o.hook.toUpperCase().replace(/[.…]+$/, '').replace(/ ([?!:;»])/g, '\u00a0$1');
+      c.font = `${96 * u}px ${FONT_TITLE}`; const hl = wrap(c, txt, W * 0.8);
+      const lh = 104 * u, bh = hl.length * lh + 50 * u, by = H * 0.79 - bh / 2;
+      c.save(); c.translate(W / 2, by + bh / 2); c.rotate(-0.035); c.translate(-W / 2, -(by + bh / 2));
+      c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = 30 * u; c.shadowOffsetY = 12 * u;
+      c.fillStyle = '#e8102a'; rr(c, W * 0.05, by, W * 0.9, bh, 28 * u); c.fill(); c.shadowBlur = 0; c.shadowOffsetY = 0;
+      c.strokeStyle = '#fff'; c.lineWidth = 6 * u; rr(c, W * 0.05, by, W * 0.9, bh, 28 * u); c.stroke();
+      const last = hl.length - 1; const lastWords = hl[last].split(' '); const emph = lastWords.pop();
+      hl.forEach((l, i) => {
+        const y = by + 25 * u + lh * (i + 0.5) + 4 * u;
+        if (i !== last) { c.fillStyle = '#fff'; c.fillText(l, W / 2, y); return; }
+        const pre = lastWords.join(' '); const pw = pre ? c.measureText(pre + ' ').width : 0, ew = c.measureText(emph).width; const x0 = W / 2 - (pw + ew) / 2;
+        c.textAlign = 'left'; c.fillStyle = '#fff'; if (pre) c.fillText(pre + ' ', x0, y); c.fillStyle = '#ffe44d'; c.fillText(emph, x0 + pw, y); c.textAlign = 'center';
+      });
+      c.restore();
     }
-    if (o.episode) {
-      c.font = `${54 * u}px ${FONT_TITLE}`; const lab = `ÉP. ${o.episode}`; const w = c.measureText(lab).width + 50 * u;
-      c.fillStyle = '#ff3da8'; rr(c, W - w - 40 * u, H * 0.93 - 45 * u, w, 90 * u, 45 * u); c.fill(); c.fillStyle = '#fff'; c.fillText(lab, W - w / 2 - 40 * u, H * 0.93);
-    }
+    // flèche « regarde ! » vers le visage
+    c.save(); c.translate(W * 0.15, H * 0.62); c.rotate(0.8);
+    c.fillStyle = '#ffe44d'; c.strokeStyle = '#000'; c.lineWidth = 7 * u; c.beginPath();
+    c.moveTo(-18 * u, 70 * u); c.lineTo(-18 * u, -20 * u); c.lineTo(-48 * u, -20 * u); c.lineTo(0, -80 * u); c.lineTo(48 * u, -20 * u); c.lineTo(18 * u, -20 * u); c.lineTo(18 * u, 70 * u); c.closePath(); c.fill(); c.stroke();
+    c.restore();
   }
 
   // accroche plein cadre des premières secondes

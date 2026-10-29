@@ -72,9 +72,26 @@ export class World {
   renderCover(t, cover) {
     const ev = evaluate(this.tl, t, this);
     const set = this.activate(ev.set); set.update(t, ev.setState || {});
+    // miniature : la vedette en gros plan, expression « choc » (visage qui donne envie de cliquer)
+    const star = cover.subject && ev.actors[cover.subject] ? cover.subject : null;
+    if (star) ev.actors[star] = { ...ev.actors[star], emotions: { [cover.emotion || 'shocked']: 1 }, mouth: { open: 0.75, wide: 0.45, round: 0.3 }, talk: 0, eyeWide: 0.3, browBoost: 0.6, blink: 0, poses: { cheeks: 1 } };
     for (const id in this.chars) { const st = ev.actors[id]; const ch = this.chars[id]; if (!st) { ch.visible = false; continue; } ch.applyState(st, t, {}); }
-    ev.applyCamera(this.camera); this.r3d.setFocus(ev.focus ?? 4); this.r3d.render(t, 0);
-    this.ctx.drawImage(this.r3d.renderer.domElement, 0, 0, this.W, this.H);
+    ev.applyCamera(this.camera);
+    if (star) {
+      const ch = this.chars[star]; ch.updateMatrixWorld(true);
+      const face = ch.localToWorld(new THREE.Vector3(0, (ch.def.faceY ?? ch.height * 0.7) * 0.97, 0));
+      const top = ch.localToWorld(new THREE.Vector3(0, ch.headTop, 0));
+      const h = Math.max(0.5, (top.y - face.y) * 2.6 + 0.35);
+      const dir = this.camera.position.clone().sub(face); dir.y = 0; if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1); dir.normalize();
+      const fov = 34; this.camera.fov = fov; this.camera.updateProjectionMatrix();
+      const d = h / (2 * Math.tan(THREE.MathUtils.degToRad(fov) / 2)) * 1.05;
+      const tgt = face.clone().add(new THREE.Vector3(0, -h * 0.08, 0));
+      this.camera.position.copy(tgt).addScaledVector(dir, d); this.camera.position.y = face.y - h * 0.06; this.camera.up.set(0, 1, 0); this.camera.lookAt(tgt);
+      this.r3d.setFocus(d);
+    } else this.r3d.setFocus(ev.focus ?? 4);
+    this.r3d.render(t, 0);
+    this.ctx.save(); this.ctx.filter = 'saturate(1.3) contrast(1.1) brightness(1.04)';
+    this.ctx.drawImage(this.r3d.renderer.domElement, 0, 0, this.W, this.H); this.ctx.restore();
     this.overlay.cover(this.ctx, cover);
   }
 

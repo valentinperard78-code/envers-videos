@@ -78,8 +78,12 @@ export async function coverAndQC(work, scriptPath, outFile, log = console.log) {
     const slug = (n) => String(n || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
     const hookLine = doc.sections.flatMap((x) => x.items).find((i) => i.type === 'line' && !i.voiceOver && post.accroche && i.text.includes(post.accroche.replace(/^./, (c) => c)));
     const star = (doc.casting || []).find((c) => !/voix|narrat/i.test(c.name));
-    const t = pickCoverTime(tl, slug(hookLine?.speaker || star?.name));
-    const b64 = await page.evaluate((t, c) => window.renderCover(t, c), t, { title: doc.pathology || doc.episodeName, hook: post.accroche, episode: doc.episode });
+    const prefer = slug(hookLine?.speaker || star?.name);
+    const t = pickCoverTime(tl, prefer);
+    const beatAt = tl.beats.find((b) => b.t0 <= t && b.t1 > t);
+    const subject = beatAt?.actors?.[prefer] ? prefer : (beatAt?.shot?.subject || beatAt?.speaker || null);
+    const color = (tl.cast || []).find((c) => c.id === subject)?.color;
+    const b64 = await page.evaluate((t, c) => window.renderCover(t, c), t, { title: doc.pathology || doc.episodeName, hook: post.accroche, episode: doc.episode, subject, color });
     fs.writeFileSync(`${base}.couverture.jpg`, Buffer.from(b64, 'base64'));
     log(`🖼  Miniature créée (moment : ${t.toFixed(1)} s).`);
     const issues = await page.evaluate(() => window.qualityCheck());
