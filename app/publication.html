@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Publisher</title>
+<style>
+@font-face { font-family: Anton; src: url(/assets/fonts/Anton-Regular.ttf); }
+@font-face { font-family: Montserrat; src: url(/assets/fonts/Montserrat.ttf); font-weight: 100 900; }
+:root { --bg:#0d0716; --panel:#170d26; --panel2:#21123a; --line:#34204f; --text:#f3eaff; --muted:#a993c9; --pink:#ff3da8; --cyan:#2fe0ff; --gold:#ffd166; --ok:#2bd96b; --err:#ff4d6d; }
+* { box-sizing: border-box; }
+html,body { margin:0; background:var(--bg); color:var(--text); font:14px/1.5 Montserrat, system-ui, sans-serif; }
+header { display:flex; align-items:center; gap:14px; padding:10px 18px; border-bottom:1px solid var(--line); background:linear-gradient(90deg,#1c0a2e,#0d0716); flex-wrap:wrap; }
+header h1 { margin:0; font:32px Anton, Impact, sans-serif; letter-spacing:1px; }
+header h1 span { color:var(--pink); text-shadow:0 0 18px var(--pink); }
+header a { margin-left:auto; color:var(--muted); text-decoration:none; border:1px solid var(--line); padding:6px 12px; border-radius:99px; }
+main { max-width:1100px; margin:0 auto; padding:16px; display:grid; gap:14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+section { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+section.wide { grid-column: 1 / -1; }
+h2 { margin:0 0 10px; font:20px Anton, sans-serif; letter-spacing:.5px; }
+.muted { color:var(--muted); font-size:12.5px; }
+.pill { display:inline-block; padding:2px 10px; border-radius:99px; font-size:12px; font-weight:800; background:var(--panel2); border:1px solid var(--line); }
+.ok { color:var(--ok); } .bad { color:var(--err); } .warn { color:var(--gold); }
+input { font:inherit; color:var(--text); background:#0b0613; border:1px solid var(--line); border-radius:9px; padding:8px 10px; width:100%; margin:4px 0 10px; }
+button { font:inherit; font-weight:800; color:#fff; background:linear-gradient(90deg,var(--pink),#b42cff); border:0; border-radius:10px; padding:10px 14px; cursor:pointer; }
+button:disabled { opacity:.5; }
+.grid7 { display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; }
+.day { background:var(--panel2); border-radius:10px; padding:8px; min-height:84px; }
+.day b { display:block; font-size:12px; text-transform:capitalize; color:var(--muted); margin-bottom:6px; }
+.slot { display:block; background:#2d1650; border:1px solid var(--pink); border-radius:7px; padding:3px 6px; margin-bottom:4px; font-weight:800; font-size:13px; text-align:center; }
+ol { margin:0; padding-left:20px; } li { margin:3px 0; }
+table { width:100%; border-collapse:collapse; font-size:13px; } td, th { padding:6px 4px; border-bottom:1px solid var(--line); text-align:left; } th { color:var(--muted); font-weight:600; }
+pre { background:#0b0613; border:1px solid var(--line); border-radius:9px; padding:10px; white-space:pre-wrap; word-break:break-all; font-size:12px; max-height:160px; overflow:auto; }
+.secret { margin-bottom:10px; } .secret b { font-family:ui-monospace,Consolas,monospace; color:var(--gold); }
+.copy { font-size:12px; padding:4px 10px; margin-left:8px; background:var(--panel2); border:1px solid var(--line); }
+ol.steps li { margin:6px 0; }
+@media (max-width: 700px) { .grid7 { grid-template-columns: repeat(2, 1fr); } }
+</style></head>
+<body>
+<header><h1>VILLA <span>PUBLISHER</span></h1><div class="muted">Publication TikTok automatique, gratuite, sans crédits</div><a href="/">← Studio</a></header>
+<main>
+  <section>
+    <h2>📡 État</h2>
+    <div id="state" class="muted">Chargement…</div>
+  </section>
+
+  <section>
+    <h2>🔗 Connecter TikTok</h2>
+    <p class="muted">Une seule fois. Il te faut une application gratuite sur <a style="color:var(--cyan)" href="https://developers.tiktok.com/apps" target="_blank">developers.tiktok.com</a> (pas-à-pas ci-dessous).</p>
+    <label class="muted">Client key</label><input id="ck" autocomplete="off">
+    <label class="muted">Client secret</label><input id="cs" type="password" autocomplete="off">
+    <button id="connect">Connecter mon compte TikTok</button>
+    <div id="result" style="margin-top:12px"></div>
+  </section>
+
+  <section class="wide">
+    <h2>📅 Calendrier (heure de Paris)</h2>
+    <div class="grid7" id="cal"></div>
+    <p class="muted" id="calnote"></p>
+  </section>
+
+  <section>
+    <h2>🎬 File d'attente</h2>
+    <ol id="queue"></ol>
+  </section>
+
+  <section>
+    <h2>🕘 Historique</h2>
+    <table><thead><tr><th>Date</th><th>Épisode</th><th>Mode</th><th>Statut</th></tr></thead><tbody id="hist"></tbody></table>
+  </section>
+
+  <section class="wide">
+    <h2>🧭 Mise en route (10 min, une seule fois)</h2>
+    <ol class="steps">
+      <li>Va sur <a style="color:var(--cyan)" href="https://developers.tiktok.com" target="_blank">developers.tiktok.com</a>, connecte-toi avec ton compte TikTok, puis <b>Manage apps → Connect an app</b>. Nom : « Villa Publisher ».</li>
+      <li>Dans l'application, ajoute les produits <b>Login Kit</b> et <b>Content Posting API</b> (active « Direct Post » si tu veux le mode direct).</li>
+      <li>Login Kit → plateforme <b>Desktop</b> → Redirect URI : <b>http://127.0.0.1:3455/callback/</b></li>
+      <li>Scopes : <b>user.info.basic</b>, <b>video.upload</b>, <b>video.publish</b>. Utilise l'onglet <b>Sandbox</b> et ajoute ton compte TikTok comme « target user ».</li>
+      <li>Copie le <b>Client key</b> et le <b>Client secret</b> ici, puis clique « Connecter mon compte TikTok ». Accepte dans la fenêtre TikTok.</li>
+      <li>Le studio affiche alors 4 secrets : colle-les dans <a style="color:var(--cyan)" href="https://github.com/valentinperard78-code/envers-videos/settings/secrets/actions" target="_blank">GitHub → Settings → Secrets → Actions</a> (« New repository secret »). Optionnel : un 5ᵉ secret <b>NTFY_TOPIC</b> (un nom secret, ex. villa-valentin-7k2p) et l'appli gratuite <b>ntfy</b> sur ton téléphone abonnée à ce nom, pour recevoir la notification « vidéo prête ».</li>
+      <li>Dis-moi « active la publication » : je passe <code>"actif": true</code> et les vidéos partent toutes seules aux heures du calendrier.</li>
+    </ol>
+    <p class="muted">⚠️ Règle TikTok : sans audit, une application ne peut publier directement qu'en <b>privé</b>. Le mode <b>brouillon</b> (par défaut) respecte cette règle : la vidéo arrive dans tes brouillons TikTok, tu reçois la notification avec le texte, tu publies en public en ~10 secondes. Maximum 5 vidéos en attente à la fois et ~15 publications par jour (limite TikTok).</p>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+async function load() {
+  const r = await fetch('/api/publication').then((x) => x.json());
+  const c = r.conf, h = c.historique || [];
+  if (r.app.clientKey) $('ck').value = r.app.clientKey;
+  const done = new Set(h.filter((x) => x.statut !== 'echec').map((x) => x.episode));
+  const next = (c.file || []).find((e) => !done.has(e));
+  $('state').innerHTML = `
+    <p>Publication automatique : <span class="pill ${c.actif ? 'ok' : 'warn'}">${c.actif ? 'ACTIVE' : 'EN PAUSE'}</span></p>
+    <p>Mode : <span class="pill">${c.mode === 'direct' ? 'publication directe (' + esc(c.confidentialiteDirect) + ')' : 'brouillons TikTok + notification'}</span></p>
+    <p>Maximum par jour : <b>${c.maxParJour}</b> · Prochain épisode : <b>${esc(next || '—')}</b></p>
+    <p class="muted">Calendrier lu depuis ${r.source === 'github' ? 'GitHub (celui qu\'utilise l\'automatisme)' : 'la copie locale'}.</p>`;
+  const days = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+  $('cal').innerHTML = days.map((d) => `<div class="day"><b>${d}</b>${(c.horaires[d] || []).map((s) => `<span class="slot">${esc(s)}</span>`).join('') || '<span class="muted">—</span>'}</div>`).join('');
+  $('calnote').innerHTML = `Pour changer les heures ou la file : <a style="color:var(--cyan)" target="_blank" href="https://github.com/valentinperard78-code/envers-videos/edit/villa-studio/villa/publication.json">modifier sur GitHub</a>, ou demande-le simplement à Claude.`;
+  $('queue').innerHTML = (c.file || []).map((e) => `<li>${done.has(e) ? '✅' : e === next ? '⏭️' : '⏳'} ${esc(e)}</li>`).join('');
+  $('hist').innerHTML = h.slice().reverse().slice(0, 30).map((x) => `<tr><td>${esc(x.date)} ${esc(x.creneau || '')}</td><td>${esc(x.episode)}</td><td>${esc(x.mode)}</td><td class="${x.statut === 'ok' ? 'ok' : 'bad'}">${x.statut === 'ok' ? '✔ ' + esc(x.tiktok || '') : '✘ ' + esc(x.raison || '')}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">Aucune publication pour l\'instant.</td></tr>';
+}
+$('connect').onclick = async () => {
+  $('connect').disabled = true; $('result').innerHTML = '<p class="muted">Une fenêtre TikTok va s\'ouvrir : connecte-toi et accepte…</p>';
+  try {
+    const r = await fetch('/api/tiktok/connect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ clientKey: $('ck').value.trim(), clientSecret: $('cs').value.trim() }) }).then((x) => x.json());
+    if (r.error) throw new Error(r.error);
+    $('result').innerHTML = `<p class="ok">✅ Compte connecté : <b>${esc(r.user?.display_name || '')}</b></p><p class="muted">Colle ces secrets dans <a style="color:var(--cyan)" target="_blank" href="https://github.com/valentinperard78-code/envers-videos/settings/secrets/actions">GitHub → Secrets</a> :</p>` +
+      Object.entries(r.secrets).map(([k, v]) => `<div class="secret"><b>${k}</b><button class="copy" data-v="${esc(v)}">Copier</button><pre>${esc(v)}</pre></div>`).join('');
+    document.querySelectorAll('.copy').forEach((b) => (b.onclick = () => { navigator.clipboard.writeText(b.dataset.v); b.textContent = 'Copié ✓'; }));
+  } catch (e) { $('result').innerHTML = `<p class="bad">❌ ${esc(e.message)}</p>`; }
+  $('connect').disabled = false; load();
+};
+load();
+</script>
+</body></html>

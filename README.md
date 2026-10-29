@@ -32,6 +32,10 @@ Il faut aussi **Google Chrome** ou **Microsoft Edge** (déjà présent sur la pl
 
 Sur un PC avec carte graphique, le rendu est très rapide. Sans carte graphique, il tourne quand même, mais plus lentement.
 
+## Publication TikTok automatique (Villa Publisher)
+
+Calendrier de publication, envoi automatique des épisodes vers TikTok et notification sur le téléphone, gratuitement et sans crédits : voir **[docs/PUBLICATION-TIKTOK.md](docs/PUBLICATION-TIKTOK.md)** et l'onglet **📅 Publication TikTok** du studio.
+
 ## Rendu automatique gratuit sur GitHub (sans allumer ton PC)
 
 Le dépôt contient `.github/workflows/rendu.yml`. Dès qu'un script est ajouté ou modifié dans `scripts/`, GitHub calcule la vidéo sur ses serveurs, puis la publie :

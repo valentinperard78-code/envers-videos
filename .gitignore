@@ -4,3 +4,4 @@ sorties/
 scratch/
 *.log
 .DS_Store
+.tiktok-app.json

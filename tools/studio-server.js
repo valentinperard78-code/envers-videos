@@ -14,6 +14,7 @@ import { mixEpisode } from './audio-mix.js';
 import { renderEpisode } from './render.js';
 import { findChrome } from './chrome.js';
 import { loadBible, nextEpisodeTitle } from './serie.js';
+import { connect as tiktokConnect, loadApp as tiktokApp } from './tiktok-connect.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +(process.env.PORT || 5173);
@@ -45,6 +46,19 @@ async function api(req, res) {
     if (p === 'script' && req.method === 'GET') { const f = path.join(SCRIPTS, path.basename(url.searchParams.get('name') || '')); return json(res, { content: fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '' }), true; }
     if (p === 'script' && req.method === 'POST') { const b = await body(req); const name = safeName(b.name) + '.md'; fs.writeFileSync(path.join(SCRIPTS, name), b.content || ''); return json(res, { ok: true, name }), true; }
     if (p === 'bible') return json(res, loadBible()), true;
+    // ---- publication TikTok (Villa Publisher)
+    if (p === 'publication') {
+      // calendrier « officiel » = celui de GitHub (c'est lui que l'automatisme utilise) ; sinon copie locale
+      const remote = await fetch('https://raw.githubusercontent.com/valentinperard78-code/envers-videos/villa-studio/villa/publication.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      const local = JSON.parse(fs.readFileSync(path.join(ROOT, 'villa', 'publication.json'), 'utf8'));
+      const app = tiktokApp();
+      return json(res, { conf: remote || local, source: remote ? 'github' : 'local', app: { clientKey: app.clientKey || '', connected: fs.existsSync(path.join(ROOT, 'villa', 'tiktok-jeton.chiffre')) } }), true;
+    }
+    if (p === 'tiktok/connect' && req.method === 'POST') {
+      const b = await body(req);
+      const r = await tiktokConnect({ clientKey: b.clientKey, clientSecret: b.clientSecret, log: (m) => broadcast({ type: 'log', message: m }) });
+      return json(res, r), true;
+    }
     if (p === 'outputs') {
       const list = fs.readdirSync(OUT).filter((f) => f.endsWith('.mp4')).map((f) => ({ name: f, url: `/sorties/${encodeURIComponent(f)}`, size: fs.statSync(path.join(OUT, f)).size, date: fs.statSync(path.join(OUT, f)).mtimeMs })).sort((a, b) => b.date - a.date);
       return json(res, list), true;
