@@ -57,3 +57,4 @@ Script ton télé-réalité. Faits médicaux vérifiés (HAS, Assurance Maladie,
 - OMS — Hypertension artérielle : https://www.who.int/fr/news-room/fact-sheets/detail/hypertension
 - Vidal — Les causes et les complications de l'HTA : https://www.vidal.fr/maladies/coeur-circulation-veines/hypertension-arterielle/symptomes-causes.html
 
+
