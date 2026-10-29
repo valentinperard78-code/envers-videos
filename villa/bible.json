@@ -113,7 +113,8 @@
       "apparitions": [
         1,
         2,
-        3
+        3,
+        4
       ],
       "alias": []
     },
@@ -187,7 +188,8 @@
       "premierEpisode": 2,
       "apparitions": [
         2,
-        3
+        3,
+        4
       ],
       "alias": []
     },
@@ -263,7 +265,8 @@
       },
       "premierEpisode": 3,
       "apparitions": [
-        3
+        3,
+        4
       ],
       "alias": []
     },
@@ -302,6 +305,77 @@
       "premierEpisode": 3,
       "apparitions": [
         3
+      ],
+      "alias": []
+    },
+    "ventri": {
+      "id": "ventri",
+      "nom": "Ventri",
+      "role": "le cœur",
+      "description": "le cœur. Il est rouge, musclé, il bat fort et il est fier.",
+      "couleur": "#e2394a",
+      "genre": "m",
+      "notions": [
+        "coeur",
+        "muscle"
+      ],
+      "def": {
+        "shape": "heart",
+        "material": "organ-smooth",
+        "color": "#e2394a",
+        "accessories": [],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Ventri"
+      },
+      "voix": {
+        "voice": "fr-CA-ThierryNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 4,
+      "apparitions": [
+        4
+      ],
+      "alias": []
+    },
+    "caillo": {
+      "id": "caillo",
+      "nom": "Caillo",
+      "role": "le caillot de sang",
+      "description": "le caillot de sang. Il est noir, menaçant, avec des lunettes de soleil.",
+      "couleur": "#2a2a2a",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "organ",
+        "color": "#2a2a2a",
+        "lumps": 0.14,
+        "w": 1.1,
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Caillo"
+      },
+      "voix": {
+        "voice": "fr-FR-RemyMultilingualNeural",
+        "rate": "-1%",
+        "pitch": "+3Hz"
+      },
+      "premierEpisode": 4,
+      "apparitions": [
+        4
       ],
       "alias": []
     }
