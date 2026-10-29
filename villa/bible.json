@@ -36,9 +36,9 @@
       ],
       "def": "cellia",
       "voix": {
-        "voice": "fr-FR-VivienneMultilingualNeural",
+        "voice": "fr-CH-ArianeNeural",
         "rate": "+2%",
-        "pitch": "+2Hz"
+        "pitch": "+0Hz"
       },
       "premierEpisode": 1,
       "apparitions": [
@@ -82,9 +82,9 @@
       ],
       "def": "pancho",
       "voix": {
-        "voice": "fr-FR-RemyMultilingualNeural",
-        "rate": "-5%",
-        "pitch": "-8Hz"
+        "voice": "fr-FR-HenriNeural",
+        "rate": "-6%",
+        "pitch": "-16Hz"
       },
       "premierEpisode": 1,
       "apparitions": [
@@ -371,9 +371,9 @@
         "name": "Caillo"
       },
       "voix": {
-        "voice": "fr-FR-RemyMultilingualNeural",
-        "rate": "-1%",
-        "pitch": "+3Hz"
+        "voice": "fr-CH-FabriceNeural",
+        "rate": "-4%",
+        "pitch": "-12Hz"
       },
       "premierEpisode": 4,
       "apparitions": [

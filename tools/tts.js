@@ -5,7 +5,8 @@ import crypto from 'node:crypto';
 import { spawnSync, spawn } from 'node:child_process';
 import { estimateSpeech } from '../engine/script/director.js';
 
-const FALLBACKS = { f: ['fr-FR-DeniseNeural', 'fr-FR-VivienneMultilingualNeural', 'fr-CA-SylvieNeural'], m: ['fr-FR-HenriNeural', 'fr-FR-RemyMultilingualNeural', 'fr-CA-JeanNeural'] };
+// Pas de « voix de secours » : un personnage garde TOUJOURS sa voix. Si la synthèse échoue malgré les essais, le rendu s'arrête
+// (mieux vaut relancer que publier une réplique avec une autre voix ou un autre accent).
 const PY = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
 
 export function ttsAvailable() {
@@ -36,16 +37,19 @@ export async function synthesizeAll(lines, cacheDir, log = console.log) {
   const speech = {};
   const ok = ttsAvailable();
   if (!ok) {
+    if (process.env.CI) throw new Error('edge-tts introuvable sur le serveur de rendu : rendu arrêté (une vidéo sans voix ne doit jamais partir).');
     log('⚠ edge-tts introuvable : vidéo SANS voix (timings estimés). Installe-le avec : pip install edge-tts');
     for (const l of lines) speech[l.key] = estimateSpeech(l.text);
     return { speech, mode: 'estimated' };
   }
   const jobs = [];
+  const bad = lines.filter((l) => /Multilingual/i.test(l.voice || ''));
+  if (bad.length) throw new Error(`voix multilingue interdite (${[...new Set(bad.map((l) => l.voice))].join(', ')}) : elle peut changer d'accent. Corrige villa/bible.json / casting.js.`);
   for (const l of lines) {
     const h = crypto.createHash('sha1').update([l.text, l.voice, l.rate, l.pitch].join('|')).digest('hex').slice(0, 16);
     const out = path.join(cacheDir, `${h}.mp3`);
     l.file = out;
-    if (!fs.existsSync(out) || !fs.existsSync(out + '.json')) jobs.push({ key: l.key, text: l.text, voice: l.voice, rate: l.rate, pitch: l.pitch, out, fallbacks: FALLBACKS[l.gender || 'f'] });
+    if (!fs.existsSync(out) || !fs.existsSync(out + '.json')) jobs.push({ key: l.key, text: l.text, voice: l.voice, rate: l.rate, pitch: l.pitch, out });
   }
   if (jobs.length) {
     log(`🎙 Synthèse de ${jobs.length} réplique(s)…`);
@@ -58,7 +62,7 @@ export async function synthesizeAll(lines, cacheDir, log = console.log) {
   }
   let missing = 0;
   for (const l of lines) {
-    if (!fs.existsSync(l.file)) { missing++; speech[l.key] = estimateSpeech(l.text); continue; }
+    if (!fs.existsSync(l.file)) { missing++; continue; }
     const meta = JSON.parse(fs.readFileSync(l.file + '.json', 'utf8'));
     const pcm = decodePCM(l.file);
     const dur = pcm.length / 16000;
@@ -68,7 +72,7 @@ export async function synthesizeAll(lines, cacheDir, log = console.log) {
     words = alignWords(l.text, words);
     speech[l.key] = { dur, words, env: envelope(pcm), rate: 50, file: l.file };
   }
-  if (missing) log(`⚠ ${missing} réplique(s) sans voix (échec réseau) : timings estimés.`);
+  if (missing) throw new Error(`${missing} réplique(s) n'ont pas pu être synthétisées avec la voix de leur personnage : rendu arrêté (relance-le).`);
   return { speech, mode: missing ? 'partial' : 'tts' };
 }
 

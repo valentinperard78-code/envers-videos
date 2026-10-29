@@ -3,17 +3,18 @@ import { slug } from './parser.js';
 import { findInBible } from './bible.js';
 
 // Voix françaises neuronales (edge-tts, gratuites).
+// JAMAIS de voix « Multilingual » : elles détectent la langue phrase par phrase et peuvent changer d'accent
+// au milieu d'un épisode (un nom anglais comme « Josh » suffit). Uniquement des voix monolingues françaises.
 export const VOICES = {
   narrator: { voice: 'fr-FR-HenriNeural', rate: '-3%', pitch: '-6Hz' },
   f: [
     { voice: 'fr-FR-DeniseNeural', rate: '+6%', pitch: '+0Hz' },
-    { voice: 'fr-FR-VivienneMultilingualNeural', rate: '+2%', pitch: '+2Hz' },
+    { voice: 'fr-FR-EloiseNeural', rate: '+2%', pitch: '-6Hz' },
     { voice: 'fr-BE-CharlineNeural', rate: '+4%', pitch: '+0Hz' },
     { voice: 'fr-CA-SylvieNeural', rate: '+4%', pitch: '+0Hz' },
     { voice: 'fr-CH-ArianeNeural', rate: '+4%', pitch: '+0Hz' },
   ],
   m: [
-    { voice: 'fr-FR-RemyMultilingualNeural', rate: '-5%', pitch: '-8Hz' },
     { voice: 'fr-BE-GerardNeural', rate: '+2%', pitch: '+0Hz' },
     { voice: 'fr-CA-JeanNeural', rate: '+3%', pitch: '-2Hz' },
     { voice: 'fr-CA-AntoineNeural', rate: '+3%', pitch: '+0Hz' },
@@ -26,10 +27,10 @@ export const VOICES = {
 // Préréglages de l'épisode 1 (l'apparence détaillée est dans engine/characters/cast.js).
 export const PRESET_META = {
   insuline: { color: '#e8a317', gender: 'f', role: "l'hormone insuline", voice: VOICES.f[0], keywords: ['insuline'] },
-  cellia: { color: '#9b4dff', gender: 'f', role: 'la cellule, reine de la villa', voice: VOICES.f[1], keywords: ['cellule'], big: true, home: 'cellia' },
+  cellia: { color: '#9b4dff', gender: 'f', role: 'la cellule, reine de la villa', voice: { voice: 'fr-CH-ArianeNeural', rate: '+2%', pitch: '+0Hz' }, keywords: ['cellule'], big: true, home: 'cellia' },
   sucrette: { color: '#ff6fb0', gender: 'f', role: 'le glucose', voice: { voice: 'fr-BE-CharlineNeural', rate: '+10%', pitch: '+18Hz' }, keywords: ['glucose', 'sucre'] },
-  pancho: { color: '#ef6a56', gender: 'm', role: 'le pancréas', voice: VOICES.m[0], keywords: ['pancréas', 'pancreas'] },
-  josh: { color: '#2f7de1', gender: 'm', role: "l'humain", voice: VOICES.m[5], keywords: ['humain', 'josh'] },
+  pancho: { color: '#ef6a56', gender: 'm', role: 'le pancréas', voice: { voice: 'fr-FR-HenriNeural', rate: '-6%', pitch: '-16Hz' }, keywords: ['pancréas', 'pancreas'] },
+  josh: { color: '#2f7de1', gender: 'm', role: "l'humain", voice: { voice: 'fr-FR-HenriNeural', rate: '+6%', pitch: '+4Hz' }, keywords: ['humain', 'josh'] },
 };
 
 // Archétypes pour les futures pathologies : mots-clés -> forme / matière / couleur / accessoires.

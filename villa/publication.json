@@ -124,12 +124,11 @@
       "heure": "19:59",
       "mode": "buffer-immediat",
       "buffer": "6ae3978c4ae687d9696c2b67",
-      "statut": "en-file",
-      "prevu": "2026-10-29T19:02:22.309Z"
+      "statut": "retire",
+      "prevu": "2026-10-29T19:02:22.309Z",
+      "note": "supprimé de TikTok par Valentin (voix) — à republier"
     }
   ],
-  "valides": [
-    "ep01-diabete-type-2"
-  ],
+  "valides": [],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
