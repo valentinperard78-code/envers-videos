@@ -105,9 +105,10 @@ export function computeShot(shot, u, dur, subs, all, tAbs, obstacles = []) {
     }
   }
   // évitement des obstacles : si un autre personnage masque le sujet, on tourne autour de la cible
-  if (subs.length && type !== 'establish') {
+  if (type !== 'establish') {
+    // (plans larges sans sujet : on évite quand même les poteaux / palmiers du décor)
     const ids = new Set(subs.map((x) => x.id));
-    const blockers = type === 'keyhole' ? [] : all.filter((x) => !ids.has(x.id));
+    const blockers = type === 'keyhole' || !subs.length ? [] : all.filter((x) => !ids.has(x.id));
     const obst = obstacles.map((o) => ({ pos: V(o.x, 0, o.z), headTop: 9, radius: o.r, fixed: true }));
     const blocked = (P) => obst.some((o) => Math.hypot(P.x - o.pos.x, P.z - o.pos.z) < o.radius + 0.35) || [...blockers, ...obst].some((o) => {
       const c = V(o.pos.x, Math.min(o.headTop * 0.6, P.y), o.pos.z);
