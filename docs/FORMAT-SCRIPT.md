@@ -47,7 +47,8 @@ Un script est un simple fichier texte (`.md`) dans le dossier `scripts/`. Le log
    (ex. ép. 1 : « Pancho est cramé, il ne fabrique plus assez d'Insuline → on injecte de l'insuline pour la remplacer »).
    Ordre habituel : hygiène de vie → médicament de 1re intention (nommé si la source le nomme) → traitement de recours ; pour une urgence : le 15, puis ce que fait l'hôpital.
 6. **Sources officielles uniquement** (`docs/SOURCES.md`), y compris pour le traitement.
-7. **« À retenir »** + **teaser du lendemain** = pathologie suivante du planning (`villa/serie.json`).
+7. **Voix** : chaque personnage garde sa voix et son accent pour toujours (bible). Jamais de voix « Multilingual » (elles changent d'accent sur un mot étranger), jamais de voix de secours : si la synthèse échoue, le rendu s'arrête et on relance.
+8. **« À retenir »** + **teaser du lendemain** = pathologie suivante du planning (`villa/serie.json`).
 
 ## Éléments reconnus
 
