@@ -51,5 +51,14 @@
     "ep04-infarctus",
     "ep05-avc"
   ],
-  "historique": []
+  "historique": [
+    {
+      "episode": "ep01-diabete-type-2",
+      "date": "2026-10-29",
+      "heure": "17:16",
+      "mode": "buffer",
+      "buffer": "6ae371630471a99f44a97359",
+      "statut": "en-file"
+    }
+  ]
 }
