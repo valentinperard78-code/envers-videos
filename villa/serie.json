@@ -95,14 +95,17 @@
       "slug": "asthme",
       "pathologie": "Asthme",
       "titre": "Les bronches à cran",
-      "pitch": "Bronchita se resserre au moindre déclencheur ; le traitement de fond vs la crise.",
+      "pitch": "Bronchita, les bronches, se ferme au moindre déclencheur : Flash (traitement de crise) les rouvre, Cortica (traitement de fond) les calme chaque jour.",
       "personnagesPrevus": [
         "Bronchita (bronches)",
-        "Poussière"
+        "Poussière (poussière et acariens)",
+        "Flash (bronchodilatateur)",
+        "Cortica (corticoïde inhalé)",
+        "Josh"
       ],
       "teaserSuivant": "Rhinite allergique (rhume des foins)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep06-asthme.md",
       "publication": null
     },
     {
