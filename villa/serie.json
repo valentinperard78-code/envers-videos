@@ -113,15 +113,18 @@
       "slug": "allergie",
       "pathologie": "Rhinite allergique (rhume des foins)",
       "titre": "L'intrus du printemps",
-      "pitch": "Histamine sur-réagit au pollen, pourtant inoffensif.",
+      "pitch": "Pollen, inoffensif, est fiché par Lympho : Histamine déclenche éternuements et nez bouché. Anti (l'antihistaminique) la fait taire.",
       "personnagesPrevus": [
-        "Histamine",
         "Pollen",
-        "Lympho (globule blanc)"
+        "Lympho (globule blanc)",
+        "Histamine",
+        "Anti (antihistaminique)",
+        "Bronchita",
+        "Josh"
       ],
       "teaserSuivant": "Grippe",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep07-allergie.md",
       "publication": null
     },
     {
