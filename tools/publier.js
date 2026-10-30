@@ -174,6 +174,7 @@ async function remplirBuffer(conf, videos, now) {
   }
   const deja = await B.scheduled(key, org, ch.id);
   const tampon = conf.buffer?.tampon ?? 10;
+  for (const p of deja) log(`   · en file : ${p.dueAt || '?'} — ${(p.text || '').split('\n')[0].slice(0, 70)}`);
   log(`📚 Buffer : chaîne « ${ch.displayName || ch.name} » — ${deja.length} vidéo(s) déjà en file (max ${tampon}).${ch.isQueuePaused ? ' ⚠ file en PAUSE dans Buffer !' : ''}`);
   const eps = aEnvoyer(conf, videos, Math.max(0, tampon - deja.length));
   const ajout = [];

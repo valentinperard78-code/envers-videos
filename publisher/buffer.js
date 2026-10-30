@@ -33,7 +33,7 @@ export async function tiktokChannel(key, orgId, nom) {
 
 /** Posts programmés (pas encore publiés) de la chaîne. */
 export async function scheduled(key, orgId, channelId) {
-  const q = (withChannel) => `query { posts(input: { organizationId: "${orgId}", sort: [{ field: dueAt, direction: asc }], filter: { status: [scheduled]${withChannel ? `, channelIds: ["${channelId}"]` : ''} } }) { edges { node { id text ${withChannel ? '' : 'channelId'} } } } }`;
+  const q = (withChannel) => `query { posts(input: { organizationId: "${orgId}", sort: [{ field: dueAt, direction: asc }], filter: { status: [scheduled]${withChannel ? `, channelIds: ["${channelId}"]` : ''} } }) { edges { node { id text dueAt ${withChannel ? '' : 'channelId'} } } } }`;
   let d;
   try { d = await gql(key, q(true)); } catch { d = await gql(key, q(false)); }
   return (d.posts?.edges || []).map((e) => e.node).filter((n) => !n.channelId || n.channelId === channelId);
