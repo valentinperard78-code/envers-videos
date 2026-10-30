@@ -55,7 +55,8 @@
     "ep08-grippe",
     "ep09-angine",
     "ep10-gastro-enterite",
-    "ep11-reflux"
+    "ep11-reflux",
+    "ep12-anemie"
   ],
   "historique": [
     {
@@ -186,7 +187,8 @@
     "ep08-grippe",
     "ep09-angine",
     "ep10-gastro-enterite",
-    "ep11-reflux"
+    "ep11-reflux",
+    "ep12-anemie"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
