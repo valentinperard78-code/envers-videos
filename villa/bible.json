@@ -120,7 +120,8 @@
         7,
         8,
         9,
-        10
+        10,
+        11
       ],
       "alias": []
     },
@@ -1015,6 +1016,148 @@
       "premierEpisode": 10,
       "apparitions": [
         10
+      ],
+      "alias": []
+    },
+    "estoma": {
+      "id": "estoma",
+      "nom": "Estoma",
+      "role": "l'estomac",
+      "description": "l'estomac. Elle est orange, gourmande, une diva avec des créoles.",
+      "couleur": "#ff8a3d",
+      "genre": "f",
+      "notions": [
+        "estomac"
+      ],
+      "def": {
+        "shape": "bean",
+        "material": "organ-smooth",
+        "color": "#ff8a3d",
+        "accessories": [
+          "hoops"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Estoma"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+2%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 11,
+      "apparitions": [
+        11
+      ],
+      "alias": []
+    },
+    "acidia": {
+      "id": "acidia",
+      "nom": "Acidia",
+      "role": "l'acide gastrique",
+      "description": "l'acide gastrique. Elle est jaune, piquante, avec des paillettes.",
+      "couleur": "#f6d03b",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "accessories": [
+          "sparkles"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Acidia"
+      },
+      "voix": {
+        "voice": "fr-FR-EloiseNeural",
+        "rate": "-2%",
+        "pitch": "-17Hz"
+      },
+      "premierEpisode": 11,
+      "apparitions": [
+        11
+      ],
+      "alias": []
+    },
+    "sphinx": {
+      "id": "sphinx",
+      "nom": "Sphinx",
+      "role": "le sphincter, la porte du cardia",
+      "description": "le sphincter, la porte du cardia. Il est marron, un muscle fatigué, avec de la sueur.",
+      "couleur": "#8a5a32",
+      "genre": "m",
+      "notions": [
+        "muscle"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#8a5a32",
+        "accessories": [
+          "sweat"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Sphinx"
+      },
+      "voix": {
+        "voice": "fr-CA-ThierryNeural",
+        "rate": "-2%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 11,
+      "apparitions": [
+        11
+      ],
+      "alias": []
+    },
+    "ipeo": {
+      "id": "ipeo",
+      "nom": "Ipéo",
+      "role": "l'inhibiteur de la pompe à protons",
+      "description": "l'inhibiteur de la pompe à protons. Il est bleu, un médicament sérieux, avec une cravate.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Ipéo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+6%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 11,
+      "apparitions": [
+        11
       ],
       "alias": []
     }
