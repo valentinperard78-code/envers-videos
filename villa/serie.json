@@ -167,14 +167,17 @@
       "slug": "gastro-enterite",
       "pathologie": "Gastro-entérite",
       "titre": "Tempête dans le ventre",
-      "pitch": "Un virus retourne Gastro l'intestin ; le danger, c'est la déshydratation.",
+      "pitch": "Rota le rotavirus retourne Gastro l'intestin ; le vrai danger, c'est la déshydratation : Hydra et l'eau sucrée-salée remplacent ce qui est perdu.",
       "personnagesPrevus": [
         "Gastro (intestin)",
-        "Rota (virus)"
+        "Rota (rotavirus)",
+        "Hydra (sachet de réhydratation)",
+        "Antibio",
+        "Josh"
       ],
       "teaserSuivant": "Reflux gastro-œsophagien",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep10-gastro-enterite.md",
       "publication": null
     },
     {
