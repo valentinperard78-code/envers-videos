@@ -203,14 +203,15 @@
       "slug": "anemie",
       "pathologie": "Anémie par manque de fer",
       "titre": "Plus de fer, plus d'énergie",
-      "pitch": "Les globules rouges de Josh manquent de fer : fatigue et essoufflement.",
+      "pitch": "Ferro le fer s'en va, Hémo le globule rouge ne peut plus livrer l'oxygène : fatigue, pâleur, essoufflement. Prise de sang, recherche de la cause et fer pendant au moins 3 mois.",
       "personnagesPrevus": [
         "Hémo (globule rouge)",
-        "Ferro (fer)"
+        "Ferro (fer)",
+        "Josh"
       ],
       "teaserSuivant": "Diabète de type 1",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep12-anemie.md",
       "publication": null
     },
     {
