@@ -132,14 +132,16 @@
       "slug": "grippe",
       "pathologie": "Grippe",
       "titre": "Le virus qui s'incruste",
-      "pitch": "Flu le virus envahit la villa ; Lympho et le vaccin organisent la défense.",
+      "pitch": "Flu, le virus de la grippe, met Josh au lit : repos, eau, paracétamol, pas d'antibiotique. Vaxi, le vaccin, apprend à Lympho à le reconnaître.",
       "personnagesPrevus": [
         "Flu (virus de la grippe)",
-        "Lympho"
+        "Lympho",
+        "Vaxi (vaccin)",
+        "Josh"
       ],
       "teaserSuivant": "Angine : virale ou bactérienne ?",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep08-grippe.md",
       "publication": null
     },
     {
