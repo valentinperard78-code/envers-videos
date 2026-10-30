@@ -149,15 +149,17 @@
       "slug": "angine",
       "pathologie": "Angine : virale ou bactérienne ?",
       "titre": "Antibio, pas automatique",
-      "pitch": "Le test rapide départage virus et bactérie ; les antibiotiques ne servent pas contre les virus.",
+      "pitch": "Gorge en feu : Flu le virus ou Strepto la bactérie ? Le test rapide tranche, et Antibio ne sert que contre la bactérie.",
       "personnagesPrevus": [
-        "Strepto (bactérie)",
+        "Amygdala (amygdales)",
+        "Strepto (streptocoque)",
         "Flu",
-        "Antibio (antibiotique)"
+        "Antibio (antibiotique)",
+        "Josh"
       ],
       "teaserSuivant": "Gastro-entérite",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep09-angine.md",
       "publication": null
     },
     {
