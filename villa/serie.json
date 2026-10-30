@@ -185,14 +185,17 @@
       "slug": "reflux",
       "pathologie": "Reflux gastro-œsophagien",
       "titre": "Ça remonte",
-      "pitch": "L'acide de l'estomac remonte là où il ne devrait pas.",
+      "pitch": "Sphinx, la porte entre l'estomac et l'œsophage, lâche : Acidia remonte et brûle. Ipéo, l'IPP, baisse la production d'acide pour laisser cicatriser.",
       "personnagesPrevus": [
         "Estoma (estomac)",
-        "Acidia (acide)"
+        "Acidia (acide gastrique)",
+        "Sphinx (sphincter du cardia)",
+        "Ipéo (IPP)",
+        "Josh"
       ],
       "teaserSuivant": "Anémie par manque de fer",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep11-reflux.md",
       "publication": null
     },
     {
