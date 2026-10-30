@@ -118,7 +118,8 @@
         5,
         6,
         7,
-        8
+        8,
+        9
       ],
       "alias": []
     },
@@ -753,7 +754,8 @@
       },
       "premierEpisode": 8,
       "apparitions": [
-        8
+        8,
+        9
       ],
       "alias": []
     },
@@ -790,6 +792,112 @@
       "premierEpisode": 8,
       "apparitions": [
         8
+      ],
+      "alias": []
+    },
+    "amygdala": {
+      "id": "amygdala",
+      "nom": "Amygdala",
+      "role": "les amygdales",
+      "description": "les amygdales. Elle est orange, dramatique, avec des paillettes.",
+      "couleur": "#ff8a3d",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "sparkles"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Amygdala"
+      },
+      "voix": {
+        "voice": "fr-CA-SylvieNeural",
+        "rate": "+8%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 9,
+      "apparitions": [
+        9
+      ],
+      "alias": []
+    },
+    "strepto": {
+      "id": "strepto",
+      "nom": "Strepto",
+      "role": "le streptocoque, une bactérie",
+      "description": "le streptocoque, une bactérie. Il est rouge, provocateur, avec une moustache.",
+      "couleur": "#e2394a",
+      "genre": "m",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#e2394a",
+        "accessories": [
+          "mustache"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Strepto"
+      },
+      "voix": {
+        "voice": "fr-CA-JeanNeural",
+        "rate": "-1%",
+        "pitch": "-13Hz"
+      },
+      "premierEpisode": 9,
+      "apparitions": [
+        9
+      ],
+      "alias": []
+    },
+    "antibio": {
+      "id": "antibio",
+      "nom": "Antibio",
+      "role": "l'antibiotique",
+      "description": "l'antibiotique. Il est blanc, sérieux, avec des lunettes.",
+      "couleur": "#f4f4f4",
+      "genre": "m",
+      "notions": [
+        "antibiotique"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f4f4f4",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Antibio"
+      },
+      "voix": {
+        "voice": "fr-CA-AntoineNeural",
+        "rate": "-1%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 9,
+      "apparitions": [
+        9
       ],
       "alias": []
     }
