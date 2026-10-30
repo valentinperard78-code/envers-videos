@@ -219,16 +219,18 @@
       "slug": "diabete-type-1",
       "pathologie": "Diabète de type 1",
       "titre": "La clé disparue",
-      "pitch": "Cette fois, Insuline disparaît : maladie auto-immune, à ne pas confondre avec l'épisode 1.",
+      "pitch": "Lympho se trompe de cible et détruit l'usine à insuline de Pancho : maladie auto-immune, rien à voir avec l'épisode 1. Le traitement : Insuline revient, en stylo ou en pompe, à vie.",
       "personnagesPrevus": [
-        "Insuline",
         "Pancho",
+        "Insuline",
         "Sucrette",
-        "Lympho"
+        "Cellia",
+        "Lympho",
+        "Josh"
       ],
       "teaserSuivant": "Hypothyroïdie",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep13-diabete-type-1.md",
       "publication": null
     },
     {
