@@ -1,6 +1,41 @@
 {
   "_aide": "Relevés du compte TikTok la.villa.des.pathologies (lus sur la page publique du profil). Un relevé par récap du vendredi.",
   "releves": [
-    { "date": "2026-10-30", "heure": "06:55", "abonnes": 5, "abonnements": 0, "likes_total": 19, "videos": [{ "episode": "ep01-diabete-type-2", "vues": 772 }], "note": "Relevé de départ (ép. 1 en ligne depuis 00h30)." }
+    {
+      "date": "2026-10-30",
+      "heure": "06:55",
+      "abonnes": 5,
+      "abonnements": 0,
+      "likes_total": 19,
+      "videos": [
+        {
+          "episode": "ep01-diabete-type-2",
+          "vues": 772
+        }
+      ],
+      "note": "Relevé de départ (ép. 1 en ligne depuis 00h30)."
+    },
+    {
+      "date": "2026-10-30",
+      "heure": "20:40",
+      "abonnes": 8,
+      "abonnements": 0,
+      "likes_total": 30,
+      "videos": [
+        {
+          "episode": "ep01-diabete-type-2",
+          "vues": 896
+        },
+        {
+          "episode": "ep02-hypertension",
+          "vues": 79
+        },
+        {
+          "episode": "ep03-cholesterol",
+          "vues": 86
+        }
+      ],
+      "note": "Récap hebdo du vendredi soir (lu via Nimble, TinyFish indisponible). Ép. 2 en ligne depuis 12:30, ép. 3 depuis 19:00."
+    }
   ]
 }
