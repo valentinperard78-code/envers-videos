@@ -115,7 +115,8 @@
         2,
         3,
         4,
-        5
+        5,
+        6
       ],
       "alias": []
     },
@@ -422,7 +423,149 @@
         5
       ],
       "alias": []
+    },
+    "bronchita": {
+      "id": "bronchita",
+      "nom": "Bronchita",
+      "role": "les bronches",
+      "description": "les bronches. Elle est rose, hypersensible, toujours à cran, avec un chignon.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [
+        "bronche"
+      ],
+      "def": {
+        "shape": "lung",
+        "material": "organ-lobules",
+        "color": "#ff6fb0",
+        "accessories": [
+          "bun"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Bronchita"
+      },
+      "voix": {
+        "voice": "fr-FR-EloiseNeural",
+        "rate": "+2%",
+        "pitch": "-6Hz"
+      },
+      "premierEpisode": 6,
+      "apparitions": [
+        6
+      ],
+      "alias": []
+    },
+    "poussiere": {
+      "id": "poussiere",
+      "nom": "Poussière",
+      "role": "la poussière et les acariens",
+      "description": "la poussière et les acariens. Il est gris, sournois, avec une casquette.",
+      "couleur": "#9aa0a6",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#9aa0a6",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Poussière"
+      },
+      "voix": {
+        "voice": "fr-CA-JeanNeural",
+        "rate": "+7%",
+        "pitch": "+9Hz"
+      },
+      "premierEpisode": 6,
+      "apparitions": [
+        6
+      ],
+      "alias": []
+    },
+    "flash": {
+      "id": "flash",
+      "nom": "Flash",
+      "role": "le bronchodilatateur d'action…",
+      "description": "le bronchodilatateur d'action rapide. Un médicament bleu, pressé, avec des lunettes de soleil.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Flash"
+      },
+      "voix": {
+        "voice": "fr-CA-AntoineNeural",
+        "rate": "+7%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 6,
+      "apparitions": [
+        6
+      ],
+      "alias": []
+    },
+    "cortica": {
+      "id": "cortica",
+      "nom": "Cortica",
+      "role": "le corticoïde inhalé du…",
+      "description": "le corticoïde inhalé du traitement de fond. Un médicament orange, calme et posée, avec des lunettes.",
+      "couleur": "#ff8a3d",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Cortica"
+      },
+      "voix": {
+        "voice": "fr-CH-FabriceNeural",
+        "rate": "+6%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 6,
+      "apparitions": [
+        6
+      ],
+      "alias": []
     }
   },
-  "maj": "2026-10-29"
+  "maj": "2026-10-30"
 }
