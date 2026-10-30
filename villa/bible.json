@@ -119,7 +119,8 @@
         6,
         7,
         8,
-        9
+        9,
+        10
       ],
       "alias": []
     },
@@ -897,7 +898,123 @@
       },
       "premierEpisode": 9,
       "apparitions": [
-        9
+        9,
+        10
+      ],
+      "alias": []
+    },
+    "gastro": {
+      "id": "gastro",
+      "nom": "Gastro",
+      "role": "l'intestin",
+      "description": "l'intestin. Il est rose, sensible, un peu dramatique, avec une casquette.",
+      "couleur": "#ff6fb0",
+      "genre": "m",
+      "notions": [
+        "intestin"
+      ],
+      "def": {
+        "shape": "bean",
+        "material": "organ-smooth",
+        "color": "#ff6fb0",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Gastro"
+      },
+      "voix": {
+        "voice": "fr-CH-FabriceNeural",
+        "rate": "-2%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 10,
+      "apparitions": [
+        10
+      ],
+      "alias": []
+    },
+    "rota": {
+      "id": "rota",
+      "nom": "Rota",
+      "role": "le rotavirus",
+      "description": "le rotavirus. Il est violet, un virus farceur, avec une couronne.",
+      "couleur": "#9b4dff",
+      "genre": "m",
+      "notions": [
+        "virus"
+      ],
+      "def": {
+        "shape": "virus",
+        "material": "skin",
+        "color": "#9b4dff",
+        "accessories": [
+          [
+            "spikes",
+            {
+              "color": "#3e9b50",
+              "tipColor": "#ff4d6d"
+            }
+          ],
+          "tiara"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Rota"
+      },
+      "voix": {
+        "voice": "fr-FR-HenriNeural",
+        "rate": "+2%",
+        "pitch": "-7Hz"
+      },
+      "premierEpisode": 10,
+      "apparitions": [
+        10
+      ],
+      "alias": []
+    },
+    "hydra": {
+      "id": "hydra",
+      "nom": "Hydra",
+      "role": "le sachet de réhydratation",
+      "description": "le sachet de réhydratation. Elle est turquoise, pétillante, un médicament avec un nœud.",
+      "couleur": "#2ec4c4",
+      "genre": "f",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#2ec4c4",
+        "accessories": [
+          "bow"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Hydra"
+      },
+      "voix": {
+        "voice": "fr-CH-ArianeNeural",
+        "rate": "+8%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 10,
+      "apparitions": [
+        10
       ],
       "alias": []
     }
