@@ -53,7 +53,8 @@
     "ep06-asthme",
     "ep07-allergie",
     "ep08-grippe",
-    "ep09-angine"
+    "ep09-angine",
+    "ep10-gastro-enterite"
   ],
   "historique": [
     {
@@ -182,7 +183,8 @@
     "ep06-asthme",
     "ep07-allergie",
     "ep08-grippe",
-    "ep09-angine"
+    "ep09-angine",
+    "ep10-gastro-enterite"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
