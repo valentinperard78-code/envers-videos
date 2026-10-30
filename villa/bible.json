@@ -20,7 +20,8 @@
       "premierEpisode": 1,
       "apparitions": [
         1,
-        2
+        2,
+        13
       ],
       "alias": []
     },
@@ -43,7 +44,8 @@
       "premierEpisode": 1,
       "apparitions": [
         1,
-        2
+        2,
+        13
       ],
       "alias": []
     },
@@ -67,7 +69,8 @@
       "apparitions": [
         1,
         2,
-        12
+        12,
+        13
       ],
       "alias": []
     },
@@ -90,7 +93,8 @@
       "premierEpisode": 1,
       "apparitions": [
         1,
-        2
+        2,
+        13
       ],
       "alias": []
     },
@@ -123,7 +127,8 @@
         9,
         10,
         11,
-        12
+        12,
+        13
       ],
       "alias": []
     },
@@ -643,7 +648,8 @@
       "premierEpisode": 7,
       "apparitions": [
         7,
-        8
+        8,
+        13
       ],
       "alias": []
     },
