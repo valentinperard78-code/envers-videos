@@ -117,7 +117,8 @@
         4,
         5,
         6,
-        7
+        7,
+        8
       ],
       "alias": []
     },
@@ -636,7 +637,8 @@
       },
       "premierEpisode": 7,
       "apparitions": [
-        7
+        7,
+        8
       ],
       "alias": []
     },
@@ -709,6 +711,85 @@
       "premierEpisode": 7,
       "apparitions": [
         7
+      ],
+      "alias": []
+    },
+    "flu": {
+      "id": "flu",
+      "nom": "Flu",
+      "role": "le virus de la grippe",
+      "description": "le virus de la grippe. Il est vert, arrogant, piquant, avec des lunettes de soleil.",
+      "couleur": "#4cbf6b",
+      "genre": "m",
+      "notions": [
+        "virus"
+      ],
+      "def": {
+        "shape": "virus",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          [
+            "spikes",
+            {
+              "color": "#3e9b50",
+              "tipColor": "#ff4d6d"
+            }
+          ],
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Flu"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "-2%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 8,
+      "apparitions": [
+        8
+      ],
+      "alias": []
+    },
+    "vaxi": {
+      "id": "vaxi",
+      "nom": "Vaxi",
+      "role": "le vaccin contre la grippe",
+      "description": "le vaccin contre la grippe. Elle est turquoise, stratège, avec une couronne.",
+      "couleur": "#2ec4c4",
+      "genre": "f",
+      "notions": [
+        "vaccin"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#2ec4c4",
+        "accessories": [
+          "tiara"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Vaxi"
+      },
+      "voix": {
+        "voice": "fr-BE-CharlineNeural",
+        "rate": "+8%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 8,
+      "apparitions": [
+        8
       ],
       "alias": []
     }
