@@ -49,7 +49,8 @@
     "ep02-hypertension",
     "ep03-cholesterol",
     "ep04-infarctus",
-    "ep05-avc"
+    "ep05-avc",
+    "ep06-asthme"
   ],
   "historique": [
     {
@@ -174,7 +175,8 @@
     "ep02-hypertension",
     "ep03-cholesterol",
     "ep04-infarctus",
-    "ep05-avc"
+    "ep05-avc",
+    "ep06-asthme"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
