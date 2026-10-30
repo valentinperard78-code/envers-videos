@@ -56,7 +56,8 @@
     "ep09-angine",
     "ep10-gastro-enterite",
     "ep11-reflux",
-    "ep12-anemie"
+    "ep12-anemie",
+    "ep13-diabete-type-1"
   ],
   "historique": [
     {
@@ -188,7 +189,8 @@
     "ep09-angine",
     "ep10-gastro-enterite",
     "ep11-reflux",
-    "ep12-anemie"
+    "ep12-anemie",
+    "ep13-diabete-type-1"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
