@@ -116,7 +116,8 @@
         3,
         4,
         5,
-        6
+        6,
+        7
       ],
       "alias": []
     },
@@ -456,7 +457,8 @@
       },
       "premierEpisode": 6,
       "apparitions": [
-        6
+        6,
+        7
       ],
       "alias": []
     },
@@ -563,6 +565,150 @@
       "premierEpisode": 6,
       "apparitions": [
         6
+      ],
+      "alias": []
+    },
+    "pollen": {
+      "id": "pollen",
+      "nom": "Pollen",
+      "role": "le pollen de graminées",
+      "description": "le pollen de graminées. Il est jaune, tout petit, gentil, avec un nœud.",
+      "couleur": "#f6d03b",
+      "genre": "m",
+      "notions": [
+        "pollen"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "accessories": [
+          "bow"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Pollen"
+      },
+      "voix": {
+        "voice": "fr-FR-HenriNeural",
+        "rate": "+10%",
+        "pitch": "+15Hz"
+      },
+      "premierEpisode": 7,
+      "apparitions": [
+        7
+      ],
+      "alias": []
+    },
+    "lympho": {
+      "id": "lympho",
+      "nom": "Lympho",
+      "role": "le globule blanc",
+      "description": "le globule blanc. Il est blanc, parano, toujours en alerte.",
+      "couleur": "#f4f4f4",
+      "genre": "m",
+      "notions": [
+        "globule blanc"
+      ],
+      "def": {
+        "shape": "sphere",
+        "material": "skin",
+        "color": "#f4f4f4",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Lympho"
+      },
+      "voix": {
+        "voice": "fr-CA-ThierryNeural",
+        "rate": "+6%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 7,
+      "apparitions": [
+        7
+      ],
+      "alias": []
+    },
+    "histamine": {
+      "id": "histamine",
+      "nom": "Histamine",
+      "role": "l'histamine, la molécule de…",
+      "description": "l'histamine, la molécule de l'alarme. Une diva violette explosive, avec des créoles.",
+      "couleur": "#9b4dff",
+      "genre": "f",
+      "notions": [
+        "histamine"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#9b4dff",
+        "accessories": [
+          "hoops"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Histamine"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+10%",
+        "pitch": "+11Hz"
+      },
+      "premierEpisode": 7,
+      "apparitions": [
+        7
+      ],
+      "alias": []
+    },
+    "anti": {
+      "id": "anti",
+      "nom": "Anti",
+      "role": "l'antihistaminique",
+      "description": "l'antihistaminique. Un médicament vert, cool, avec une cravate.",
+      "couleur": "#4cbf6b",
+      "genre": "f",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Anti"
+      },
+      "voix": {
+        "voice": "fr-FR-EloiseNeural",
+        "rate": "+6%",
+        "pitch": "+5Hz"
+      },
+      "premierEpisode": 7,
+      "apparitions": [
+        7
       ],
       "alias": []
     }
