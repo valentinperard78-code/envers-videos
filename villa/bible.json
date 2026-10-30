@@ -66,7 +66,8 @@
       "premierEpisode": 1,
       "apparitions": [
         1,
-        2
+        2,
+        12
       ],
       "alias": []
     },
@@ -121,7 +122,8 @@
         8,
         9,
         10,
-        11
+        11,
+        12
       ],
       "alias": []
     },
@@ -1158,6 +1160,81 @@
       "premierEpisode": 11,
       "apparitions": [
         11
+      ],
+      "alias": []
+    },
+    "hemo": {
+      "id": "hemo",
+      "nom": "Hémo",
+      "role": "le globule rouge",
+      "description": "le globule rouge. Il est rouge, livreur, toujours pressé, avec une casquette.",
+      "couleur": "#e2394a",
+      "genre": "m",
+      "notions": [
+        "globule rouge"
+      ],
+      "def": {
+        "shape": "disc",
+        "material": "organ-smooth",
+        "color": "#e2394a",
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12",
+          "eyeY": 0.6,
+          "eyeX": 0.2,
+          "mouthY": 0.38
+        },
+        "accessories": [
+          "cap"
+        ],
+        "name": "Hémo"
+      },
+      "voix": {
+        "voice": "fr-CA-JeanNeural",
+        "rate": "+7%",
+        "pitch": "+14Hz"
+      },
+      "premierEpisode": 12,
+      "apparitions": [
+        12
+      ],
+      "alias": []
+    },
+    "ferro": {
+      "id": "ferro",
+      "nom": "Ferro",
+      "role": "le fer",
+      "description": "le fer. Il est gris, costaud, avec des lunettes de soleil.",
+      "couleur": "#9aa0a6",
+      "genre": "m",
+      "notions": [
+        "fer"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#9aa0a6",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Ferro"
+      },
+      "voix": {
+        "voice": "fr-CA-AntoineNeural",
+        "rate": "+7%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 12,
+      "apparitions": [
+        12
       ],
       "alias": []
     }
