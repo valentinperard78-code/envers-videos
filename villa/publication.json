@@ -57,7 +57,8 @@
     "ep10-gastro-enterite",
     "ep11-reflux",
     "ep12-anemie",
-    "ep13-diabete-type-1"
+    "ep13-diabete-type-1",
+    "ep14-hypothyroidie"
   ],
   "historique": [
     {
@@ -254,7 +255,8 @@
     "ep10-gastro-enterite",
     "ep11-reflux",
     "ep12-anemie",
-    "ep13-diabete-type-1"
+    "ep13-diabete-type-1",
+    "ep14-hypothyroidie"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
