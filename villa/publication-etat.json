@@ -1,18 +1,18 @@
 {
-  "quand": "2026-10-31T09:18:08.524Z",
+  "quand": "2026-10-31T17:46:21.533Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-10-31T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 4 : Code rouge",
     "   · en file : 2026-10-31T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 5 : Panne de courant",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 2 vidéo(s) déjà en file (max 10).",
-    "✅ ep06-asthme ajouté à la file Buffer.",
-    "✅ ep07-allergie ajouté à la file Buffer.",
-    "✅ ep08-grippe ajouté à la file Buffer.",
-    "✅ ep09-angine ajouté à la file Buffer.",
-    "✅ ep10-gastro-enterite ajouté à la file Buffer.",
-    "✅ ep11-reflux ajouté à la file Buffer.",
-    "✅ ep12-anemie ajouté à la file Buffer.",
-    "✅ ep13-diabete-type-1 ajouté à la file Buffer."
+    "   · en file : 2026-11-01T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 6 : Les bronches à cran",
+    "   · en file : 2026-11-01T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 7 : L'intrus du printemps",
+    "   · en file : 2026-11-02T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 8 : Le virus qui s'incruste",
+    "   · en file : 2026-11-02T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 9 : Antibio, pas automatique",
+    "   · en file : 2026-11-03T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 10 : Tempête dans le ventre",
+    "   · en file : 2026-11-03T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 11 : Ça remonte",
+    "   · en file : 2026-11-04T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 12 : Plus de fer, plus d'énergie",
+    "   · en file : 2026-11-04T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 13 : La clé disparue",
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 9 vidéo(s) déjà en file (max 10).",
+    "✅ ep14-hypothyroidie ajouté à la file Buffer."
   ]
 }
