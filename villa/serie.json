@@ -291,14 +291,16 @@
       "slug": "cystite",
       "pathologie": "Infection urinaire (cystite)",
       "titre": "La vessie s'enflamme",
-      "pitch": "Une bactérie remonte dans la vessie.",
+      "pitch": "Coli (Escherichia coli) remonte l'urètre et s'installe chez Vessia, la vessie : brûlures, envies pressantes, urines troubles. Rénato craint la pyélonéphrite. Le traitement : bandelette puis Antibio, une dose unique de fosfomycine.",
       "personnagesPrevus": [
-        "Vessie",
-        "E. coli (bactérie)"
+        "Vessia",
+        "Coli",
+        "Antibio",
+        "Rénato"
       ],
       "teaserSuivant": "Ostéoporose",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep17-cystite.md",
       "publication": null
     },
     {
