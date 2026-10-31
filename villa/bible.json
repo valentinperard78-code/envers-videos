@@ -133,7 +133,8 @@
         13,
         14,
         15,
-        16
+        16,
+        17
       ],
       "alias": []
     },
@@ -916,7 +917,8 @@
       "premierEpisode": 9,
       "apparitions": [
         9,
-        10
+        10,
+        17
       ],
       "alias": []
     },
@@ -1460,7 +1462,8 @@
       },
       "premierEpisode": 16,
       "apparitions": [
-        16
+        16,
+        17
       ],
       "alias": []
     },
@@ -1532,6 +1535,78 @@
       "premierEpisode": 16,
       "apparitions": [
         16
+      ],
+      "alias": []
+    },
+    "vessia": {
+      "id": "vessia",
+      "nom": "Vessia",
+      "role": "la vessie, une poche ronde",
+      "description": "la vessie, une poche ronde. Elle est jaune, avec un chignon.",
+      "couleur": "#f6d03b",
+      "genre": "f",
+      "notions": [
+        "vessie"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "accessories": [
+          "bun"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Vessia"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+10%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 17,
+      "apparitions": [
+        17
+      ],
+      "alias": []
+    },
+    "coli": {
+      "id": "coli",
+      "nom": "Coli",
+      "role": "Escherichia coli, un microbe…",
+      "description": "Escherichia coli, un microbe voyageur. Il est vert, avec une casquette, c'est une bactérie.",
+      "couleur": "#4cbf6b",
+      "genre": "m",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Coli"
+      },
+      "voix": {
+        "voice": "fr-CA-AntoineNeural",
+        "rate": "-1%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 17,
+      "apparitions": [
+        17
       ],
       "alias": []
     }
