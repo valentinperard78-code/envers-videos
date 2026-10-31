@@ -238,13 +238,17 @@
       "slug": "hypothyroidie",
       "pathologie": "Hypothyroïdie",
       "titre": "Le thermostat en panne",
-      "pitch": "Thyro, la thyroïde, ralentit toute la villa.",
+      "pitch": "Thyro, la thyroïde, tourne au ralenti : fatigue, froid, prise de poids. Tess (la TSH) crie de plus en plus fort. Le traitement : Lévo, la lévothyroxine, remplace l'hormone manquante, un comprimé le matin à jeun, à vie.",
       "personnagesPrevus": [
-        "Thyro (thyroïde)"
+        "Thyro",
+        "Tess",
+        "Lévo",
+        "Lympho",
+        "Josh"
       ],
       "teaserSuivant": "Migraine",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep14-hypothyroidie.md",
       "publication": null
     },
     {
