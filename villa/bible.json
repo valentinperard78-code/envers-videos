@@ -131,7 +131,8 @@
         11,
         12,
         13,
-        14
+        14,
+        15
       ],
       "alias": []
     },
@@ -207,7 +208,8 @@
       "apparitions": [
         2,
         3,
-        4
+        4,
+        15
       ],
       "alias": []
     },
@@ -435,7 +437,8 @@
       },
       "premierEpisode": 5,
       "apparitions": [
-        5
+        5,
+        15
       ],
       "alias": []
     },
@@ -1349,6 +1352,78 @@
       "premierEpisode": 14,
       "apparitions": [
         14
+      ],
+      "alias": []
+    },
+    "neura": {
+      "id": "neura",
+      "nom": "Neura",
+      "role": "un neurone survolté",
+      "description": "un neurone survolté. Elle est violette, avec des paillettes.",
+      "couleur": "#9b4dff",
+      "genre": "f",
+      "notions": [
+        "neurone"
+      ],
+      "def": {
+        "shape": "cell",
+        "material": "membrane",
+        "color": "#9b4dff",
+        "door": false,
+        "legs": false,
+        "accessories": [
+          "sparkles"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Neura"
+      },
+      "voix": {
+        "voice": "fr-CA-SylvieNeural",
+        "rate": "+0%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 15,
+      "apparitions": [
+        15
+      ],
+      "alias": []
+    },
+    "tripta": {
+      "id": "tripta",
+      "nom": "Tripta",
+      "role": "le triptan, un comprimé anti-crise",
+      "description": "le triptan, un comprimé anti-crise. Elle est orange, avec une couronne.",
+      "couleur": "#ff8a3d",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "tiara"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Tripta"
+      },
+      "voix": {
+        "voice": "fr-CH-ArianeNeural",
+        "rate": "+0%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 15,
+      "apparitions": [
+        15
       ],
       "alias": []
     }
