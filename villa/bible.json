@@ -132,7 +132,8 @@
         12,
         13,
         14,
-        15
+        15,
+        16
       ],
       "alias": []
     },
@@ -1424,6 +1425,113 @@
       "premierEpisode": 15,
       "apparitions": [
         15
+      ],
+      "alias": []
+    },
+    "renato": {
+      "id": "renato",
+      "nom": "Rénato",
+      "role": "le rein, en forme de haricot",
+      "description": "le rein, en forme de haricot. Il est rouge, avec une moustache.",
+      "couleur": "#e2394a",
+      "genre": "m",
+      "notions": [
+        "rein"
+      ],
+      "def": {
+        "shape": "bean",
+        "material": "organ",
+        "color": "#e2394a",
+        "accessories": [
+          "mustache"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Rénato"
+      },
+      "voix": {
+        "voice": "fr-CA-ThierryNeural",
+        "rate": "+6%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 16,
+      "apparitions": [
+        16
+      ],
+      "alias": []
+    },
+    "calci": {
+      "id": "calci",
+      "nom": "Calci",
+      "role": "le calcul, une petite pierre",
+      "description": "le calcul, une petite pierre. Il est gris, fait de cristaux de sel, avec des lunettes de soleil.",
+      "couleur": "#9aa0a6",
+      "genre": "m",
+      "notions": [
+        "sel"
+      ],
+      "def": {
+        "shape": "crystal",
+        "material": "salt",
+        "color": "#9aa0a6",
+        "accessories": [
+          "sparkles",
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Calci"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "-2%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 16,
+      "apparitions": [
+        16
+      ],
+      "alias": []
+    },
+    "calmos": {
+      "id": "calmos",
+      "nom": "Calmos",
+      "role": "l'anti-inflammatoire, un…",
+      "description": "l'anti-inflammatoire, un comprimé anti-douleur. Il est bleu, avec une casquette.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Calmos"
+      },
+      "voix": {
+        "voice": "fr-CA-JeanNeural",
+        "rate": "-1%",
+        "pitch": "-18Hz"
+      },
+      "premierEpisode": 16,
+      "apparitions": [
+        16
       ],
       "alias": []
     }
