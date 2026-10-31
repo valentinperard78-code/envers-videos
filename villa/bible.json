@@ -70,7 +70,8 @@
         1,
         2,
         12,
-        13
+        13,
+        14
       ],
       "alias": []
     },
@@ -94,7 +95,8 @@
       "apparitions": [
         1,
         2,
-        13
+        13,
+        14
       ],
       "alias": []
     },
@@ -128,7 +130,8 @@
         10,
         11,
         12,
-        13
+        13,
+        14
       ],
       "alias": []
     },
@@ -649,7 +652,8 @@
       "apparitions": [
         7,
         8,
-        13
+        13,
+        14
       ],
       "alias": []
     },
@@ -1243,7 +1247,111 @@
         12
       ],
       "alias": []
+    },
+    "thyro": {
+      "id": "thyro",
+      "nom": "Thyro",
+      "role": "la thyroïde, en forme de…",
+      "description": "la thyroïde, en forme de papillon à la base du cou. Il est turquoise, avec un nœud.",
+      "couleur": "#2ec4c4",
+      "genre": "m",
+      "notions": [
+        "thyroide"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#2ec4c4",
+        "accessories": [
+          "bow"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Thyro"
+      },
+      "voix": {
+        "voice": "fr-CH-FabriceNeural",
+        "rate": "+6%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 14,
+      "apparitions": [
+        14
+      ],
+      "alias": []
+    },
+    "tess": {
+      "id": "tess",
+      "nom": "Tess",
+      "role": "la TSH, la messagère de…",
+      "description": "la TSH, la messagère de l'hypophyse. Elle est rose, avec un chignon.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#ff6fb0",
+        "accessories": [
+          "bun"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Tess"
+      },
+      "voix": {
+        "voice": "fr-BE-CharlineNeural",
+        "rate": "+0%",
+        "pitch": "-11Hz"
+      },
+      "premierEpisode": 14,
+      "apparitions": [
+        14
+      ],
+      "alias": []
+    },
+    "levo": {
+      "id": "levo",
+      "nom": "Lévo",
+      "role": "la lévothyroxine, un comprimé…",
+      "description": "la lévothyroxine, un comprimé blanc. Il est calme, avec des lunettes.",
+      "couleur": "#f4f4f4",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#f4f4f4",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Lévo"
+      },
+      "voix": {
+        "voice": "fr-FR-HenriNeural",
+        "rate": "+10%",
+        "pitch": "+20Hz"
+      },
+      "premierEpisode": 14,
+      "apparitions": [
+        14
+      ],
+      "alias": []
     }
   },
-  "maj": "2026-10-30"
+  "maj": "2026-10-31"
 }
