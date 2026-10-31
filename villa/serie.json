@@ -256,13 +256,17 @@
       "slug": "migraine",
       "pathologie": "Migraine",
       "titre": "Le cerveau en alerte",
-      "pitch": "Neura et ses crises : déclencheurs, aura, traitement.",
+      "pitch": "Neura, un neurone survolté, s'emballe : Artie gonfle et Cervo fait une crise de migraine (aura, douleur d'un côté, lumière insupportable). Le traitement : Tripta, le triptan, resserre les vaisseaux ; agenda des déclencheurs et traitement de fond si crises fréquentes.",
       "personnagesPrevus": [
-        "Neura"
+        "Cervo",
+        "Neura",
+        "Artie",
+        "Tripta",
+        "Josh"
       ],
       "teaserSuivant": "Calculs rénaux (colique néphrétique)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep15-migraine.md",
       "publication": null
     },
     {
