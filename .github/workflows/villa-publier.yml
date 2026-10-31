@@ -43,7 +43,7 @@ jobs:
           if [ -n "${{ github.event.inputs.episode }}" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "go=1" >> $GITHUB_OUTPUT; exit 0; fi
           node -e "
             import('./tools/publier.js').then(m=>{const c=JSON.parse(require('fs').readFileSync('villa/publication.json','utf8'));
-            const h=+new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',hour12:false}).format(new Date());
+            const h=parseInt(new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',hourCycle:'h23'}).format(new Date()),10);
             const go=c.actif && (c.mode==='buffer' ? h%6===0 && m.nextEpisode(c) : m.dueSlot(c) && m.nextEpisode(c)); console.log(go?'créneau : '+m.dueSlot(c)+' → '+m.nextEpisode(c):'rien à publier'); require('fs').appendFileSync(process.env.GITHUB_OUTPUT,'go='+(go?1:0)+'\n');})"
       - name: Vidéos (branche villa-videos)
         if: steps.due.outputs.go == '1'
