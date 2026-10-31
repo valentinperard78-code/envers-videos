@@ -59,7 +59,8 @@
     "ep12-anemie",
     "ep13-diabete-type-1",
     "ep14-hypothyroidie",
-    "ep15-migraine"
+    "ep15-migraine",
+    "ep16-calculs-renaux"
   ],
   "historique": [
     {
@@ -258,7 +259,8 @@
     "ep12-anemie",
     "ep13-diabete-type-1",
     "ep14-hypothyroidie",
-    "ep15-migraine"
+    "ep15-migraine",
+    "ep16-calculs-renaux"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
