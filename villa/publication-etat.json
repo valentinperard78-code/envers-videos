@@ -1,13 +1,18 @@
 {
-  "quand": "2026-10-30T05:48:33.158Z",
+  "quand": "2026-10-31T09:18:08.524Z",
   "ok": true,
-  "essai": true,
+  "essai": false,
   "journal": [
-    "   · en file : 2026-10-30T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 2 : Sous pression",
-    "   · en file : 2026-10-30T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 3 : Les squatteurs des artères",
     "   · en file : 2026-10-31T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 4 : Code rouge",
     "   · en file : 2026-10-31T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 5 : Panne de courant",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 4 vidéo(s) déjà en file (max 10).",
-    "⏭  ep06-asthme : pas encore de fichier unique, il sera prêt au prochain passage."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 2 vidéo(s) déjà en file (max 10).",
+    "✅ ep06-asthme ajouté à la file Buffer.",
+    "✅ ep07-allergie ajouté à la file Buffer.",
+    "✅ ep08-grippe ajouté à la file Buffer.",
+    "✅ ep09-angine ajouté à la file Buffer.",
+    "✅ ep10-gastro-enterite ajouté à la file Buffer.",
+    "✅ ep11-reflux ajouté à la file Buffer.",
+    "✅ ep12-anemie ajouté à la file Buffer.",
+    "✅ ep13-diabete-type-1 ajouté à la file Buffer."
   ]
 }

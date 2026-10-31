@@ -175,6 +175,70 @@
       "mode": "buffer",
       "buffer": "6ae3c6db397c2ef8f34af02d",
       "statut": "en-file"
+    },
+    {
+      "episode": "ep06-asthme",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b248eaa24d6f9a6685ab",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep07-allergie",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b249eaa24d6f9a6685ea",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep08-grippe",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b24a1891472093c39fc1",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep09-angine",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b24b406ab8a018ac20db",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep10-gastro-enterite",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b24cb84259308bca22b1",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep11-reflux",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b24ea114574349975db8",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep12-anemie",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b24f1891472093c3a0dc",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep13-diabete-type-1",
+      "date": "2026-10-31",
+      "heure": "10:17",
+      "mode": "buffer",
+      "buffer": "6ae5b250a114574349975e04",
+      "statut": "en-file"
     }
   ],
   "valides": [
