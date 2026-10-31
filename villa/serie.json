@@ -274,13 +274,16 @@
       "slug": "calculs-renaux",
       "pathologie": "Calculs rénaux (colique néphrétique)",
       "titre": "Les cailloux du rein",
-      "pitch": "Rénato, le rein, fabrique des cailloux qui bloquent la sortie.",
+      "pitch": "Josh ne boit pas assez : Calci, un calcul, se forme chez Rénato le rein et se coince dans le tuyau. Colique néphrétique : douleur du dos vers l'aine. Le traitement : Calmos, l'anti-inflammatoire, calme la douleur ; les petits calculs sortent seuls ; prévention : 2 litres d'eau par jour.",
       "personnagesPrevus": [
-        "Rénato (rein)"
+        "Rénato",
+        "Calci",
+        "Calmos",
+        "Josh"
       ],
       "teaserSuivant": "Infection urinaire (cystite)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep16-calculs-renaux.md",
       "publication": null
     },
     {
