@@ -63,7 +63,8 @@
     "ep16-calculs-renaux",
     "ep17-cystite",
     "ep18-osteoporose",
-    "ep19-arthrose"
+    "ep19-arthrose",
+    "ep20-eczema"
   ],
   "historique": [
     {
@@ -282,7 +283,8 @@
     "ep16-calculs-renaux",
     "ep17-cystite",
     "ep18-osteoporose",
-    "ep19-arthrose"
+    "ep19-arthrose",
+    "ep20-eczema"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
