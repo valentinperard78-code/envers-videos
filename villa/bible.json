@@ -21,7 +21,8 @@
       "apparitions": [
         1,
         2,
-        13
+        13,
+        24
       ],
       "alias": []
     },
@@ -139,7 +140,8 @@
         19,
         20,
         22,
-        23
+        23,
+        24
       ],
       "alias": []
     },
@@ -2178,6 +2180,89 @@
       "premierEpisode": 23,
       "apparitions": [
         23
+      ],
+      "alias": []
+    },
+    "hepato": {
+      "id": "hepato",
+      "nom": "Hépato",
+      "role": "le foie",
+      "description": "le foie. Un gros foie marron, bon vivant, avec une moustache.",
+      "couleur": "#8a5a32",
+      "genre": "m",
+      "notions": [
+        "foie"
+      ],
+      "def": {
+        "shape": "liver",
+        "material": "organ",
+        "color": "#8a5a32",
+        "w": 1.1,
+        "h": 1.5,
+        "shoulderX": 0.22,
+        "hipX": 0.12,
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a",
+          "eyeX": 0.085,
+          "eyeY": 0.56,
+          "eyeR": 0.085,
+          "mouthY": 0.36,
+          "mouthW": 0.2
+        },
+        "accessories": [
+          "mustache"
+        ],
+        "name": "Hépato"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 24,
+      "apparitions": [
+        24
+      ],
+      "alias": []
+    },
+    "trigly": {
+      "id": "trigly",
+      "nom": "Trigly",
+      "role": "la graisse en réserve",
+      "description": "la graisse en réserve. Une graisse jaune, collante, avec des paillettes.",
+      "couleur": "#f6d03b",
+      "genre": "f",
+      "notions": [
+        "graisse"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "lumps": 0.06,
+        "w": 1.2,
+        "accessories": [
+          "sparkles"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Trigly"
+      },
+      "voix": {
+        "voice": "fr-FR-EloiseNeural",
+        "rate": "-2%",
+        "pitch": "-22Hz"
+      },
+      "premierEpisode": 24,
+      "apparitions": [
+        24
       ],
       "alias": []
     }
