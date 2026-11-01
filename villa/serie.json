@@ -392,14 +392,16 @@
       "slug": "bpco",
       "pathologie": "BPCO (bronchopneumopathie chronique obstructive)",
       "titre": "La fumée de trop",
-      "pitch": "Le tabac abîme durablement Bronchita.",
+      "pitch": "Fumée, la cigarette, abîme Bronchita depuis vingt ans : parois épaissies, mucus, Alvéa les alvéoles détruites. Toux du fumeur, essoufflement, spirométrie. Le traitement : arrêter le tabac (seule mesure qui ralentit la maladie) et Longo, le bronchodilatateur inhalé qui ouvre les bronches ; kiné et vaccin grippe.",
       "personnagesPrevus": [
         "Bronchita",
-        "Fumée (tabac)"
+        "Fumée",
+        "Alvéa",
+        "Longo"
       ],
       "teaserSuivant": "Stéatose hépatique (foie gras)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep23-bpco.md",
       "publication": null
     },
     {
