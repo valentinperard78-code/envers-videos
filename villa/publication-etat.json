@@ -1,9 +1,8 @@
 {
-  "quand": "2026-11-01T05:55:06.850Z",
+  "quand": "2026-11-01T11:37:18.327Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-11-01T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 6 : Les bronches à cran",
     "   · en file : 2026-11-01T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 7 : L'intrus du printemps",
     "   · en file : 2026-11-02T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 8 : Le virus qui s'incruste",
     "   · en file : 2026-11-02T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 9 : Antibio, pas automatique",
@@ -13,6 +12,7 @@
     "   · en file : 2026-11-04T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 13 : La clé disparue",
     "   · en file : 2026-11-05T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 14 : Le thermostat en panne",
     "   · en file : 2026-11-05T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 15 : Le cerveau en alerte",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 10 vidéo(s) déjà en file (max 10)."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 9 vidéo(s) déjà en file (max 10).",
+    "✅ ep16-calculs-renaux ajouté à la file Buffer."
   ]
 }
