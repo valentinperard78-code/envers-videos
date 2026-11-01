@@ -424,14 +424,17 @@
       "numero": 25,
       "slug": "appendicite",
       "pathologie": "Appendicite",
-      "titre": "L'appendice explose",
-      "pitch": "Une urgence chirurgicale : les signes à connaître.",
+      "titre": "L’appendice explose",
+      "pitch": "Appendix, le petit appendice oublié, se bouche : Bacto la bactérie s’y multiplie. Douleur autour du nombril qui descend à droite et s’aggrave, fièvre, nausées ; risque de péritonite. Le traitement : l’opération (appendicectomie), souvent par petites incisions, avec perfusion et antibiotiques avant : on retire l’appendice infecté, donc l’infection part avec.",
       "personnagesPrevus": [
-        "Appendice"
+        "Appendix",
+        "Gastro",
+        "Bacto",
+        "Chira"
       ],
       "teaserSuivant": "Varicelle",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep25-appendicite.md",
       "publication": null
     },
     {
