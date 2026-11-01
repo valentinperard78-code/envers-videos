@@ -64,7 +64,8 @@
     "ep17-cystite",
     "ep18-osteoporose",
     "ep19-arthrose",
-    "ep20-eczema"
+    "ep20-eczema",
+    "ep21-acne"
   ],
   "historique": [
     {
@@ -284,7 +285,8 @@
     "ep17-cystite",
     "ep18-osteoporose",
     "ep19-arthrose",
-    "ep20-eczema"
+    "ep20-eczema",
+    "ep21-acne"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
