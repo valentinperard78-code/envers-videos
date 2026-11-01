@@ -1967,6 +1967,40 @@
         21
       ],
       "alias": []
+    },
+    "sebo": {
+      "id": "sebo",
+      "nom": "Sébo",
+      "role": "le sébum, l'huile naturelle",
+      "description": "le sébum, l'huile naturelle. Il est jaune, huileux, avec des lunettes de soleil.",
+      "couleur": "#f6d03b",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Sébo"
+      },
+      "voix": {
+        "voice": "fr-CA-ThierryNeural",
+        "rate": "+6%",
+        "pitch": "+21Hz"
+      },
+      "premierEpisode": 21,
+      "apparitions": [
+        21
+      ],
+      "alias": []
     }
   },
   "maj": "2026-11-01"
