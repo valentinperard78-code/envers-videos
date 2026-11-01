@@ -158,19 +158,25 @@ jobs:
         run: |
           cp travail/preparation.log sorties/rendu.log 2>/dev/null || true
           for f in $(find travail/journaux -name '*.log' 2>/dev/null | sort); do { echo; echo "===== $(basename $f) ====="; grep -E "Morceau|✅|❌|⚠|ERR|Error|error|s/image" "$f" | tail -8; } >> sorties/rendu.log || true; done
-          # chaque épisode a son dossier ; on garde les autres épisodes déjà publiés (un seul commit, sans historique, pour rester léger)
+          # chaque épisode a son dossier. On AJOUTE un commit par-dessus la branche (au lieu de la réécrire en entier) :
+          # réécrire tout villa-videos dépassait la limite de 2 Go par envoi de GitHub (HTTP 500 à partir de l'ép. 25).
           EP=$(basename "${{ needs.preparer.outputs.script }}" .md)
           URL="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}"
-          rm -rf /tmp/pub && mkdir -p /tmp/pub && cd /tmp/pub
-          if git clone -q --depth 1 --branch villa-videos "$URL" anc 2>/dev/null; then rm -rf anc/.git; for d in anc/*/; do [ -d "$d" ] && cp -r "$d" . ; done; fi
-          rm -rf anc "$EP" && mkdir -p "$EP"
-          cp "$GITHUB_WORKSPACE"/sorties/* "$EP"/ 2>/dev/null || true
+          rm -rf /tmp/pub && mkdir -p /tmp/pub/nouveau && cp "$GITHUB_WORKSPACE"/sorties/* /tmp/pub/nouveau/ 2>/dev/null || true
           # GitHub refuse les fichiers > 100 Mo : la vidéo est découpée en parts (à recoller avec cat)
-          for v in "$EP"/*.mp4; do if [ -f "$v" ] && [ "$(stat -c%s "$v")" -gt 95000000 ]; then split -b 90m -d "$v" "$v.part"; rm "$v"; fi; done
-          cp "$EP"/rendu.log ./dernier-rendu.log 2>/dev/null || true
-          echo "$EP" > dernier-episode.txt
-          ls -laR | head -60
-          git init -q -b villa-videos
+          for v in /tmp/pub/nouveau/*.mp4; do if [ -f "$v" ] && [ "$(stat -c%s "$v")" -gt 95000000 ]; then split -b 90m -d "$v" "$v.part"; rm "$v"; fi; done
+          cd /tmp/pub
+          if ! git clone -q --depth 1 --branch villa-videos "$URL" depot 2>/dev/null; then mkdir depot && git -C depot init -q -b villa-videos; fi
+          cd depot
           git config user.name "Villa Studio" && git config user.email "villa-studio@users.noreply.github.com"
-          git add -A . && git commit -qm "Vidéo : ${{ needs.preparer.outputs.script }}"
-          git push -qf "$URL" HEAD:villa-videos
+          for i in 1 2 3 4 5; do
+            rm -rf "$EP" && mkdir -p "$EP" && { cp /tmp/pub/nouveau/* "$EP"/ 2>/dev/null || true; }
+            cp "$EP"/rendu.log ./dernier-rendu.log 2>/dev/null || true
+            echo "$EP" > dernier-episode.txt
+            git add -A . && { git commit -qm "Vidéo : ${{ needs.preparer.outputs.script }}" || true; }
+            git push -q "$URL" HEAD:villa-videos && { OK=1; break; }
+            # quelqu'un (le robot de publication) est passé avant : on repart de la dernière version
+            sleep 15; git fetch -q --depth 1 "$URL" villa-videos && git reset -q --hard FETCH_HEAD
+          done
+          [ "${OK:-0}" = 1 ] || { echo "❌ envoi sur villa-videos impossible"; exit 1; }
+          git log -1 --format=%s
