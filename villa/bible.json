@@ -141,7 +141,8 @@
         20,
         22,
         23,
-        24
+        24,
+        25
       ],
       "alias": []
     },
@@ -963,7 +964,8 @@
       },
       "premierEpisode": 10,
       "apparitions": [
-        10
+        10,
+        25
       ],
       "alias": []
     },
@@ -2263,6 +2265,112 @@
       "premierEpisode": 24,
       "apparitions": [
         24
+      ],
+      "alias": []
+    },
+    "appendix": {
+      "id": "appendix",
+      "nom": "Appendix",
+      "role": "l'appendice",
+      "description": "l'appendice. Un petit tube rose oublié au bout de l'intestin, avec une casquette.",
+      "couleur": "#ff6fb0",
+      "genre": "m",
+      "notions": [
+        "appendice",
+        "intestin"
+      ],
+      "def": {
+        "shape": "bean",
+        "material": "organ-smooth",
+        "color": "#ff6fb0",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Appendix"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 25,
+      "apparitions": [
+        25
+      ],
+      "alias": []
+    },
+    "bacto": {
+      "id": "bacto",
+      "nom": "Bacto",
+      "role": "le squatteur des tuyaux bouchés",
+      "description": "le squatteur des tuyaux bouchés. Une bactérie verte et sournoise, avec une moustache.",
+      "couleur": "#4cbf6b",
+      "genre": "f",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "mustache"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Bacto"
+      },
+      "voix": {
+        "voice": "fr-BE-CharlineNeural",
+        "rate": "+0%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 25,
+      "apparitions": [
+        25
+      ],
+      "alias": []
+    },
+    "chira": {
+      "id": "chira",
+      "nom": "Chira",
+      "role": "la chirurgienne",
+      "description": "la chirurgienne. Une humaine sûre d'elle, en blouse, avec des lunettes.",
+      "couleur": "#00f5d4",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "human": true,
+        "color": "#00f5d4",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Chira"
+      },
+      "voix": {
+        "voice": "fr-CA-SylvieNeural",
+        "rate": "+0%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 25,
+      "apparitions": [
+        25
       ],
       "alias": []
     }
