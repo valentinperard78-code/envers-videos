@@ -409,14 +409,15 @@
       "slug": "steatose-hepatique",
       "pathologie": "Stéatose hépatique (foie gras)",
       "titre": "Le foie déborde",
-      "pitch": "Le foie stocke trop de graisse ; lien avec le diabète et l'alimentation.",
+      "pitch": "Quand Josh mange plus de sucre et de gras qu’il n’en dépense, Hépato le foie stocke le surplus : Trigly la graisse s’installe. Silencieuse, près d’un Français sur cinq. Le traitement : changer de mode de vie — perdre au moins 5 % du poids, 150 min d’activité par semaine, cuisine méditerranéenne, moins d’alcool ; pris à temps, c’est réversible.",
       "personnagesPrevus": [
-        "Hépato (foie)",
-        "Choco"
+        "Hépato",
+        "Sucrette",
+        "Trigly"
       ],
       "teaserSuivant": "Appendicite",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep24-steatose-hepatique.md",
       "publication": null
     },
     {
