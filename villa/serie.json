@@ -342,14 +342,16 @@
       "slug": "eczema",
       "pathologie": "Eczéma atopique",
       "titre": "La peau qui gratte",
-      "pitch": "La barrière de la peau est fragile et s'enflamme.",
+      "pitch": "La barrière de Dermia, la peau, est fragile de naissance : les intrus entrent, Lympho surréagit, Gratton la démangeaison s’installe. Le traitement : crème hydratante deux fois par jour pour réparer la barrière, et Corti, le dermocorticoïde, qui calme l’inflammation pendant les poussées.",
       "personnagesPrevus": [
-        "Dermia (peau)",
-        "Histamine"
+        "Dermia",
+        "Gratton",
+        "Lympho",
+        "Corti"
       ],
       "teaserSuivant": "Acné",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep20-eczema.md",
       "publication": null
     },
     {
