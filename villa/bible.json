@@ -138,7 +138,8 @@
         18,
         19,
         20,
-        22
+        22,
+        23
       ],
       "alias": []
     },
@@ -481,7 +482,8 @@
       "premierEpisode": 6,
       "apparitions": [
         6,
-        7
+        7,
+        23
       ],
       "alias": []
     },
@@ -2070,6 +2072,112 @@
       "premierEpisode": 22,
       "apparitions": [
         22
+      ],
+      "alias": []
+    },
+    "fumee": {
+      "id": "fumee",
+      "nom": "Fumée",
+      "role": "la fumée de cigarette",
+      "description": "la fumée de cigarette. Un nuage gris et toxique, avec des lunettes de soleil.",
+      "couleur": "#9aa0a6",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#9aa0a6",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Fumée"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 23,
+      "apparitions": [
+        23
+      ],
+      "alias": []
+    },
+    "alvea": {
+      "id": "alvea",
+      "nom": "Alvéa",
+      "role": "les alvéoles du poumon",
+      "description": "les alvéoles du poumon. Une petite rose fragile, avec un chignon.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [
+        "poumon"
+      ],
+      "def": {
+        "shape": "lung",
+        "material": "organ-lobules",
+        "color": "#ff6fb0",
+        "accessories": [
+          "bun"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Alvéa"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+2%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 23,
+      "apparitions": [
+        23
+      ],
+      "alias": []
+    },
+    "longo": {
+      "id": "longo",
+      "nom": "Longo",
+      "role": "le bronchodilatateur de longue…",
+      "description": "le bronchodilatateur de longue durée. Un médicament bleu, posé, avec une cravate.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Longo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 23,
+      "apparitions": [
+        23
       ],
       "alias": []
     }
