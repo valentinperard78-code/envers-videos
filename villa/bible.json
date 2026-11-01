@@ -134,7 +134,8 @@
         14,
         15,
         16,
-        17
+        17,
+        18
       ],
       "alias": []
     },
@@ -1609,7 +1610,111 @@
         17
       ],
       "alias": []
+    },
+    "ossian": {
+      "id": "ossian",
+      "nom": "Ossian",
+      "role": "l'os de la hanche",
+      "description": "l'os de la hanche. Il est beige, fier et costaud, avec une cravate.",
+      "couleur": "#e8d5b0",
+      "genre": "m",
+      "notions": [
+        "os"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#e8d5b0",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Ossian"
+      },
+      "voix": {
+        "voice": "fr-CH-FabriceNeural",
+        "rate": "-2%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 18,
+      "apparitions": [
+        18
+      ],
+      "alias": []
+    },
+    "clasto": {
+      "id": "clasto",
+      "nom": "Clasto",
+      "role": "l'ostéoclaste, le démolisseur",
+      "description": "l'ostéoclaste, le démolisseur. Il est orange, gourmand, avec une casquette.",
+      "couleur": "#ff8a3d",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Clasto"
+      },
+      "voix": {
+        "voice": "fr-FR-HenriNeural",
+        "rate": "+2%",
+        "pitch": "-12Hz"
+      },
+      "premierEpisode": 18,
+      "apparitions": [
+        18
+      ],
+      "alias": []
+    },
+    "bispho": {
+      "id": "bispho",
+      "nom": "Bispho",
+      "role": "le bisphosphonate",
+      "description": "le bisphosphonate. Un comprimé blanc, sérieux, avec des lunettes.",
+      "couleur": "#f4f4f4",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#f4f4f4",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Bispho"
+      },
+      "voix": {
+        "voice": "fr-CA-ThierryNeural",
+        "rate": "-2%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 18,
+      "apparitions": [
+        18
+      ],
+      "alias": []
     }
   },
-  "maj": "2026-10-31"
+  "maj": "2026-11-01"
 }
