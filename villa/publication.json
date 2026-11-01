@@ -66,7 +66,8 @@
     "ep19-arthrose",
     "ep20-eczema",
     "ep21-acne",
-    "ep22-insomnie"
+    "ep22-insomnie",
+    "ep23-bpco"
   ],
   "historique": [
     {
@@ -296,7 +297,8 @@
     "ep19-arthrose",
     "ep20-eczema",
     "ep21-acne",
-    "ep22-insomnie"
+    "ep22-insomnie",
+    "ep23-bpco"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
