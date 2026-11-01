@@ -137,7 +137,8 @@
         17,
         18,
         19,
-        20
+        20,
+        22
       ],
       "alias": []
     },
@@ -1396,7 +1397,8 @@
       },
       "premierEpisode": 15,
       "apparitions": [
-        15
+        15,
+        22
       ],
       "alias": []
     },
@@ -1999,6 +2001,75 @@
       "premierEpisode": 21,
       "apparitions": [
         21
+      ],
+      "alias": []
+    },
+    "melatonine": {
+      "id": "melatonine",
+      "nom": "Mélatonine",
+      "role": "l'hormone du sommeil",
+      "description": "l'hormone du sommeil. Une hormone violette et douce, avec un nœud.",
+      "couleur": "#9b4dff",
+      "genre": "f",
+      "notions": [
+        "hormone"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#9b4dff",
+        "accessories": [
+          "bow"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Mélatonine"
+      },
+      "voix": {
+        "voice": "fr-CA-SylvieNeural",
+        "rate": "+8%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 22,
+      "apparitions": [
+        22
+      ],
+      "alias": []
+    },
+    "docta": {
+      "id": "docta",
+      "nom": "Docta",
+      "role": "la médecin du sommeil",
+      "description": "la médecin du sommeil. Une humaine calme, avec des lunettes.",
+      "couleur": "#06d6a0",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "human": true,
+        "color": "#06d6a0",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Docta"
+      },
+      "voix": {
+        "voice": "fr-CH-ArianeNeural",
+        "rate": "+8%",
+        "pitch": "+16Hz"
+      },
+      "premierEpisode": 22,
+      "apparitions": [
+        22
       ],
       "alias": []
     }
