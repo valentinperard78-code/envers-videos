@@ -359,14 +359,16 @@
       "slug": "acne",
       "pathologie": "Acné",
       "titre": "Les boutons débarquent",
-      "pitch": "Sébum, bactérie et hormones s'invitent sur la peau.",
+      "pitch": "À l’adolescence, Sébo le sébum en fait trop et bouche les pores ; Cuti, la bactérie, s’y multiplie : points noirs, boutons rouges, pustules. Le piège : percer. Le traitement : nettoyage doux, Rétino le rétinoïde débouche les pores, le peroxyde de benzoyle freine Cuti, 2 mois minimum.",
       "personnagesPrevus": [
         "Dermia",
-        "Sébum"
+        "Sébo",
+        "Cuti",
+        "Rétino"
       ],
       "teaserSuivant": "Insomnie",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep21-acne.md",
       "publication": null
     },
     {
