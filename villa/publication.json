@@ -61,7 +61,8 @@
     "ep14-hypothyroidie",
     "ep15-migraine",
     "ep16-calculs-renaux",
-    "ep17-cystite"
+    "ep17-cystite",
+    "ep18-osteoporose"
   ],
   "historique": [
     {
@@ -278,7 +279,8 @@
     "ep14-hypothyroidie",
     "ep15-migraine",
     "ep16-calculs-renaux",
-    "ep17-cystite"
+    "ep17-cystite",
+    "ep18-osteoporose"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
