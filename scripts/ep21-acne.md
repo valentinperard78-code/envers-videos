@@ -4,7 +4,7 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie, Vida
 
 ## Casting
 - **Dermia** : la peau.
-- **Sébo** : le sébum, le gras de la peau. Il est jaune, huileux, avec des lunettes de soleil.
+- **Sébo** : le sébum, l'huile naturelle. Il est jaune, huileux, avec des lunettes de soleil.
 - **Cuti** : Cutibacterium acnes, l'habitant des pores. C'est une bactérie violette, avec une casquette.
 - **Rétino** : le rétinoïde en gel. Un médicament vert, efficace, avec une cravate.
 - **La Voix de la Villa** : le narrateur.
