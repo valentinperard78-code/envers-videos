@@ -325,13 +325,16 @@
       "slug": "arthrose",
       "pathologie": "Arthrose",
       "titre": "Ça grince dans la villa",
-      "pitch": "Le cartilage s'use dans les articulations.",
+      "pitch": "Cartilo, le cartilage du genou, s’use : douleur quand Josh marche, raideur le matin. Le piège : arrêter de bouger. Le traitement : activité physique adaptée et perte de poids pour soulager Cartilo, Paracéta le paracétamol en cas de poussée, prothèse en dernier recours.",
       "personnagesPrevus": [
-        "Cartilo (cartilage)"
+        "Cartilo",
+        "Ossian",
+        "Paracéta",
+        "Josh"
       ],
       "teaserSuivant": "Eczéma atopique",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep19-arthrose.md",
       "publication": null
     },
     {
