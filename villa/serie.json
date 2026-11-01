@@ -308,14 +308,16 @@
       "slug": "osteoporose",
       "pathologie": "Ostéoporose",
       "titre": "Les os en dentelle",
-      "pitch": "Ossian l'os perd sa solidité ; calcium, vitamine D et activité physique.",
+      "pitch": "Clasto, l’ostéoclaste, démolit l’os plus vite qu’il n’est reconstruit : Ossian devient fragile comme de la dentelle, sans douleur, jusqu’à la fracture. Le traitement : Bispho, le bisphosphonate, freine Clasto ; calcium, vitamine D, activité physique, prévention des chutes.",
       "personnagesPrevus": [
-        "Ossian (os)",
-        "Calcium"
+        "Ossian",
+        "Clasto",
+        "Bispho",
+        "Josh"
       ],
       "teaserSuivant": "Arthrose",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep18-osteoporose.md",
       "publication": null
     },
     {
