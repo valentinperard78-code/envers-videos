@@ -62,7 +62,8 @@
     "ep15-migraine",
     "ep16-calculs-renaux",
     "ep17-cystite",
-    "ep18-osteoporose"
+    "ep18-osteoporose",
+    "ep19-arthrose"
   ],
   "historique": [
     {
@@ -280,7 +281,8 @@
     "ep15-migraine",
     "ep16-calculs-renaux",
     "ep17-cystite",
-    "ep18-osteoporose"
+    "ep18-osteoporose",
+    "ep19-arthrose"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
