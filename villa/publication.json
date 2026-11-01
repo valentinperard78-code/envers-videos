@@ -67,7 +67,8 @@
     "ep20-eczema",
     "ep21-acne",
     "ep22-insomnie",
-    "ep23-bpco"
+    "ep23-bpco",
+    "ep24-steatose-hepatique"
   ],
   "historique": [
     {
@@ -298,7 +299,8 @@
     "ep20-eczema",
     "ep21-acne",
     "ep22-insomnie",
-    "ep23-bpco"
+    "ep23-bpco",
+    "ep24-steatose-hepatique"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
