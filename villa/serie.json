@@ -376,14 +376,15 @@
       "slug": "insomnie",
       "pathologie": "Insomnie",
       "titre": "Nuit blanche dans la villa",
-      "pitch": "Neura n'arrive plus à éteindre la lumière.",
+      "pitch": "Neura, le neurone survolté, reste en hyper-éveil ; la lumière bleue des écrans bloque Mélatonine, l’hormone du sommeil. Insomnie chronique : plus de 3 nuits par semaine depuis plus de 3 mois. Le traitement : horaires réguliers et moins d’écrans, puis la thérapie cognitive et comportementale (traitement de référence) ; somnifère seulement en recours, moins de 4 semaines.",
       "personnagesPrevus": [
         "Neura",
-        "Mélatonine"
+        "Mélatonine",
+        "Docta"
       ],
       "teaserSuivant": "BPCO (bronchopneumopathie chronique obstructive)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep22-insomnie.md",
       "publication": null
     },
     {
