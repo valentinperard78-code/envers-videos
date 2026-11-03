@@ -1,9 +1,8 @@
 {
-  "quand": "2026-11-03T18:01:13.437Z",
+  "quand": "2026-11-03T23:42:13.029Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-11-03T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 11 : Ça remonte",
     "   · en file : 2026-11-04T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 12 : Plus de fer, plus d'énergie",
     "   · en file : 2026-11-04T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 13 : La clé disparue",
     "   · en file : 2026-11-05T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 14 : Le thermostat en panne",
@@ -13,6 +12,7 @@
     "   · en file : 2026-11-07T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 18 : Les os en dentelle",
     "   · en file : 2026-11-07T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 19 : Ça grince dans la villa",
     "   · en file : 2026-11-08T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 20 : La peau qui gratte",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 10 vidéo(s) déjà en file (max 10)."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 9 vidéo(s) déjà en file (max 10).",
+    "✅ ep21-acne ajouté à la file Buffer."
   ]
 }
