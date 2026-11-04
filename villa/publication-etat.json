@@ -1,9 +1,8 @@
 {
-  "quand": "2026-11-04T11:14:24.299Z",
+  "quand": "2026-11-04T17:57:02.847Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-11-04T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 12 : Plus de fer, plus d'énergie",
     "   · en file : 2026-11-04T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 13 : La clé disparue",
     "   · en file : 2026-11-05T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 14 : Le thermostat en panne",
     "   · en file : 2026-11-05T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 15 : Le cerveau en alerte",
@@ -13,6 +12,7 @@
     "   · en file : 2026-11-07T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 19 : Ça grince dans la villa",
     "   · en file : 2026-11-08T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 20 : La peau qui gratte",
     "   · en file : 2026-11-08T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 21 : Les boutons débarquent",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 10 vidéo(s) déjà en file (max 10)."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 9 vidéo(s) déjà en file (max 10).",
+    "✅ ep22-insomnie ajouté à la file Buffer."
   ]
 }
