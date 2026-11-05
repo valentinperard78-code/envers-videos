@@ -1,9 +1,8 @@
 {
-  "quand": "2026-11-05T11:07:07.825Z",
+  "quand": "2026-11-05T12:00:19.412Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-11-05T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 14 : Le thermostat en panne",
     "   · en file : 2026-11-05T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 15 : Le cerveau en alerte",
     "   · en file : 2026-11-06T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 16 : Les cailloux du rein",
     "   · en file : 2026-11-06T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 17 : La vessie s'enflamme",
@@ -13,6 +12,7 @@
     "   · en file : 2026-11-08T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 21 : Les boutons débarquent",
     "   · en file : 2026-11-09T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 22 : Nuit blanche dans la villa",
     "   · en file : 2026-11-09T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 23 : La fumée de trop",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 10 vidéo(s) déjà en file (max 10)."
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 9 vidéo(s) déjà en file (max 10).",
+    "✅ ep24-steatose-hepatique ajouté à la file Buffer."
   ]
 }
