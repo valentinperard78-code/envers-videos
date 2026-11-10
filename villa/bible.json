@@ -144,7 +144,8 @@
         24,
         25,
         26,
-        27
+        27,
+        28
       ],
       "alias": []
     },
@@ -2525,6 +2526,150 @@
       "premierEpisode": 27,
       "apparitions": [
         27
+      ],
+      "alias": []
+    },
+    "uricia": {
+      "id": "uricia",
+      "nom": "Uricia",
+      "role": "l'acide urique en trop",
+      "description": "l'acide urique en trop. Une diva blanche et piquante, en cristaux comme du sel, avec une couronne.",
+      "couleur": "#f4f4f4",
+      "genre": "f",
+      "notions": [
+        "sel"
+      ],
+      "def": {
+        "shape": "crystal",
+        "material": "salt",
+        "color": "#f4f4f4",
+        "accessories": [
+          "sparkles",
+          "tiara"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Uricia"
+      },
+      "voix": {
+        "voice": "fr-BE-CharlineNeural",
+        "rate": "+8%",
+        "pitch": "+21Hz"
+      },
+      "premierEpisode": 28,
+      "apparitions": [
+        28
+      ],
+      "alias": []
+    },
+    "orteo": {
+      "id": "orteo",
+      "nom": "Ortéo",
+      "role": "l'articulation du gros orteil",
+      "description": "l'articulation du gros orteil. Un os beige, douillet, avec une casquette.",
+      "couleur": "#f2b632",
+      "genre": "m",
+      "notions": [
+        "articulation",
+        "os"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#f2b632",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Ortéo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 28,
+      "apparitions": [
+        28
+      ],
+      "alias": []
+    },
+    "colchi": {
+      "id": "colchi",
+      "nom": "Colchi",
+      "role": "la colchicine, l'anti-crise",
+      "description": "la colchicine, l'anti-crise. Un médicament vert, rapide, avec des lunettes.",
+      "couleur": "#4cbf6b",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Colchi"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 28,
+      "apparitions": [
+        28
+      ],
+      "alias": []
+    },
+    "allo": {
+      "id": "allo",
+      "nom": "Allo",
+      "role": "l'allopurinol, le traitement de…",
+      "description": "l'allopurinol, le traitement de fond. Un comprimé blanc, calme, avec une cravate.",
+      "couleur": "#f4f4f4",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#f4f4f4",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Allo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 28,
+      "apparitions": [
+        28
       ],
       "alias": []
     }
