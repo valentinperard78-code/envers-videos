@@ -493,13 +493,17 @@
       "slug": "intestin-irritable",
       "pathologie": "Syndrome de l'intestin irritable",
       "titre": "Le ventre en vrac",
-      "pitch": "Un syndrome fréquent, sans lésion visible, mais bien réel.",
+      "pitch": "Gastro n’a aucun microbe, et pourtant : crampes, ballonnements, diarrhée ou constipation. Cervo stressé grésille sur la ligne cerveau-intestin, Spasmo serre trop ou pas assez, Bioti le microbiote fait des gaz. Environ 5 % des Français, deux fois plus de femmes. Le traitement : pas de guérison définitive, mais Antispa (l’antispasmodique) détend les muscles de l’intestin pendant les crises ; repas à heures fixes, manger lentement, relaxation.",
       "personnagesPrevus": [
-        "Gastro"
+        "Gastro",
+        "Cervo",
+        "Spasmo",
+        "Bioti",
+        "Antispa"
       ],
       "teaserSuivant": "Fibrillation atriale",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep29-intestin-irritable.md",
       "publication": null
     },
     {
