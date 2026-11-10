@@ -14,7 +14,7 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie) : un
 
 ## Teaser (avant le générique)
 - Accroche : Tes jambes pèsent une tonne ?
-- Question : Tu restes debout toute la journée ?
+- Question : Toi aussi, tu restes debout toute la journée ?
 - VEINA (confessionnal) : « Mon job ? Remonter le sang jusqu'au cœur. Contre la gravité. Toute. La. Journée. »
 - CLAPET : « Et moi… je ferme plus très bien. »
 - → GÉNÉRIQUE
