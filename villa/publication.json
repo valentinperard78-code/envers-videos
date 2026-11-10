@@ -387,6 +387,38 @@
       "mode": "buffer",
       "buffer": "6af2b51c26f9e6aeeaea5674",
       "statut": "en-file"
+    },
+    {
+      "episode": "ep30-fibrillation-atriale",
+      "date": "2026-11-10",
+      "heure": "19:04",
+      "mode": "buffer",
+      "buffer": "6af35ccd0649793ed2fdd9a6",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep31-insuffisance-cardiaque",
+      "date": "2026-11-10",
+      "heure": "19:04",
+      "mode": "buffer",
+      "buffer": "6af35ccf94964d984f0a17d4",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep32-thrombose-veineuse-profonde",
+      "date": "2026-11-10",
+      "heure": "19:04",
+      "mode": "buffer",
+      "buffer": "6af35cd15c5c353271425b94",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep33-embolie-pulmonaire",
+      "date": "2026-11-10",
+      "heure": "19:04",
+      "mode": "buffer",
+      "buffer": "6af35cd21d932748c7e1463b",
+      "statut": "en-file"
     }
   ],
   "valides": [

@@ -1,14 +1,16 @@
 {
-  "quand": "2026-11-10T06:09:32.881Z",
+  "quand": "2026-11-10T18:05:07.135Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-11-10T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 24 : Le foie déborde",
-    "   · en file : 2026-11-10T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 25 : L'appendice explose",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 2 vidéo(s) déjà en file (max 10).",
-    "✅ ep26-varicelle ajouté à la file Buffer.",
-    "✅ ep27-varices ajouté à la file Buffer.",
-    "✅ ep28-goutte ajouté à la file Buffer.",
-    "✅ ep29-intestin-irritable ajouté à la file Buffer."
+    "   · en file : 2026-11-11T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 26 : Les boutons de l'enfance",
+    "   · en file : 2026-11-11T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 27 : Les jambes lourdes",
+    "   · en file : 2026-11-12T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 28 : Le cristal qui pique",
+    "   · en file : 2026-11-12T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 29 : Le ventre en vrac",
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 4 vidéo(s) déjà en file (max 10).",
+    "✅ ep30-fibrillation-atriale ajouté à la file Buffer.",
+    "✅ ep31-insuffisance-cardiaque ajouté à la file Buffer.",
+    "✅ ep32-thrombose-veineuse-profonde ajouté à la file Buffer.",
+    "✅ ep33-embolie-pulmonaire ajouté à la file Buffer."
   ]
 }
