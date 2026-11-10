@@ -549,11 +549,18 @@
       "numero": 32,
       "slug": "thrombose-veineuse-profonde",
       "pathologie": "Thrombose veineuse profonde (phlébite)",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Le squatteur du mollet",
+      "pitch": "Après un long voyage assis, Mollo le mollet ne pousse plus le sang : Caillo se colle à la paroi de Veina. Mollet gonflé, dur, chaud, parfois douloureux ; 50 000 à 100 000 phlébites par an en France. Le danger : un morceau de Caillo qui part vers les poumons. Le traitement : Hépa (l’héparine) en piqûre agit tout de suite contre la coagulation, Fluido (l’anticoagulant en comprimés) prend le relais plusieurs mois, Compressa (le bas de compression) au moins 3 mois aide le sang à remonter. Souffle coupé, douleur thoracique : le 15.",
+      "personnagesPrevus": [
+        "Veina",
+        "Mollo",
+        "Caillo",
+        "Hépa",
+        "Fluido",
+        "Compressa"
+      ],
       "teaserSuivant": "Embolie pulmonaire",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep32-thrombose-veineuse-profonde.md",
       "publication": null
     },
