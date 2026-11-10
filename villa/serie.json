@@ -459,13 +459,16 @@
       "slug": "varices",
       "pathologie": "Insuffisance veineuse (varices)",
       "titre": "Les jambes lourdes",
-      "pitch": "Les veines n'arrivent plus à faire remonter le sang.",
+      "pitch": "Clapet la valvule ferme mal : le sang reflue et Veina la veine se dilate, jambes lourdes. 11 à 24 % des gens, trois femmes pour un homme. Le traitement : marcher chaque jour (pompe du mollet) et la compression (Compressa) qui empêche la veine de se dilater et fait remonter le sang plus vite ; sinon sclérose, laser ou chirurgie.",
       "personnagesPrevus": [
-        "Veina (veine)"
+        "Veina",
+        "Clapet",
+        "Hémo",
+        "Compressa"
       ],
       "teaserSuivant": "Crise de goutte",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep27-varices.md",
       "publication": null
     },
     {
