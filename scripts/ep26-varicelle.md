@@ -3,7 +3,7 @@
 Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie) : la varicelle est une maladie infectieuse virale extrêmement contagieuse, due au virus varicelle-zona (groupe des herpès-virus), qui atteint surtout les enfants ; transmission par contact avec les vésicules et par gouttelettes de salive ; contagieux 24 à 48 heures avant les rougeurs et pendant environ une semaine, jusqu'aux croûtes ; incubation d'environ 14 jours ; fièvre modérée jusqu'à 38 °C ; vésicules remplies d'un liquide clair (gouttes de rosée), de 10 à 2 000, d'abord sur la nuque, le thorax, le ventre ou le dos ; paumes et plantes épargnées ; fortes démangeaisons ; près de 66 % des cas chez les enfants de 1 à 4 ans ; guérison en 10 à 12 jours ; immunisé ensuite, mais le virus reste dans les ganglions nerveux et se réactive en zona chez 15 à 20 % des personnes ; complication : surinfection (impétigo) par grattage ; pas d'antibiotique (c'est un virus) ; douche 2 fois par jour avec un produit lavant doux, ongles coupés ; paracétamol si la fièvre est mal supportée ; ni ibuprofène ni aspirine (AINS contre-indiqués, syndrome de Reye) ; antihistaminiques possibles contre le grattage ; antiviral en perfusion (aciclovir) dans les formes graves des personnes fragiles ; 15 ou 112 si forte fièvre, troubles de l'équilibre, état confus.
 
 ## Casting
-- **Zoster** : le virus de la varicelle. Un virus violet plein de piquants, avec des lunettes de soleil.
+- **Zoster** : l'envahisseur de la varicelle. Un virus violet plein de piquants, avec des lunettes de soleil.
 - **Dermia** : la peau.
 - **Lympho** : le globule blanc.
 - **Paracéta** : le paracétamol.
