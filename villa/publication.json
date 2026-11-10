@@ -69,7 +69,8 @@
     "ep22-insomnie",
     "ep23-bpco",
     "ep24-steatose-hepatique",
-    "ep25-appendicite"
+    "ep25-appendicite",
+    "ep26-varicelle"
   ],
   "historique": [
     {
@@ -374,7 +375,8 @@
     "ep22-insomnie",
     "ep23-bpco",
     "ep24-steatose-hepatique",
-    "ep25-appendicite"
+    "ep25-appendicite",
+    "ep26-varicelle"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
