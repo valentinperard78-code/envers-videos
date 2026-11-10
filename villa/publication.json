@@ -75,7 +75,8 @@
     "ep28-goutte",
     "ep29-intestin-irritable",
     "ep30-fibrillation-atriale",
-    "ep31-insuffisance-cardiaque"
+    "ep31-insuffisance-cardiaque",
+    "ep32-thrombose-veineuse-profonde"
   ],
   "historique": [
     {
@@ -418,7 +419,8 @@
     "ep28-goutte",
     "ep29-intestin-irritable",
     "ep30-fibrillation-atriale",
-    "ep31-insuffisance-cardiaque"
+    "ep31-insuffisance-cardiaque",
+    "ep32-thrombose-veineuse-profonde"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
