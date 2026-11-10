@@ -145,7 +145,8 @@
         25,
         26,
         27,
-        28
+        28,
+        29
       ],
       "alias": []
     },
@@ -451,7 +452,8 @@
       "premierEpisode": 5,
       "apparitions": [
         5,
-        15
+        15,
+        29
       ],
       "alias": []
     },
@@ -969,7 +971,8 @@
       "premierEpisode": 10,
       "apparitions": [
         10,
-        25
+        25,
+        29
       ],
       "alias": []
     },
@@ -2670,6 +2673,114 @@
       "premierEpisode": 28,
       "apparitions": [
         28
+      ],
+      "alias": []
+    },
+    "spasmo": {
+      "id": "spasmo",
+      "nom": "Spasmo",
+      "role": "la crampe du ventre",
+      "description": "la crampe du ventre. Un muscle rouge, nerveux, avec une moustache.",
+      "couleur": "#e2394a",
+      "genre": "m",
+      "notions": [
+        "muscle"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#e2394a",
+        "accessories": [
+          "mustache"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Spasmo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 29,
+      "apparitions": [
+        29
+      ],
+      "alias": []
+    },
+    "bioti": {
+      "id": "bioti",
+      "nom": "Bioti",
+      "role": "la colonie qui vit dans le ventre",
+      "description": "la colonie qui vit dans le ventre. Une bactérie verte et bavarde, avec des créoles.",
+      "couleur": "#4cbf6b",
+      "genre": "f",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "hoops"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Bioti"
+      },
+      "voix": {
+        "voice": "fr-CA-SylvieNeural",
+        "rate": "+8%",
+        "pitch": "+21Hz"
+      },
+      "premierEpisode": 29,
+      "apparitions": [
+        29
+      ],
+      "alias": []
+    },
+    "antispa": {
+      "id": "antispa",
+      "nom": "Antispa",
+      "role": "l'antispasmodique",
+      "description": "l'antispasmodique. Un médicament bleu, zen, avec des lunettes.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Antispa"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 29,
+      "apparitions": [
+        29
       ],
       "alias": []
     }
