@@ -146,7 +146,8 @@
         26,
         27,
         28,
-        29
+        29,
+        30
       ],
       "alias": []
     },
@@ -373,7 +374,8 @@
       },
       "premierEpisode": 4,
       "apparitions": [
-        4
+        4,
+        30
       ],
       "alias": []
     },
@@ -410,7 +412,8 @@
       "premierEpisode": 4,
       "apparitions": [
         4,
-        5
+        5,
+        30
       ],
       "alias": []
     },
@@ -453,7 +456,8 @@
       "apparitions": [
         5,
         15,
-        29
+        29,
+        30
       ],
       "alias": []
     },
@@ -2781,6 +2785,150 @@
       "premierEpisode": 29,
       "apparitions": [
         29
+      ],
+      "alias": []
+    },
+    "ori": {
+      "id": "ori",
+      "nom": "Ori",
+      "role": "l'oreillette gauche, la petite…",
+      "description": "l'oreillette gauche, la petite chambre du haut. Une diva en forme de cœur rose, avec des créoles.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [
+        "coeur"
+      ],
+      "def": {
+        "shape": "heart",
+        "material": "organ-smooth",
+        "color": "#ff6fb0",
+        "accessories": [
+          "hoops"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Ori"
+      },
+      "voix": {
+        "voice": "fr-CH-ArianeNeural",
+        "rate": "+8%",
+        "pitch": "+21Hz"
+      },
+      "premierEpisode": 30,
+      "apparitions": [
+        30
+      ],
+      "alias": []
+    },
+    "zapp": {
+      "id": "zapp",
+      "nom": "Zapp",
+      "role": "le courant électrique en folie",
+      "description": "le courant électrique en folie. Une cellule jaune survoltée, avec des lunettes de soleil.",
+      "couleur": "#f6d03b",
+      "genre": "f",
+      "notions": [
+        "cellule"
+      ],
+      "def": {
+        "shape": "cell",
+        "material": "membrane",
+        "color": "#f6d03b",
+        "door": false,
+        "legs": false,
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Zapp"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 30,
+      "apparitions": [
+        30
+      ],
+      "alias": []
+    },
+    "fluido": {
+      "id": "fluido",
+      "nom": "Fluido",
+      "role": "l'anticoagulant",
+      "description": "l'anticoagulant. Un médicament turquoise, calme, avec une cravate.",
+      "couleur": "#2ec4c4",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#2ec4c4",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Fluido"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 30,
+      "apparitions": [
+        30
+      ],
+      "alias": []
+    },
+    "freino": {
+      "id": "freino",
+      "nom": "Freino",
+      "role": "le bêtabloquant",
+      "description": "le bêtabloquant. Un comprimé violet, zen, avec des lunettes.",
+      "couleur": "#9b4dff",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#9b4dff",
+        "accessories": [
+          "glasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Freino"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 30,
+      "apparitions": [
+        30
       ],
       "alias": []
     }
