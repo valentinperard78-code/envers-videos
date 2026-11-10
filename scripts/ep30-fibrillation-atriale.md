@@ -33,7 +33,7 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie) : la
 - VENTRI (en sueur) : « Et moi, en bas, je suis à 150 par minute ! »
 - À l'écran : la jauge de rythme cardiaque passe au rouge.
 
-## Scène 3 : le confessionnal
+## Scène 3 : le diagnostic
 - VOIX OFF : « Un électrocardiogramme le montre. Ça touche 1 % de la population, plus de 10 % des plus de 80 ans. »
 - VENTRI (confessionnal) : « Josh sent son cœur cogner, il s'essouffle. Parfois, il ne sent rien du tout. »
 
