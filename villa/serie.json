@@ -568,11 +568,18 @@
       "numero": 33,
       "slug": "embolie-pulmonaire",
       "pathologie": "Embolie pulmonaire",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Le bouchon des poumons",
+      "pitch": "Caillo s’échappe du mollet, remonte au cœur et Ventri le propulse dans Pulmo, l’artère du poumon : bouchon ! Alvéa ne reçoit plus de sang et ne donne plus d’oxygène. Souffle court, douleur d’un côté de la poitrine pire à l’inspiration, parfois crachats de sang ; 48 489 hospitalisations en 2022. Le réflexe : le 15, position semi-assise, ne pas bouger. Le traitement : Fluido (l’anticoagulant) toujours, pour empêcher le caillot de grossir et de revenir ; Lysa (la thrombolyse) fait fondre le caillot si c’est grave.",
+      "personnagesPrevus": [
+        "Caillo",
+        "Ventri",
+        "Alvéa",
+        "Pulmo",
+        "Fluido",
+        "Lysa"
+      ],
       "teaserSuivant": "Pneumonie",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep33-embolie-pulmonaire.md",
       "publication": null
     },
