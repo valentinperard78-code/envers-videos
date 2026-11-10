@@ -2380,6 +2380,49 @@
         25
       ],
       "alias": []
+    },
+    "zoster": {
+      "id": "zoster",
+      "nom": "Zoster",
+      "role": "l'envahisseur de la varicelle",
+      "description": "l'envahisseur de la varicelle. Un virus violet plein de piquants, avec des lunettes de soleil.",
+      "couleur": "#9b4dff",
+      "genre": "m",
+      "notions": [
+        "virus"
+      ],
+      "def": {
+        "shape": "virus",
+        "material": "skin",
+        "color": "#9b4dff",
+        "accessories": [
+          [
+            "spikes",
+            {
+              "color": "#3e9b50",
+              "tipColor": "#ff4d6d"
+            }
+          ],
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Zoster"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 26,
+      "apparitions": [
+        26
+      ],
+      "alias": []
     }
   },
   "maj": "2026-11-10"
