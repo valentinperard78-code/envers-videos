@@ -143,7 +143,8 @@
         23,
         24,
         25,
-        26
+        26,
+        27
       ],
       "alias": []
     },
@@ -1227,7 +1228,8 @@
       },
       "premierEpisode": 12,
       "apparitions": [
-        12
+        12,
+        27
       ],
       "alias": []
     },
@@ -2418,6 +2420,111 @@
       "premierEpisode": 26,
       "apparitions": [
         26
+      ],
+      "alias": []
+    },
+    "veina": {
+      "id": "veina",
+      "nom": "Veina",
+      "role": "la veine de la jambe",
+      "description": "la veine de la jambe. Une veine bleue, fatiguée, avec un chignon.",
+      "couleur": "#3b7ddd",
+      "genre": "f",
+      "notions": [
+        "veine"
+      ],
+      "def": {
+        "shape": "tube",
+        "material": "organ-smooth",
+        "color": "#3b7ddd",
+        "h": 0.9,
+        "accessories": [
+          "bun"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Veina"
+      },
+      "voix": {
+        "voice": "fr-CH-ArianeNeural",
+        "rate": "+0%",
+        "pitch": "-16Hz"
+      },
+      "premierEpisode": 27,
+      "apparitions": [
+        27
+      ],
+      "alias": []
+    },
+    "clapet": {
+      "id": "clapet",
+      "nom": "Clapet",
+      "role": "la valvule, la petite porte…",
+      "description": "la valvule, la petite porte anti-retour. Une protéine grise avec une cravate.",
+      "couleur": "#9aa0a6",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#9aa0a6",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Clapet"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+10%",
+        "pitch": "+21Hz"
+      },
+      "premierEpisode": 27,
+      "apparitions": [
+        27
+      ],
+      "alias": []
+    },
+    "compressa": {
+      "id": "compressa",
+      "nom": "Compressa",
+      "role": "le bas de compression",
+      "description": "le bas de compression. Un traitement beige, sportif, avec une casquette.",
+      "couleur": "#e8d5b0",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#e8d5b0",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Compressa"
+      },
+      "voix": {
+        "voice": "fr-FR-EloiseNeural",
+        "rate": "+6%",
+        "pitch": "+15Hz"
+      },
+      "premierEpisode": 27,
+      "apparitions": [
+        27
       ],
       "alias": []
     }
