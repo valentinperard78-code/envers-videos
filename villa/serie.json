@@ -442,14 +442,16 @@
       "slug": "varicelle",
       "pathologie": "Varicelle",
       "titre": "Les boutons de l'enfance",
-      "pitch": "Un virus très contagieux, et pourquoi il peut revenir sous forme de zona.",
+      "pitch": "Zoster, le virus de la varicelle, couvre Dermia de boutons qui grattent : extrêmement contagieux, surtout chez les 1-4 ans. Le traitement : pas d'antibiotique (c'est un virus) ; Lympho fabrique les anticorps et tout guérit en 10 à 12 jours ; on soulage (douche, ongles courts, paracétamol, jamais d'ibuprofène ni d'aspirine). Le virus reste caché et peut revenir en zona.",
       "personnagesPrevus": [
-        "Zoster (virus)",
-        "Dermia"
+        "Zoster",
+        "Dermia",
+        "Lympho",
+        "Paracéta"
       ],
       "teaserSuivant": "Insuffisance veineuse (varices)",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep26-varicelle.md",
       "publication": null
     },
     {
