@@ -74,7 +74,8 @@
     "ep27-varices",
     "ep28-goutte",
     "ep29-intestin-irritable",
-    "ep30-fibrillation-atriale"
+    "ep30-fibrillation-atriale",
+    "ep31-insuffisance-cardiaque"
   ],
   "historique": [
     {
@@ -416,7 +417,8 @@
     "ep27-varices",
     "ep28-goutte",
     "ep29-intestin-irritable",
-    "ep30-fibrillation-atriale"
+    "ep30-fibrillation-atriale",
+    "ep31-insuffisance-cardiaque"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
