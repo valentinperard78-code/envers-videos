@@ -76,7 +76,8 @@
     "ep29-intestin-irritable",
     "ep30-fibrillation-atriale",
     "ep31-insuffisance-cardiaque",
-    "ep32-thrombose-veineuse-profonde"
+    "ep32-thrombose-veineuse-profonde",
+    "ep33-embolie-pulmonaire"
   ],
   "historique": [
     {
@@ -420,7 +421,8 @@
     "ep29-intestin-irritable",
     "ep30-fibrillation-atriale",
     "ep31-insuffisance-cardiaque",
-    "ep32-thrombose-veineuse-profonde"
+    "ep32-thrombose-veineuse-profonde",
+    "ep33-embolie-pulmonaire"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
