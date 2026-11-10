@@ -148,7 +148,8 @@
         28,
         29,
         30,
-        31
+        31,
+        32
       ],
       "alias": []
     },
@@ -416,7 +417,8 @@
       "apparitions": [
         4,
         5,
-        30
+        30,
+        32
       ],
       "alias": []
     },
@@ -2468,7 +2470,8 @@
       },
       "premierEpisode": 27,
       "apparitions": [
-        27
+        27,
+        32
       ],
       "alias": []
     },
@@ -2536,7 +2539,8 @@
       },
       "premierEpisode": 27,
       "apparitions": [
-        27
+        27,
+        32
       ],
       "alias": []
     },
@@ -2898,7 +2902,8 @@
       },
       "premierEpisode": 30,
       "apparitions": [
-        30
+        30,
+        32
       ],
       "alias": []
     },
@@ -3002,6 +3007,76 @@
       "premierEpisode": 31,
       "apparitions": [
         31
+      ],
+      "alias": []
+    },
+    "mollo": {
+      "id": "mollo",
+      "nom": "Mollo",
+      "role": "le mollet, gros et costaud",
+      "description": "le mollet, gros et costaud. Un gros bonhomme beige, avec une casquette.",
+      "couleur": "#e8d5b0",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#e8d5b0",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Mollo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 32,
+      "apparitions": [
+        32
+      ],
+      "alias": []
+    },
+    "hepa": {
+      "id": "hepa",
+      "nom": "Hépa",
+      "role": "l'héparine, la piqûre qui agit…",
+      "description": "l'héparine, la piqûre qui agit tout de suite. Un médicament orange, rapide, avec un nœud.",
+      "couleur": "#ff8a3d",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "bow"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Hépa"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 32,
+      "apparitions": [
+        32
       ],
       "alias": []
     }
