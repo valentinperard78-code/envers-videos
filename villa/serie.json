@@ -476,13 +476,16 @@
       "slug": "goutte",
       "pathologie": "Crise de goutte",
       "titre": "Le cristal qui pique",
-      "pitch": "L'acide urique forme des cristaux dans l'articulation du gros orteil.",
+      "pitch": "Uricia, l’acide urique en trop, se change en cristaux pointus dans l’orteil d’Ortéo : crise de goutte, douleur maximale en 6 à 12 h. Le traitement : Colchi (la colchicine) calme l’inflammation en quelques heures ; Allo (l’allopurinol), chaque jour à vie, freine la fabrication d’acide urique pour dissoudre les cristaux. Stop bière, alcools forts, sodas.",
       "personnagesPrevus": [
-        "Uricia (acide urique)"
+        "Uricia",
+        "Ortéo",
+        "Colchi",
+        "Allo"
       ],
       "teaserSuivant": "Syndrome de l'intestin irritable",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep28-goutte.md",
       "publication": null
     },
     {
