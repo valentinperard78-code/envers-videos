@@ -351,6 +351,38 @@
       "mode": "buffer",
       "buffer": "6aed1585f3498efda759948d",
       "statut": "en-file"
+    },
+    {
+      "episode": "ep26-varicelle",
+      "date": "2026-11-10",
+      "heure": "07:09",
+      "mode": "buffer",
+      "buffer": "6af2b51826f9e6aeeaea559d",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep27-varices",
+      "date": "2026-11-10",
+      "heure": "07:09",
+      "mode": "buffer",
+      "buffer": "6af2b51a26f9e6aeeaea55ce",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep28-goutte",
+      "date": "2026-11-10",
+      "heure": "07:09",
+      "mode": "buffer",
+      "buffer": "6af2b51bd35dff5701e19f28",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep29-intestin-irritable",
+      "date": "2026-11-10",
+      "heure": "07:09",
+      "mode": "buffer",
+      "buffer": "6af2b51c26f9e6aeeaea5674",
+      "statut": "en-file"
     }
   ],
   "valides": [
