@@ -511,14 +511,19 @@
       "slug": "fibrillation-atriale",
       "pathologie": "Fibrillation atriale",
       "titre": "Le cœur s'emballe",
-      "pitch": "Cardio bat la chamade : risque d'AVC et traitement. Final de la saison.",
+      "pitch": "Zapp, le courant électrique en folie, fait trembler Ori l’oreillette gauche (400 à 600 ordres par minute) : Ventri bat vite et irrégulier. Le sang stagne, Caillo se forme et vise Cervo : 20 à 30 % des AVC. Le traitement : Fluido (l’anticoagulant) empêche le caillot, Freino (le bêtabloquant) ralentit le cœur sous 110/min ; sinon choc électrique ou ablation. Douleur thoracique ou signes d’AVC : le 15.",
       "personnagesPrevus": [
-        "Cardio",
-        "Neura"
+        "Ventri",
+        "Ori",
+        "Zapp",
+        "Caillo",
+        "Cervo",
+        "Fluido",
+        "Freino"
       ],
       "teaserSuivant": "Insuffisance cardiaque",
-      "statut": "prévu",
-      "script": null,
+      "statut": "écrit",
+      "script": "scripts/ep30-fibrillation-atriale.md",
       "publication": null
     },
     {
