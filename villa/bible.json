@@ -786,12 +786,9 @@
       "premierEpisode": 8,
       "apparitions": [
         8,
-        9,
-        26
+        9
       ],
-      "alias": [
-        "Zoster"
-      ]
+      "alias": []
     },
     "vaxi": {
       "id": "vaxi",
