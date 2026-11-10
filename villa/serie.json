@@ -530,11 +530,18 @@
       "numero": 31,
       "slug": "insuffisance-cardiaque",
       "pathologie": "Insuffisance cardiaque",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "La pompe à plat",
+      "pitch": "Ventri, épuisé après infarctus et tension, ne pompe plus assez. Le sang ralentit, Josh s’essouffle ; Flaque, l’eau en trop, gonfle les chevilles, aidée par Sel l’éponge et Rénato le rein. 1,37 million de Français, 400 000 à 700 000 l’ignorent. 4 signes : essoufflement, chevilles gonflées, 2-3 kg en quelques jours, fatigue. Le traitement : des médicaments tous les jours à vie, dont Freino (le bêtabloquant) qui ménage le cœur et Diuro (le diurétique) qui fait uriner l’eau en trop ; 4 à 6 g de sel par jour maximum.",
+      "personnagesPrevus": [
+        "Ventri",
+        "Sel",
+        "Rénato",
+        "Freino",
+        "Flaque",
+        "Diuro"
+      ],
       "teaserSuivant": "Thrombose veineuse profonde (phlébite)",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep31-insuffisance-cardiaque.md",
       "publication": null
     },
