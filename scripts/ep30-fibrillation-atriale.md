@@ -27,31 +27,30 @@ Script ton télé-réalité. Faits médicaux vérifiés (Assurance Maladie) : la
 - ORI (entrée stylée) : « Et moi, Ori, l'oreillette gauche. C'est moi qui donne le premier coup, en haut du cœur. »
 
 ## Scène 2 : le clash
-- ZAPP (entrée stylée) : « Coucou ! Moi, je suis le courant électrique du cœur. Aujourd'hui, j'envoie des ordres partout ! »
+- ZAPP (entrée stylée) : « Coucou ! Moi, le courant électrique du cœur. Aujourd'hui, j'envoie des ordres partout ! »
 - ORI (épuisée) : « 400 à 600 ordres par minute ?! Je tremble, je ne pompe plus rien ! »
 - Encadré à l'écran : FIBRILLATION ATRIALE = les oreillettes tremblent au lieu de se contracter, le cœur bat vite et irrégulier.
-- VENTRI (en sueur) : « Et moi, en bas, je suis à 150 par minute. N'importe comment ! »
+- VENTRI (en sueur) : « Et moi, en bas, je suis à 150 par minute ! »
 - À l'écran : la jauge de rythme cardiaque passe au rouge.
 
 ## Scène 3 : le confessionnal
-- VENTRI (confessionnal) : « Josh sent son cœur cogner, il est essoufflé, fatigué. Parfois, il ne sent rien du tout. »
-- VOIX OFF : « Un électrocardiogramme suffit pour le voir. Ça touche 1 % de la population, et plus de 10 % des plus de 80 ans. »
+- VOIX OFF : « Un électrocardiogramme le montre. Ça touche 1 % de la population, plus de 10 % des plus de 80 ans. »
+- VENTRI (confessionnal) : « Josh sent son cœur cogner, il s'essouffle. Parfois, il ne sent rien du tout. »
 
 ## Scène 4 : le twist
 - VOIX OFF : « Le vrai danger est silencieux. Ori ne pompe plus : le sang stagne chez elle. »
-- CAILLO (entrée stylée) : « Du sang qui ne bouge plus ? Parfait. Je me forme ici… et je pars vers le cerveau. »
-- CERVO (confessionnal) : « Attends… c'est moi la cible ?! »
+- CAILLO (entrée stylée) : « Du sang qui ne bouge plus ? Parfait. Je me forme ici… et je file au cerveau. »
 - VOIX OFF : « 20 à 30 % des AVC viennent d'une fibrillation atriale. »
+- CERVO (confessionnal) : « Attends… c'est moi la cible ?! »
 
 ## Scène 5 : le traitement
 - FLUIDO (entrée stylée) : « Moi, l'anticoagulant. J'empêche le sang de coaguler : pas de caillot, pas d'AVC. »
 - CAILLO : « Sérieux ? Je n'arrive plus à me former ! »
 - FREINO : « Et moi, le bêtabloquant : je ralentis Ventri, sous 110 battements par minute. »
-- VOIX OFF : « Si ça ne suffit pas : un petit choc électrique pour remettre le bon rythme, ou on brûle les zones folles de Zapp avec une sonde. »
+- VOIX OFF : « Sinon, un petit choc électrique remet le bon rythme. »
 
 ## Scène 6 : le verdict
-- VOIX OFF : « Et on calme les complices : tension, surpoids, diabète, tabac, alcool. Avec l'anticoagulant, un saignement inhabituel, on en parle à son médecin. »
-- VOIX OFF : « Palpitations avec douleur ou oppression dans la poitrine, ou signes d'AVC : on appelle le 15. »
+- VOIX OFF : « Et on calme les complices : tension, surpoids, tabac, alcool. Palpitations avec douleur dans la poitrine, ou signes d'AVC : on appelle le 15. »
 - VENTRI (confessionnal) : « Je souffle. Boum, boum. Je retrouve mon tempo. »
 
 ## Récap et appel à l'abonnement
