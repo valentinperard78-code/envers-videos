@@ -72,7 +72,8 @@
     "ep25-appendicite",
     "ep26-varicelle",
     "ep27-varices",
-    "ep28-goutte"
+    "ep28-goutte",
+    "ep29-intestin-irritable"
   ],
   "historique": [
     {
@@ -380,7 +381,8 @@
     "ep25-appendicite",
     "ep26-varicelle",
     "ep27-varices",
-    "ep28-goutte"
+    "ep28-goutte",
+    "ep29-intestin-irritable"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
