@@ -149,7 +149,8 @@
         29,
         30,
         31,
-        32
+        32,
+        33
       ],
       "alias": []
     },
@@ -379,7 +380,8 @@
       "apparitions": [
         4,
         30,
-        31
+        31,
+        33
       ],
       "alias": []
     },
@@ -418,7 +420,8 @@
         4,
         5,
         30,
-        32
+        32,
+        33
       ],
       "alias": []
     },
@@ -2165,7 +2168,8 @@
       },
       "premierEpisode": 23,
       "apparitions": [
-        23
+        23,
+        33
       ],
       "alias": []
     },
@@ -2903,7 +2907,8 @@
       "premierEpisode": 30,
       "apparitions": [
         30,
-        32
+        32,
+        33
       ],
       "alias": []
     },
@@ -3077,6 +3082,79 @@
       "premierEpisode": 32,
       "apparitions": [
         32
+      ],
+      "alias": []
+    },
+    "pulmo": {
+      "id": "pulmo",
+      "nom": "Pulmo",
+      "role": "la route du sang vers les alvéoles",
+      "description": "la route du sang vers les alvéoles. Un tuyau rouge, une artère, avec une cravate.",
+      "couleur": "#e2394a",
+      "genre": "m",
+      "notions": [
+        "artere"
+      ],
+      "def": {
+        "shape": "tube",
+        "material": "organ-smooth",
+        "color": "#e2394a",
+        "h": 0.9,
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Pulmo"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 33,
+      "apparitions": [
+        33
+      ],
+      "alias": []
+    },
+    "lysa": {
+      "id": "lysa",
+      "nom": "Lysa",
+      "role": "la thrombolyse, la perfusion…",
+      "description": "la thrombolyse, la perfusion qui fait fondre les bouchons. Un médicament rose, avec une couronne.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#ff6fb0",
+        "accessories": [
+          "tiara"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Lysa"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 33,
+      "apparitions": [
+        33
       ],
       "alias": []
     }
