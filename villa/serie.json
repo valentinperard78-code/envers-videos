@@ -623,11 +623,16 @@
       "numero": 36,
       "slug": "syndrome-d-apnees-du-sommeil",
       "pathologie": "Syndrome d'apnées du sommeil",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Les nuits sans air",
+      "pitch": "La nuit, Gorgette (le pharynx) se relâche : ronflements, puis la gorge se ferme. Pauses de 10 à 30 secondes, au moins 5 fois par heure, parfois une centaine par nuit ; Cervo réveille Josh sans qu’il s’en souvienne. Le jour : maux de tête, somnolence, accidents ; à long terme tension, infarctus, AVC. Docta enregistre son sommeil. Le traitement : hygiène de vie toujours (poids, sport, tabac, alcool le soir, dormir sur le côté), puis Souffli, la PPC, qui souffle de l’air avec une légère pression par un masque pour empêcher la gorge de s’écraser.",
+      "personnagesPrevus": [
+        "Gorgette",
+        "Cervo",
+        "Docta",
+        "Souffli"
+      ],
       "teaserSuivant": "Insuffisance rénale chronique",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep36-syndrome-d-apnees-du-sommeil.md",
       "publication": null
     },
