@@ -151,7 +151,8 @@
         31,
         32,
         33,
-        34
+        34,
+        35
       ],
       "alias": []
     },
@@ -688,7 +689,8 @@
         14,
         20,
         26,
-        34
+        34,
+        35
       ],
       "alias": []
     },
@@ -2174,7 +2176,8 @@
       "apparitions": [
         23,
         33,
-        34
+        34,
+        35
       ],
       "alias": []
     },
@@ -3230,6 +3233,78 @@
       "premierEpisode": 34,
       "apparitions": [
         34
+      ],
+      "alias": []
+    },
+    "koch": {
+      "id": "koch",
+      "nom": "Koch",
+      "role": "le bacille de Koch, le vieux…",
+      "description": "le bacille de Koch, le vieux locataire très patient. Une bactérie grise avec une moustache.",
+      "couleur": "#9aa0a6",
+      "genre": "f",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#9aa0a6",
+        "accessories": [
+          "mustache"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Koch"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 35,
+      "apparitions": [
+        35
+      ],
+      "alias": []
+    },
+    "quatuor": {
+      "id": "quatuor",
+      "nom": "Quatuor",
+      "role": "le quatuor antituberculeux,…",
+      "description": "le quatuor antituberculeux, quatre comprimés qui jouent ensemble. Un médicament orange avec une casquette.",
+      "couleur": "#ff8a3d",
+      "genre": "f",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Quatuor"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 35,
+      "apparitions": [
+        35
       ],
       "alias": []
     }
