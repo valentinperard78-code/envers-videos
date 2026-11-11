@@ -1,9 +1,8 @@
 {
-  "quand": "2026-11-11T06:15:01.132Z",
+  "quand": "2026-11-11T12:00:46.727Z",
   "ok": true,
   "essai": false,
   "journal": [
-    "   · en file : 2026-11-11T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 26 : Les boutons de l'enfance",
     "   · en file : 2026-11-11T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 27 : Les jambes lourdes",
     "   · en file : 2026-11-12T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 28 : Le cristal qui pique",
     "   · en file : 2026-11-12T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 29 : Le ventre en vrac",
@@ -11,8 +10,9 @@
     "   · en file : 2026-11-13T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 31 : La pompe à plat",
     "   · en file : 2026-11-14T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 32 : Le squatteur du mollet",
     "   · en file : 2026-11-14T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 33 : Le bouchon des poumons",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 8 vidéo(s) déjà en file (max 10).",
-    "✅ ep34-pneumonie ajouté à la file Buffer.",
-    "✅ ep35-tuberculose ajouté à la file Buffer."
+    "   · en file : 2026-11-15T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 34 : Le squatteur des alvéoles",
+    "   · en file : 2026-11-15T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 35 : Le locataire patient",
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 9 vidéo(s) déjà en file (max 10).",
+    "✅ ep36-syndrome-d-apnees-du-sommeil ajouté à la file Buffer."
   ]
 }
