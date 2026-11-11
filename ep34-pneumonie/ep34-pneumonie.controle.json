@@ -1,0 +1,12 @@
+[
+  {
+    "t": 119.66093333333333,
+    "level": "avertissement",
+    "msg": "visage masqué par un autre personnage à 119.7 s (villa, medium, pneumo)"
+  },
+  {
+    "t": 122.85626666666667,
+    "level": "avertissement",
+    "msg": "visage masqué par un autre personnage à 122.9 s (villa, close, paraceta)"
+  }
+]
