@@ -22,7 +22,8 @@
         1,
         2,
         13,
-        24
+        24,
+        37
       ],
       "alias": []
     },
@@ -153,7 +154,8 @@
         33,
         34,
         35,
-        36
+        36,
+        37
       ],
       "alias": []
     },
@@ -191,7 +193,8 @@
       "apparitions": [
         2,
         3,
-        5
+        5,
+        37
       ],
       "alias": []
     },
@@ -1503,7 +1506,8 @@
       "apparitions": [
         16,
         17,
-        31
+        31,
+        37
       ],
       "alias": []
     },
@@ -3379,6 +3383,110 @@
       "premierEpisode": 36,
       "apparitions": [
         36
+      ],
+      "alias": []
+    },
+    "crea": {
+      "id": "crea",
+      "nom": "Créa",
+      "role": "la créatinine, le déchet que…",
+      "description": "la créatinine, le déchet que Rénato doit jeter. Un petit déchet marron avec une casquette.",
+      "couleur": "#8a5a32",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#8a5a32",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Créa"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 37,
+      "apparitions": [
+        37
+      ],
+      "alias": []
+    },
+    "protecto": {
+      "id": "protecto",
+      "nom": "Protecto",
+      "role": "l'IEC, le garde du corps de Rénato",
+      "description": "l'IEC, le garde du corps de Rénato. Un médicament bleu avec des lunettes de soleil.",
+      "couleur": "#3b7ddd",
+      "genre": "m",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Protecto"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 37,
+      "apparitions": [
+        37
+      ],
+      "alias": []
+    },
+    "dialysa": {
+      "id": "dialysa",
+      "nom": "Dialysa",
+      "role": "la dialyse, le filtre de secours",
+      "description": "la dialyse, le filtre de secours. Un traitement turquoise avec une couronne.",
+      "couleur": "#2ec4c4",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#2ec4c4",
+        "accessories": [
+          "tiara"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Dialysa"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 37,
+      "apparitions": [
+        37
       ],
       "alias": []
     }
