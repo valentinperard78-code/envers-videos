@@ -98,7 +98,8 @@
         1,
         2,
         13,
-        14
+        14,
+        40
       ],
       "alias": []
     },
@@ -157,7 +158,8 @@
         36,
         37,
         38,
-        39
+        39,
+        40
       ],
       "alias": []
     },
@@ -2274,7 +2276,8 @@
       },
       "premierEpisode": 24,
       "apparitions": [
-        24
+        24,
+        40
       ],
       "alias": []
     },
@@ -2418,7 +2421,8 @@
       },
       "premierEpisode": 25,
       "apparitions": [
-        25
+        25,
+        40
       ],
       "alias": []
     },
@@ -2820,7 +2824,8 @@
       },
       "premierEpisode": 29,
       "apparitions": [
-        29
+        29,
+        40
       ],
       "alias": []
     },
@@ -3605,6 +3610,83 @@
       "premierEpisode": 39,
       "apparitions": [
         39
+      ],
+      "alias": []
+    },
+    "vesi": {
+      "id": "vesi",
+      "nom": "Vési",
+      "role": "la vésicule biliaire, la petite…",
+      "description": "la vésicule biliaire, la petite poche rangée sous Hépato. Elle est verte, avec un chignon.",
+      "couleur": "#4cbf6b",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "liver",
+        "material": "organ",
+        "color": "#4cbf6b",
+        "w": 1.1,
+        "h": 1.5,
+        "shoulderX": 0.22,
+        "hipX": 0.12,
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a",
+          "eyeX": 0.085,
+          "eyeY": 0.56,
+          "eyeR": 0.085,
+          "mouthY": 0.36,
+          "mouthW": 0.2
+        },
+        "accessories": [
+          "bun"
+        ],
+        "name": "Vési"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 40,
+      "apparitions": [
+        40
+      ],
+      "alias": []
+    },
+    "pierrot": {
+      "id": "pierrot",
+      "nom": "Pierrot",
+      "role": "le calcul biliaire, un caillou…",
+      "description": "le calcul biliaire, un caillou de la vésicule. Il est jaune, un gros dur, avec des lunettes de soleil.",
+      "couleur": "#f6d03b",
+      "genre": "m",
+      "notions": [],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#f6d03b",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Pierrot"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 40,
+      "apparitions": [
+        40
       ],
       "alias": []
     }
