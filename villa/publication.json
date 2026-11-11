@@ -77,7 +77,8 @@
     "ep30-fibrillation-atriale",
     "ep31-insuffisance-cardiaque",
     "ep32-thrombose-veineuse-profonde",
-    "ep33-embolie-pulmonaire"
+    "ep33-embolie-pulmonaire",
+    "ep34-pneumonie"
   ],
   "historique": [
     {
@@ -454,7 +455,8 @@
     "ep30-fibrillation-atriale",
     "ep31-insuffisance-cardiaque",
     "ep32-thrombose-veineuse-profonde",
-    "ep33-embolie-pulmonaire"
+    "ep33-embolie-pulmonaire",
+    "ep34-pneumonie"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
