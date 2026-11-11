@@ -152,7 +152,8 @@
         32,
         33,
         34,
-        35
+        35,
+        36
       ],
       "alias": []
     },
@@ -467,7 +468,8 @@
         5,
         15,
         29,
-        30
+        30,
+        36
       ],
       "alias": []
     },
@@ -2104,7 +2106,8 @@
       },
       "premierEpisode": 22,
       "apparitions": [
-        22
+        22,
+        36
       ],
       "alias": []
     },
@@ -3305,6 +3308,77 @@
       "premierEpisode": 35,
       "apparitions": [
         35
+      ],
+      "alias": []
+    },
+    "gorgette": {
+      "id": "gorgette",
+      "nom": "Gorgette",
+      "role": "le pharynx, la gorge qui se…",
+      "description": "le pharynx, la gorge qui se relâche la nuit. Un tuyau rose et mou, comme une artère, avec un nœud.",
+      "couleur": "#ff6fb0",
+      "genre": "f",
+      "notions": [
+        "artere"
+      ],
+      "def": {
+        "shape": "tube",
+        "material": "organ-smooth",
+        "color": "#ff6fb0",
+        "h": 0.9,
+        "accessories": [
+          "bow"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Gorgette"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 36,
+      "apparitions": [
+        36
+      ],
+      "alias": []
+    },
+    "souffli": {
+      "id": "souffli",
+      "nom": "Souffli",
+      "role": "la PPC, la machine à air de la…",
+      "description": "la PPC, la machine à air de la nuit, avec son masque. Un traitement bleu avec une casquette.",
+      "couleur": "#3b7ddd",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#3b7ddd",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#3b6fb0"
+        },
+        "name": "Souffli"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 36,
+      "apparitions": [
+        36
       ],
       "alias": []
     }
