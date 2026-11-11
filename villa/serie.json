@@ -659,11 +659,18 @@
       "numero": 38,
       "slug": "hyperthyroidie",
       "pathologie": "Hyperthyroïdie (maladie de Basedow)",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Le papillon en surchauffe",
+      "pitch": "Thyro, le papillon du cou, revient en mode turbo : Trak, un auto-anticorps, appuie sans arrêt sur son bouton, à la place de Tess (la TSH). C’est la maladie de Basedow, première cause d’hyperthyroïdie. Josh maigrit en mangeant, a chaud, tremble, Ventri s’emballe. Prise de sang : TSH basse, T4 haute. Le traitement : Carbi, l’antithyroïdien de synthèse, réduit la production d’hormones (normal en 3 à 8 semaines, 12 à 18 mois de traitement), Freino le bêtabloquant calme le cœur ; en cas de rechute, iode radioactif ou chirurgie. Crise : le 15.",
+      "personnagesPrevus": [
+        "Thyro",
+        "Tess",
+        "Ventri",
+        "Trak",
+        "Carbi",
+        "Freino"
+      ],
       "teaserSuivant": "Ulcère de l'estomac (Helicobacter pylori)",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep38-hyperthyroidie.md",
       "publication": null
     },
