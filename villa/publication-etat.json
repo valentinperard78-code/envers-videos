@@ -1,5 +1,5 @@
 {
-  "quand": "2026-11-10T18:05:07.135Z",
+  "quand": "2026-11-11T06:15:01.132Z",
   "ok": true,
   "essai": false,
   "journal": [
@@ -7,10 +7,12 @@
     "   · en file : 2026-11-11T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 27 : Les jambes lourdes",
     "   · en file : 2026-11-12T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 28 : Le cristal qui pique",
     "   · en file : 2026-11-12T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 29 : Le ventre en vrac",
-    "📚 Buffer : chaîne « la.villa.des.pathologies » — 4 vidéo(s) déjà en file (max 10).",
-    "✅ ep30-fibrillation-atriale ajouté à la file Buffer.",
-    "✅ ep31-insuffisance-cardiaque ajouté à la file Buffer.",
-    "✅ ep32-thrombose-veineuse-profonde ajouté à la file Buffer.",
-    "✅ ep33-embolie-pulmonaire ajouté à la file Buffer."
+    "   · en file : 2026-11-13T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 30 : Le cœur s'emballe",
+    "   · en file : 2026-11-13T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 31 : La pompe à plat",
+    "   · en file : 2026-11-14T11:30:00.000Z — 🏠 La Villa des Pathologies — Ép. 32 : Le squatteur du mollet",
+    "   · en file : 2026-11-14T18:00:00.000Z — 🏠 La Villa des Pathologies — Ép. 33 : Le bouchon des poumons",
+    "📚 Buffer : chaîne « la.villa.des.pathologies » — 8 vidéo(s) déjà en file (max 10).",
+    "✅ ep34-pneumonie ajouté à la file Buffer.",
+    "✅ ep35-tuberculose ajouté à la file Buffer."
   ]
 }

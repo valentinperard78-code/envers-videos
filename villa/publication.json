@@ -423,6 +423,22 @@
       "mode": "buffer",
       "buffer": "6af35cd21d932748c7e1463b",
       "statut": "en-file"
+    },
+    {
+      "episode": "ep34-pneumonie",
+      "date": "2026-11-11",
+      "heure": "07:14",
+      "mode": "buffer",
+      "buffer": "6af407e3a9d779009b8a6e42",
+      "statut": "en-file"
+    },
+    {
+      "episode": "ep35-tuberculose",
+      "date": "2026-11-11",
+      "heure": "07:14",
+      "mode": "buffer",
+      "buffer": "6af407e51da76fd3d2c58b73",
+      "statut": "en-file"
     }
   ],
   "valides": [
