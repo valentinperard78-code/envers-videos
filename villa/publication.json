@@ -1,6 +1,6 @@
 {
   "_aide": "Calendrier de publication TikTok. Modifiable à la main ou depuis l'onglet Publication du studio. Heures en heure de Paris.",
-  "actif": true,
+  "actif": false,
   "mode": "buffer",
   "_modes": "buffer = Buffer (gratuit) publie tout seul sur TikTok aux heures réglées dans Buffer ; le robot GitHub garde sa file remplie. brouillon = brouillons TikTok + notification ; direct = publication directe (privée sans audit TikTok)",
   "buffer": {
