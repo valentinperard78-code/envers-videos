@@ -714,11 +714,17 @@
       "numero": 41,
       "slug": "pancreatite-aigue",
       "pathologie": "Pancréatite aiguë",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "L’usine qui se mange",
+      "pitch": "Pancho revient : ses ouvriers, Enzo (les enzymes digestives), se réveillent trop tôt et le découpent de l’intérieur. Coupables dans environ 90 % des cas : Pierrot, le calcul biliaire coincé à la sortie, et Glouglou, l’alcool en excès. Douleur violente en haut du ventre, en ceinture vers le dos, vomissements : le 15. Le traitement à l’hôpital : à jeun au début pour mettre l’usine au repos, Perfu (perfusion) et antidouleurs, puis on traite la cause (retirer le calcul par endoscopie, puis la vésicule ; limiter ou arrêter l’alcool). Environ 85 % guérissent en quelques jours.",
+      "personnagesPrevus": [
+        "Pancho",
+        "Enzo",
+        "Pierrot",
+        "Glouglou",
+        "Perfu"
+      ],
       "teaserSuivant": "Maladie de Crohn",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep41-pancreatite-aigue.md",
       "publication": null
     },
