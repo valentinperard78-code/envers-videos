@@ -678,11 +678,17 @@
       "numero": 39,
       "slug": "ulcere-de-l-estomac",
       "pathologie": "Ulcère de l'estomac (Helicobacter pylori)",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Le trou dans le mur",
+      "pitch": "Pylo (Helicobacter pylori), bactérie attrapée dans l’enfance et portée par 15 à 30 % des Français, abîme la couche protectrice d’Estoma ; Acidia creuse alors une plaie : l’ulcère. Autre coupable : les anti-inflammatoires. Crampe au creux de l’estomac 1 à 3 h après manger, calmée par les repas. Endoscopie. Le traitement : Ipéo (IPP) baisse l’acide pour cicatriser, Antibio chasse Pylo en 10 jours, test de contrôle 4 semaines après. Sang vomi, sang dans les selles, douleur brutale : le 15.",
+      "personnagesPrevus": [
+        "Estoma",
+        "Acidia",
+        "Pylo",
+        "Ipéo",
+        "Antibio"
+      ],
       "teaserSuivant": "Calculs biliaires",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep39-ulcere-de-l-estomac.md",
       "publication": null
     },
