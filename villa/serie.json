@@ -606,11 +606,16 @@
       "numero": 35,
       "slug": "tuberculose",
       "pathologie": "Tuberculose",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Le locataire patient",
+      "pitch": "Koch, le bacille de Koch, arrive par la toux et s’endort : 9 fois sur 10, tuberculose latente, sans symptômes ni contagion. Une fois sur 10, il se réveille en haut du poumon d’Alvéa : toux plus de 3 semaines, crachats, sueurs la nuit, amaigrissement ; contagieux (10 à 15 personnes par an sans traitement). Radio et crachats analysés 3 jours de suite. Le traitement : Quatuor, plusieurs antibiotiques en même temps tous les jours (4 pendant 2 mois puis 2 pendant 4 mois), jusqu’au bout, sinon Koch devient résistant ; isolement 10 à 20 jours au début.",
+      "personnagesPrevus": [
+        "Koch",
+        "Alvéa",
+        "Lympho",
+        "Quatuor"
+      ],
       "teaserSuivant": "Syndrome d'apnées du sommeil",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep35-tuberculose.md",
       "publication": null
     },
