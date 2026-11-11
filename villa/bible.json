@@ -155,7 +155,8 @@
         34,
         35,
         36,
-        37
+        37,
+        38
       ],
       "alias": []
     },
@@ -387,7 +388,8 @@
         4,
         30,
         31,
-        33
+        33,
+        38
       ],
       "alias": []
     },
@@ -1327,7 +1329,8 @@
       },
       "premierEpisode": 14,
       "apparitions": [
-        14
+        14,
+        38
       ],
       "alias": []
     },
@@ -1361,7 +1364,8 @@
       },
       "premierEpisode": 14,
       "apparitions": [
-        14
+        14,
+        38
       ],
       "alias": []
     },
@@ -2958,7 +2962,8 @@
       "premierEpisode": 30,
       "apparitions": [
         30,
-        31
+        31,
+        38
       ],
       "alias": []
     },
@@ -3487,6 +3492,78 @@
       "premierEpisode": 37,
       "apparitions": [
         37
+      ],
+      "alias": []
+    },
+    "trak": {
+      "id": "trak",
+      "nom": "Trak",
+      "role": "l'auto-anticorps, une protéine…",
+      "description": "l'auto-anticorps, une protéine orange avec une casquette. Il appuie sur le bouton de Thyro en boucle.",
+      "couleur": "#ff8a3d",
+      "genre": "m",
+      "notions": [
+        "anticorps"
+      ],
+      "def": {
+        "shape": "blob",
+        "material": "skin",
+        "color": "#ff8a3d",
+        "accessories": [
+          "cap"
+        ],
+        "face": {
+          "lashes": false,
+          "lips": "line",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Trak"
+      },
+      "voix": {
+        "voice": "fr-BE-GerardNeural",
+        "rate": "+2%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 38,
+      "apparitions": [
+        38
+      ],
+      "alias": []
+    },
+    "carbi": {
+      "id": "carbi",
+      "nom": "Carbi",
+      "role": "l'antithyroïdien de synthèse,…",
+      "description": "l'antithyroïdien de synthèse, le frein de Thyro. Un médicament doré avec une cravate, le calme absolu.",
+      "couleur": "#f2b632",
+      "genre": "f",
+      "notions": [
+        "medicament"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#f2b632",
+        "accessories": [
+          "tie"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#7a3f12"
+        },
+        "name": "Carbi"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 38,
+      "apparitions": [
+        38
       ],
       "alias": []
     }
