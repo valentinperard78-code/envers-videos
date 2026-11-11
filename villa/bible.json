@@ -156,7 +156,8 @@
         35,
         36,
         37,
-        38
+        38,
+        39
       ],
       "alias": []
     },
@@ -958,7 +959,8 @@
         9,
         10,
         17,
-        34
+        34,
+        39
       ],
       "alias": []
     },
@@ -1111,7 +1113,8 @@
       },
       "premierEpisode": 11,
       "apparitions": [
-        11
+        11,
+        39
       ],
       "alias": []
     },
@@ -1145,7 +1148,8 @@
       },
       "premierEpisode": 11,
       "apparitions": [
-        11
+        11,
+        39
       ],
       "alias": []
     },
@@ -1217,7 +1221,8 @@
       },
       "premierEpisode": 11,
       "apparitions": [
-        11
+        11,
+        39
       ],
       "alias": []
     },
@@ -3564,6 +3569,42 @@
       "premierEpisode": 38,
       "apparitions": [
         38
+      ],
+      "alias": []
+    },
+    "pylo": {
+      "id": "pylo",
+      "nom": "Pylo",
+      "role": "Helicobacter pylori, la…",
+      "description": "Helicobacter pylori, la squatteuse qui adore l'acide. Une bactérie verte en spirale, avec des lunettes de soleil.",
+      "couleur": "#4cbf6b",
+      "genre": "f",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Pylo"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 39,
+      "apparitions": [
+        39
       ],
       "alias": []
     }
