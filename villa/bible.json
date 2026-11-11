@@ -150,7 +150,8 @@
         30,
         31,
         32,
-        33
+        33,
+        34
       ],
       "alias": []
     },
@@ -686,7 +687,8 @@
         13,
         14,
         20,
-        26
+        26,
+        34
       ],
       "alias": []
     },
@@ -946,7 +948,8 @@
       "apparitions": [
         9,
         10,
-        17
+        17,
+        34
       ],
       "alias": []
     },
@@ -1815,7 +1818,8 @@
       "premierEpisode": 19,
       "apparitions": [
         19,
-        26
+        26,
+        34
       ],
       "alias": []
     },
@@ -2169,7 +2173,8 @@
       "premierEpisode": 23,
       "apparitions": [
         23,
-        33
+        33,
+        34
       ],
       "alias": []
     },
@@ -3157,7 +3162,77 @@
         33
       ],
       "alias": []
+    },
+    "pneumo": {
+      "id": "pneumo",
+      "nom": "Pneumo",
+      "role": "le pneumocoque, le squatteur…",
+      "description": "le pneumocoque, le squatteur des alvéoles. Une bactérie verte avec des lunettes de soleil, très sûre d'elle.",
+      "couleur": "#4cbf6b",
+      "genre": "f",
+      "notions": [
+        "bacterie"
+      ],
+      "def": {
+        "shape": "capsule",
+        "material": "skin",
+        "color": "#4cbf6b",
+        "accessories": [
+          "sunglasses"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#5b3a1e"
+        },
+        "name": "Pneumo"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 34,
+      "apparitions": [
+        34
+      ],
+      "alias": []
+    },
+    "radia": {
+      "id": "radia",
+      "nom": "Radia",
+      "role": "la radiologue, une humaine…",
+      "description": "la radiologue, une humaine médecin avec des lunettes et un chignon.",
+      "couleur": "#06d6a0",
+      "genre": "f",
+      "notions": [],
+      "def": {
+        "human": true,
+        "color": "#06d6a0",
+        "accessories": [
+          "glasses",
+          "bun"
+        ],
+        "face": {
+          "lashes": true,
+          "lips": "full",
+          "lipColor": "#c2185b",
+          "iris": "#2f7d5a"
+        },
+        "name": "Radia"
+      },
+      "voix": {
+        "voice": "fr-FR-DeniseNeural",
+        "rate": "+6%",
+        "pitch": "+0Hz"
+      },
+      "premierEpisode": 34,
+      "apparitions": [
+        34
+      ],
+      "alias": []
     }
   },
-  "maj": "2026-11-10"
+  "maj": "2026-11-11"
 }
