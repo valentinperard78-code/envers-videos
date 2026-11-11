@@ -696,11 +696,17 @@
       "numero": 40,
       "slug": "calculs-biliaires",
       "pathologie": "Calculs biliaires",
-      "titre": "",
-      "pitch": "",
-      "personnagesPrevus": [],
+      "titre": "Les cailloux de la poche",
+      "pitch": "Hépato fabrique la bile, Vési (la vésicule) la stocke. Pierrot, un calcul de cholestérol, s’y installe : 10 à 15 % des adultes de 20 à 60 ans en ont, souvent sans rien sentir. Le jour où il bouche la sortie : colique hépatique, douleur sous les côtes à droite jusqu’à l’épaule. Échographie. Le traitement : Antispa et un antidouleur calment la crise ; si les crises reviennent, Chira retire la vésicule, et la bile coule directement vers l’intestin. Fièvre, jaunisse, douleur plus de 5 h : urgence, le 15.",
+      "personnagesPrevus": [
+        "Hépato",
+        "Vési",
+        "Pierrot",
+        "Antispa",
+        "Chira"
+      ],
       "teaserSuivant": "Pancréatite aiguë",
-      "statut": "à écrire",
+      "statut": "écrit",
       "script": "scripts/ep40-calculs-biliaires.md",
       "publication": null
     },
