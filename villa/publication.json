@@ -79,7 +79,8 @@
     "ep32-thrombose-veineuse-profonde",
     "ep33-embolie-pulmonaire",
     "ep34-pneumonie",
-    "ep35-tuberculose"
+    "ep35-tuberculose",
+    "ep36-syndrome-d-apnees-du-sommeil"
   ],
   "historique": [
     {
@@ -458,7 +459,8 @@
     "ep32-thrombose-veineuse-profonde",
     "ep33-embolie-pulmonaire",
     "ep34-pneumonie",
-    "ep35-tuberculose"
+    "ep35-tuberculose",
+    "ep36-syndrome-d-apnees-du-sommeil"
   ],
   "_valides": "Épisodes contrôlés après leur rendu final : seuls ceux-là partent dans Buffer (Claude les ajoute après vérification)."
 }
